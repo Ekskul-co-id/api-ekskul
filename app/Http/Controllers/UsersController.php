@@ -172,7 +172,7 @@ class UsersController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'users sucessfuly deleted!'
-        ],404);
+        ],201);
 
     }
 

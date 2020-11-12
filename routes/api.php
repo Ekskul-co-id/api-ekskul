@@ -6,7 +6,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WebhooksController;
 use App\Http\Controllers\SettingsController;
-use Hamcrest\Core\Set;
+use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +55,14 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('upload/setings',[SettingsController::class,'store']);
     Route::post('update/setings/{id}',[SettingsController::class,'update']);
     Route::get('destroy/setings/{id}',[SettingsController::class,'destroy']);
+
+    // playlist
+    Route::get('/playlist',[PlaylistController::class,'index']);
+    Route::get('/playlist/{id}',[PlaylistController::class,'index']);
+    Route::get('/playlist/cat/{id}',[PlaylistController::class,'show']);
+    Route::post('/create/playlist',[PlaylistController::class,'create']);
+
+    // category
+    Route::post('/create/category',[CategoryController::class,'store']);
 
 });
