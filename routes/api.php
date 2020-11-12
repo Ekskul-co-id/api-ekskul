@@ -61,8 +61,13 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/playlist/{id}',[PlaylistController::class,'index']);
     Route::get('/playlist/cat/{id}',[PlaylistController::class,'show']);
     Route::post('/create/playlist',[PlaylistController::class,'create']);
+    Route::post('/update/playlist/{id}',[PlaylistController::class,'update']);
+    Route::get('/destroy/playlist/{id}',[PlaylistController::class,'destroy']);
 
     // category
+    Route::get('/category',[CategoryController::class,'index']);
+    Route::get('/category/{id}',[CategoryController::class,'index']);
     Route::post('/create/category',[CategoryController::class,'store']);
-
+    Route::post('/update/category/{id}',[CategoryController::class,'update']);
+    Route::get('/destroy/category/{id}',[CategoryController::class,'destroy']);
 });

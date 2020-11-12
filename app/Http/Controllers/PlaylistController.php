@@ -102,4 +102,58 @@ class PlaylistController extends Controller
         ],201);
     }
 
+    public function update(Request $request,$id)
+    {
+        $palylist = Playlist::where('id_playlist','=',$id)->first();
+        if(!$palylist){
+            return response()->json([
+                'status' => false,
+                'message' => 'playlist not found!'
+            ],404);
+        }
+
+        $req = $request->all();
+
+        $fileName = time().'.'.$request->image->extension();
+        $path = 'playlist';
+        $request->image->move(public_path($path), $fileName);
+
+        $data = [
+            'id_category' => $req['id_category'],
+            'playlist_name' => $req['playlist_name'],
+            'image' => $path.'/'.$fileName,
+            'about_playlist' => $req['about_playlist'],
+            'harga' => $req['harga'],
+            'rating' => $req['rating'],
+            'silabus1' => $req['silabus1'],
+            'silabus2' => $req['silabus2'],
+            'silabus3' => $req['silabus3'],
+            'silabus4' => $req['silabus4'],
+        ];
+        Playlist::where('id_playlist','=',$id)->update($data);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'playlist updated!',
+            'data' => $data,
+        ],201);
+    }
+
+
+    public function destroy(Request $request,$id)
+    {
+        $data = Playlist::where('id_playlist','=',$id)->delete();
+        if(!$data){
+            return response()->json([
+                'status' => false,
+                'message' => 'playlist not be found !'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'playlist hass delete!'
+        ],200);
+    }
+
 }
