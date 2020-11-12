@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WebhooksController;
+use App\Http\Controllers\SettingsController;
+use Hamcrest\Core\Set;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,5 +47,12 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     // payment handling
     Route::get('/urlsnap',[OrderController::class,'createOrder']);
+
+    // settings
+    Route::get('/setings',[SettingsController::class,'index']);
+    Route::get('/setings/{id}',[SettingsController::class,'index']);
+    Route::post('upload/setings',[SettingsController::class,'store']);
+    Route::post('update/setings/{id}',[SettingsController::class,'update']);
+    Route::get('destroy/setings/{id}',[SettingsController::class,'destroy']);
 
 });
