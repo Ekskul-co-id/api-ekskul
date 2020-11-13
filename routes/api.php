@@ -9,6 +9,8 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\VideoController;
+use App\Models\Video;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +80,12 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/create/roles',[RoleController::class,'store']);
     Route::post('/update/roles/{id}',[RoleController::class,'update']);
     Route::get('/destroy/roles/{id}',[RoleController::class,'destroy']);
+
+    // Video Managemnt
+    Route::get('/videos',[VideoController::class,'index']);
+    Route::get('/videos/{id}',[VideoController::class,'index']);
+    Route::post('/create/videos',[VideoController::class,'store']);
+    Route::post('/update/videos/{id}',[VideoController::class,'update']);
+    Route::get('/destroy/videos/{id}',[VideoController::class,'destroy']);
+
 });
