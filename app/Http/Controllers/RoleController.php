@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -11,9 +12,29 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id = null)
     {
-        //
+        if($id){
+            $role = Role::where('id_role','=',$id)->first();
+            if(!$role){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Roles not be found !'
+                ],404);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Roles found !',
+                'data' => $role,
+            ],200);
+        }
+
+        $role = Role::get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Roles found !',
+            'data' => $role,
+        ],200);
     }
 
     /**
@@ -21,7 +42,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
     }
@@ -34,7 +55,18 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'role_name' => 'required',
+        ]);
+
+        Role::insert(['role_name' => $request->role_name]);
+        return response([
+            'status' => true,
+            'message' => 'role hass created!',
+            'data' => [
+                'role_name' => $request->role_name
+                ]
+        ],201);
     }
 
     /**
@@ -68,7 +100,21 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $check = Role::Where('id_role','=',$id)->first();
+        if(!$check){
+            return response()->josn([
+                'status' => false,
+                'message' => 'Roles Not be found!'
+            ],404);
+        }
+        Role::Where('id_role','=',$id)->update(['role_name' => $request->role_name]);
+        return response([
+            'status' => true,
+            'message' => 'role hass updated!',
+            'data' => [
+                'role_name' => $request->role_name
+                ]
+        ],201);
     }
 
     /**
@@ -79,6 +125,17 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $destroy = Role::where('id_role','=',$id)->delete();
+        if(!$destroy){
+            return response()->json([
+                'status' => false,
+                'message' => 'Roles not found !'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Roles sucessfuly deleted!'
+        ],201);
     }
 }

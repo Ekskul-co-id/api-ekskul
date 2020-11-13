@@ -8,6 +8,7 @@ use App\Http\Controllers\WebhooksController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +71,11 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/create/category',[CategoryController::class,'store']);
     Route::post('/update/category/{id}',[CategoryController::class,'update']);
     Route::get('/destroy/category/{id}',[CategoryController::class,'destroy']);
+
+    // roles
+    Route::get('/roles',[RoleController::class,'index']);
+    Route::get('/roles/{id}',[RoleController::class,'index']);
+    Route::post('/create/roles',[RoleController::class,'store']);
+    Route::post('/update/roles/{id}',[RoleController::class,'update']);
+    Route::get('/destroy/roles/{id}',[RoleController::class,'destroy']);
 });
