@@ -16,7 +16,7 @@ class Checkout extends Model
         'id_playlist',
         'qty',
         'snap_url',
-        'meta_data',
+        'metadata',
         'status'
     ];
 

@@ -30,7 +30,8 @@ class UsersController extends Controller
             'addres' => $req['addres'],
         ];
         $details = $req['email'];
-        Mail::to($req['email'])->send(new EkskulIdMail($details));
+        $name = $req['username'];
+        Mail::to($req['email'])->send(new EkskulIdMail($details,$name));
         $save = User::create($data);
         if(!$save){
             return response()->json([
@@ -87,10 +88,7 @@ class UsersController extends Controller
             ],400);
         }
         User::where('email','=',base64_decode($id))->update(['email_verified_at' => date('d-m-Y H:m:s')]);
-        return response()->json([
-            'status' => true,
-            'message' => 'veryfy Succesfuly! thanks for your register please login'
-        ],200);
+        return view('mail/thanks');
     }
 
 

@@ -50,7 +50,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/destroy/{id}',[UsersController::class,'destroy']);
 
     // payment handling
-    Route::get('/urlsnap',[OrderController::class,'createOrder']);
+    Route::post('/create/order',[OrderController::class,'createOrder']);
+    Route::get('/orders',[OrderController::class,'index']);
+    Route::get('/orders/{id}',[OrderController::class,'index']);
 
     // settings
     Route::get('/setings',[SettingsController::class,'index']);

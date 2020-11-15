@@ -6,6 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <!-- Turn off iOS phone number autodetect -->
   <meta name="format-detection" content="telephone=no">
+  <title>Verifvication Ekkskul.co.id</title>
   <style>
     body, p {
           font-family: 'Helvetica Neue', Helvetica,Arial, sans-serif;
@@ -248,8 +249,8 @@
         <table class="content" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#F7F7F7" style="width: 600px; max-width: 600px;">
           <tr>
             <td width="33%" valign="middle" style="text-align:left; padding:20px 0 10px 0;">
-              <a href="https://www.eventbrite.com/home/?utm_source=eb_email&amp;utm_medium=email&utm_campaign=email_verification_email&utm_term=eb_logo">
-                <img src="https://cdn.evbstatic.com/s3-s3/marketing/emails/images/logos/eb-wordmarkx2.png" width="136" height="22" border="0" alt="Eventbrite" style="width:136px; height:22px;" />
+              <a href="">
+                <img src="https://raw.githubusercontent.com/Anggasayogo/Rest-Api-Ekskul.co.id/master/public/logoe.png" width="136" height="22" border="0" alt="Ekskul.co.id" style="width:136px; height:50px;" />
               </a>
             </td>
             <td width="66%" valign="middle" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: right; padding-top: 12px; vertical-align: middle;"></td>
@@ -284,7 +285,7 @@
     
 </h2>
 
-                        <p style="color: #666666; font-weight: 400; font-size: 15px; line-height: 21px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " class="">Please click on the button to complete the verification process for xxxxxx@xxxx.xxx:</p>
+                        <p style="color: #666666; font-weight: 400; font-size: 15px; line-height: 21px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " class="">Please click on the button to complete the verification process for {{ base64_decode($id) }}:</p>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 12px; margin-bottom: 12px; margin: 24px 0">
                           <tr>
                             <td>
@@ -303,8 +304,8 @@
                             </td>
                           </tr>
                         </table>
-                        <p style="color: #666666; font-weight: 400; font-size: 15px; line-height: 21px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " class="">If you didn&#39;t attempt to verify your email address with Eventbrite, please delete this email.</p>
-                        <p style="color: #666666; font-weight: 400; font-size: 17px; line-height: 24px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; margin-bottom: 6px; margin-top: 24px;" class="">Regard,</p>
+                        <p style="color: #666666; font-weight: 400; font-size: 15px; line-height: 21px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " class="">If you do not try to verify your email address with an Extracurricular ID, we will delete this email within 1 month.</p>
+                        <p style="color: #666666; font-weight: 400; font-size: 17px; line-height: 24px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; margin-bottom: 6px; margin-top: 24px;" class="">Regards,</p>
                         <a href="#">
                             <p>Admin Ekskul.co.id</p>
                         </a>
@@ -343,58 +344,58 @@
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.https://www.eventbrite.com//about/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_about&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="#"
                         class="">About</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.https://www.eventbrite.com//support/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_help&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="#"
                         class="">Help</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.https://www.eventbrite.com//login/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_myaccount&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href=""
                         class="">My Account</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.https://www.eventbrite.com//contact-us/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_contactus&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href=""
                         class="">Contact Us</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.https://www.eventbrite.com//privacypolicy/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_privacy_policy&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href=""
                         class="">Privacy</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.https://www.eventbrite.com//tos/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_tos&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href=""
                         class="">Terms</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; padding: 9px 15px 9px 10px; line-height: 11px; background: url(&#39;https://cdn.evbstatic.com/s3-s3/marketing/emails/email-footer-navigation-divider.png&#39;) no-repeat right center;' align='center'
                     valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="https://www.eventbrite.com/blog/?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=&amp;utm_term=footer_blog&amp;utm_content=&amp;ref=eemail"
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-size: 11px; color: #666666; text-transform: uppercase;" href="hi"
                         class="">Blog</a>
                     </table>
                   </td>
                   <td width='auto' height='' style='display: inline-block; line-height: 11px; padding-left: 10px;' align='center' valign='middle' class='col-nav-items' colspan='1'>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;" href="https://www.facebook.com/eventbrite" class="">
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;" href="" class="">
                         <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/facebook.png' title='Facebook' alt='Facebook' style='' border="0" width='22' height='22' class="" />
                       </a>
-                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;" href="https://twitter.com/eventbrite" class="">
+                      <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; display: inline-block; height: 22px; vertical-align: middle; margin-left: 5px;" href="" class="">
                         <img src='https://cdn.evbstatic.com/s3-s3/marketing/emails/images/icons/twitter.png' title='Twitter' alt='Twitter' style='' border="0" width='22' height='22' class="" />
                       </a>
                     </table>
@@ -418,13 +419,13 @@
                 <span style='' class=''>
                 This email was sent to 
 
-    <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " href="mailto:" class="">xxxxxxx@xxxxx.xxx</a>
+    <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " href="mailto:" class="">{{base64_decode($id)}}</a>
             </span>
 
               </div>
               <div style="color: #666666; font-weight: 400; font-size: 13px; line-height: 18px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-weight: 300; padding-bottom: 6px;" class="">
-                <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " href="https://www.eventbrite.com/" class="">Eventbrite</a> | 155 5th St | San Francisco, CA 94103</div>
-              <div style="color: #666666; font-weight: 400; font-size: 13px; line-height: 18px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-weight: 300; " class="">Copyright &copy; 2016 Eventbrite. All rights reserved.</div>
+                <a style="text-decoration: none; color: #0f90ba; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; " href="https://www.ekskul.co.id/" class="">Ekskul.co.id</a> | Tangerang postcode 15720</div>
+              <div style="color: #666666; font-weight: 400; font-size: 13px; line-height: 18px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-weight: 300; " class="">Copyright &copy; 2016 Ekskul ID. All rights reserved.</div>
             </td>
           </tr>
         </table>

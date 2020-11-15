@@ -17,9 +17,10 @@ class EkskulIdMail extends Mailable
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct($details,$name)
     {
         $this->details = $details;
+        $this->name = $name;
     }
 
     /**
@@ -29,11 +30,11 @@ class EkskulIdMail extends Mailable
      */
     public function build()
     {
-        return $this->from('admin@ekskul.co.id')
+        return $this->from('noreply@ekskul.co.id')
                    ->view('mail/template')
                    ->with(
                     [
-                        'nama' => 'Admin Eksuk.co.id',
+                        'nama' => $this->name,
                         'website' => 'www.ekskul.co.id',
                         'id' => base64_encode($this->details),
                         'url' => env('APP_URL'),
