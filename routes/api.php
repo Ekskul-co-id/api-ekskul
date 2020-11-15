@@ -10,7 +10,7 @@ use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VideoController;
-use App\Models\Video;
+use App\Http\Controllers\LivestreamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,5 +89,12 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/create/videos',[VideoController::class,'store']);
     Route::post('/update/videos/{id}',[VideoController::class,'update']);
     Route::get('/destroy/videos/{id}',[VideoController::class,'destroy']);
+
+    // livestream 
+    Route::get('livestream',[LivestreamController::class,'show']);
+    Route::get('livestream/{id}',[LivestreamController::class,'show']);
+    Route::post('create/livestream',[LivestreamController::class,'store']);
+    Route::post('update/livestream/{id}',[LivestreamController::class,'update']);
+    Route::get('destroy/livestream/{id}',[LivestreamController::class,'destroy']);
 
 });
