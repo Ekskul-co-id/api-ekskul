@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\LivestreamController;
+use App\Http\Controllers\ComentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,5 +97,13 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('create/livestream',[LivestreamController::class,'store']);
     Route::post('update/livestream/{id}',[LivestreamController::class,'update']);
     Route::get('destroy/livestream/{id}',[LivestreamController::class,'destroy']);
+
+    // coment livestream
+    Route::get('/coment',[ComentController::class,'show']);
+    Route::get('/coment/{id}',[ComentController::class,'show']);
+    Route::post('create/coment',[ComentController::class,'store']);
+    Route::post('update/coment/{id}',[ComentController::class,'update']);
+    Route::get('destroy/coment/{id}',[ComentController::class,'destroy']);
+
 
 });
