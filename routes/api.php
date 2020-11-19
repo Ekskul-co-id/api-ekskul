@@ -69,6 +69,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/create/playlist',[PlaylistController::class,'create']);
     Route::post('/update/playlist/{id}',[PlaylistController::class,'update']);
     Route::get('/destroy/playlist/{id}',[PlaylistController::class,'destroy']);
+    Route::post('/search/playlist',[PlaylistController::class,'search']);
 
     // category
     Route::get('/category',[CategoryController::class,'index']);

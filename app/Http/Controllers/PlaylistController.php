@@ -156,4 +156,23 @@ class PlaylistController extends Controller
         ],200);
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $search = Playlist::where('playlist_name','like','%'.$keyword.'%')->get();
+        if(!$search){
+            return response()->json([
+                'status' => false,
+                'message' => 'course not be found',
+            ],404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'course be found',
+            'data' => $search,
+        ],200);
+
+    }
+
 }

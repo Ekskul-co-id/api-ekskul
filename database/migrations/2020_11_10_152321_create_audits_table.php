@@ -16,8 +16,6 @@ class CreateAuditsTable extends Migration
         Schema::create('audits', function (Blueprint $table) {
             $table->increments('id_audit');
             $table->integer('id_user');
-            $table->string('login_date');
-            $table->string('logout_date');
             $table->text('description');
             $table->timestamps();
         });
