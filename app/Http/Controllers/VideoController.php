@@ -15,31 +15,30 @@ class VideoController extends Controller
      */
     public function index($id = null)
     {
-        if($id){
+        if ($id) {
             $vid = DB::table('videos')
-                        ->join('playlists','videos.id_playlist','=','playlists.id_playlist')
-                        ->where('id_video','=',$id)
-                        ->first();
-            if(!$vid){
+                ->join('playlists', 'videos.id_playlist', '=', 'playlists.id_playlist')
+                ->where('id_video', '=', $id)
+                ->first();
+            if (!$vid) {
                 return response()->json([
                     'status' => false,
                     'message' => 'videos not be found !'
-                ],404);
+                ], 404);
             }
 
             return response()->json([
                 'status' => true,
                 'message' => 'details video has geted !',
                 'data' => $vid,
-            ],200);
-
+            ], 200);
         }
-        $vid = DB::table('videos')->join('playlists','videos.id_playlist','=','playlists.id_playlist')->get();
+        $vid = DB::table('videos')->join('playlists', 'videos.id_playlist', '=', 'playlists.id_playlist')->paginate(5);
         return response()->json([
             'status' => true,
             'message' => 'data has geted !',
             'data' => $vid,
-        ],200);
+        ], 200);
     }
 
     /**
@@ -78,7 +77,7 @@ class VideoController extends Controller
             'status' => true,
             'message' => 'video succesfuly inserted !',
             'data' => $data,
-        ],201);
+        ], 201);
     }
 
     /**
@@ -112,12 +111,12 @@ class VideoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $chcek = Video::Where('id_video','=',$id)->first();
-        if(!$chcek){
+        $chcek = Video::Where('id_video', '=', $id)->first();
+        if (!$chcek) {
             return response()->json([
                 'status' => false,
                 'message' => 'video not be found !',
-            ],404);
+            ], 404);
         }
         $req = $request->all();
         $data = [
@@ -126,12 +125,12 @@ class VideoController extends Controller
             'title' => $req['title'],
             'description' => $req['description']
         ];
-        Video::Where('id_video','=',$id)->update($data);
+        Video::Where('id_video', '=', $id)->update($data);
         return response()->json([
             'status' => true,
             'message' => 'video succesfuly update!',
             'data' => $data,
-        ],201);
+        ], 201);
     }
 
     /**
@@ -142,17 +141,17 @@ class VideoController extends Controller
      */
     public function destroy($id)
     {
-        $video = Video::where('id_video','=',$id)->delete();
-        if(!$video){
+        $video = Video::where('id_video', '=', $id)->delete();
+        if (!$video) {
             return response()->json([
                 'status' => false,
                 'message' => 'video not found !'
-            ],404);
+            ], 404);
         }
 
         return response()->json([
             'status' => true,
             'message' => 'Video sucessfuly deleted!'
-        ],201);
+        ], 201);
     }
 }

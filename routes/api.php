@@ -63,7 +63,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('destroy/setings/{id}',[SettingsController::class,'destroy']);
 
     // playlist
-    Route::get('/playlist',[PlaylistController::class,'index']);
+    Route::get('/playlists/{id}',[PlaylistController::class,'showDetails']);
     Route::get('/playlist/{id}',[PlaylistController::class,'index']);
     Route::get('/playlist/cat/{id}',[PlaylistController::class,'show']);
     Route::post('/create/playlist',[PlaylistController::class,'create']);

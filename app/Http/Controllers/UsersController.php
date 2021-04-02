@@ -16,8 +16,6 @@ class UsersController extends Controller
             'username' => "required",
             'email' => 'required|email|unique:users',
             'password' => 'min:6|required',
-            'id_role' => 'required',
-            'addres' => 'required'
         ]);
 
         $req = $request->all();
@@ -26,25 +24,24 @@ class UsersController extends Controller
             'name' => $req['username'],
             'email' => $req['email'],
             'password' => bcrypt($req['password']),
-            'id_role' => $req['id_role'],
-            'addres' => $req['addres'],
+            'id_role' => !$req['id_role'] ? 2 : $req['id_role'],
+            'addres' => 'addres after update',
         ];
         $details = $req['email'];
         $name = $req['username'];
-        Mail::to($req['email'])->send(new EkskulIdMail($details,$name));
+        Mail::to($req['email'])->send(new EkskulIdMail($details, $name));
         $save = User::create($data);
-        if(!$save){
+        if (!$save) {
             return response()->json([
                 'status' => false,
                 'message' => 'errr save your data !',
-            ],500);
+            ], 500);
         }
         return response()->json([
             'status' => 'true',
             'message' => 'please verifictaion your email !',
             'data' => $data,
-        ],201);
-
+        ], 201);
     }
 
 
@@ -58,8 +55,8 @@ class UsersController extends Controller
         $email = $request->email;
         $password = $request->password;
 
-        $user = User::where('email','=',$email)->first();
-        if (! $user || ! Hash::check($password, $user->password) || ! $user->email_verified_at) {
+        $user = User::where('email', '=', $email)->first();
+        if (!$user || !Hash::check($password, $user->password) || !$user->email_verified_at) {
             return response()->json([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -69,32 +66,33 @@ class UsersController extends Controller
             'status' => true,
             'message' => 'Login Succesfuly !',
             'data' => [
+                'id_user' => "$user->id",
                 'name' => $user->name,
                 'email' => $user->email,
                 'verify_at' => $user->email_verified_at
             ],
             'api_token' => $token,
-        ],201);
+        ], 201);
     }
 
 
-    public function verify(Request $request,$id)
+    public function verify(Request $request, $id)
     {
-        $find = User::where('email','=',base64_decode($id))->first();
-        if(!$find){
+        $find = User::where('email', '=', base64_decode($id))->first();
+        if (!$find) {
             return response()->json([
                 'status' => false,
                 'message' => 'errr verify your data !',
-            ],400);
+            ], 400);
         }
-        User::where('email','=',base64_decode($id))->update(['email_verified_at' => date('d-m-Y H:m:s')]);
+        User::where('email', '=', base64_decode($id))->update(['email_verified_at' => date('d-m-Y H:m:s')]);
         return view('mail/thanks');
     }
 
 
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $req = $request->all(); 
+        $req = $request->all();
         $data = [
             'name' => $req['username'],
             'email' => $req['email'],
@@ -103,46 +101,44 @@ class UsersController extends Controller
             'addres' => $req['addres'],
         ];
 
-        $update = User::where('id','=',$id)->update($data);
-        if(!$update){
+        $update = User::where('id', '=', $id)->update($data);
+        if (!$update) {
             return response()->json([
                 'status' => false,
                 'message' => 'errr updated your data !',
-            ],400);
+            ], 400);
         }
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Update Data Succesfuly',
             'data' => $data,
-        ],200);
-
+        ], 200);
     }
 
     public function show($id = null)
     {
-        if($id){
-            $user = User::where('id','=',$id)->first();
-            if(!$user){
+        if ($id) {
+            $user = User::where('id', '=', $id)->first();
+            if (!$user) {
                 return response()->json([
                     'status' => false,
                     'message' => 'users not found !'
-                ],404);
+                ], 404);
             }
 
             return response()->json([
                 'status' => true,
                 'message' => 'Details user has geted !',
                 'data' => $user,
-            ],200);
-
+            ], 200);
         }
         $user = User::get();
         return response()->json([
             'status' => true,
             'message' => 'user has geted !',
             'data' => $user,
-        ],200);
+        ], 200);
     }
 
     public function logout(Request $request)
@@ -153,27 +149,23 @@ class UsersController extends Controller
         return response()->json([
             'uuid' => $user->currentAccessToken()->id,
             'logout' => true
-        ],200);
+        ], 200);
     }
 
 
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
-        $user = User::where('id','=',$id)->delete();
-        if(!$user){
+        $user = User::where('id', '=', $id)->delete();
+        if (!$user) {
             return response()->json([
                 'status' => false,
                 'message' => 'users not found !'
-            ],404);
+            ], 404);
         }
 
         return response()->json([
             'status' => true,
             'message' => 'users sucessfuly deleted!'
-        ],201);
-
+        ], 201);
     }
-
-
-
 }

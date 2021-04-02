@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Checkout;
 use Illuminate\Http\Request;
 use App\Models\Playlist;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +10,29 @@ use Illuminate\Support\Facades\DB;
 class PlaylistController extends Controller
 {
     public function index(Request $request,$id = null)
+    {
+
+        $order = Checkout::where([['status','=','success'],['id_user','=',$id]])->get();
+        $a = [];
+        foreach($order as $row){
+            array_push($a,$row->id_playlist);
+        }
+
+        $data = DB::table('playlists')
+                    ->join('categories','playlists.id_category','=','categories.id_category')
+                    ->whereNotIn('id_playlist',$a)
+                    ->get();
+                    
+        return response()->json([
+            'status' => true,
+            'message' => 'playlist found!',
+            'data' => $data,
+        ],200);
+
+    }
+    
+    
+    public function showDetails($id = null)
     {
         if($id){
             $data = DB::table('playlists')
@@ -27,15 +51,6 @@ class PlaylistController extends Controller
                 'data' => $data,
             ],200);
         }
-
-        $data = DB::table('playlists')
-                    ->join('categories','playlists.id_category','=','categories.id_category')
-                    ->get();
-        return response()->json([
-            'status' => true,
-            'message' => 'playlist found!',
-            'data' => $data,
-        ],200);
 
     }
 

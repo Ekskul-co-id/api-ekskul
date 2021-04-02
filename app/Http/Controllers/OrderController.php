@@ -24,6 +24,30 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
         $req = $request->all();
+        $cek = DB::table('checkouts')
+                        ->where([
+                            ['id_user','=',$req['id_user']],
+                            ['id_playlist','=',$req['id_playlist']],
+                            ['status','=','pending'],
+                        ])
+                        ->where('created_at','like','%'.date('Y-m-d').'%')
+                        ->first();
+        if($cek){
+            $detailsdata = DB::table('checkouts')
+                        ->join('users','checkouts.id_user','=','users.id')
+                        ->join('playlists','checkouts.id_playlist','=','playlists.id_playlist')
+                        ->join('categories','playlists.id_category','=','categories.id_category')
+                        ->where('id_checkout','=',$cek->id_checkout)
+                        ->first();
+            return response()->json([
+                'status' => true,
+                'message' => 'order Created',
+                'data' => $detailsdata,
+                'snap_url' => $cek->snap_url,
+            ],201);
+        }
+
+
         $order = Checkout::create([
             'id_user' => $req['id_user'],
             'id_playlist' => $req['id_playlist'],
@@ -86,7 +110,7 @@ class OrderController extends Controller
                         ->join('users','checkouts.id_user','=','users.id')
                         ->join('playlists','checkouts.id_playlist','=','playlists.id_playlist')
                         ->join('categories','playlists.id_category','=','categories.id_category')
-                        ->where('id_checkout','=',$id)
+                        ->where([['id_checkout','=',$id],['status' ,'=','success']])
                         ->first();
             if(!$detailsdata){
                 return response()->json([
@@ -106,6 +130,7 @@ class OrderController extends Controller
                         ->join('users','checkouts.id_user','=','users.id')
                         ->join('playlists','checkouts.id_playlist','=','playlists.id_playlist')
                         ->join('categories','playlists.id_category','=','categories.id_category')
+                        ->where('status' ,'=','success')
                         ->get();
         return response()->json([
             'status' => true,
