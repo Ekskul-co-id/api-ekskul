@@ -13,5 +13,3 @@ jobs:
         server: ${{ secrets.server }}
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
-    - name: Refresh Database 
-      run: php artisan migrate:fresh --seed --force

@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '29398d369ac824814190c67da915ac8d2f69130d',
+    'reference' => '294c54d732729d3be1bf9cb246ef4a42df0d24a5',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -469,7 +469,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '29398d369ac824814190c67da915ac8d2f69130d',
+      'reference' => '294c54d732729d3be1bf9cb246ef4a42df0d24a5',
     ),
     'laravel/sanctum' => 
     array (
@@ -1536,7 +1536,6 @@ self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegist
 $installed = array();
 
 if (self::$canGetVendors) {
-
 foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
 if (isset(self::$installedByVendor[$vendorDir])) {
 $installed[] = self::$installedByVendor[$vendorDir];
