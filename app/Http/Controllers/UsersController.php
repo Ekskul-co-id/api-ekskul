@@ -10,70 +10,7 @@ use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
-    public function register(Request $request)
-    {
-        $request->validate([
-            'username' => "required",
-            'email' => 'required|email|unique:users',
-            'password' => 'min:6|required',
-        ]);
-
-        $req = $request->all();
-
-        $data = [
-            'name' => $req['username'],
-            'email' => $req['email'],
-            'password' => bcrypt($req['password']),
-            'id_role' => !$req['id_role'] ? 2 : $req['id_role'],
-            'addres' => 'addres after update',
-        ];
-        $details = $req['email'];
-        $name = $req['username'];
-        Mail::to($req['email'])->send(new EkskulIdMail($details, $name));
-        $save = User::create($data);
-        if (!$save) {
-            return response()->json([
-                'status' => false,
-                'message' => 'errr save your data !',
-            ], 500);
-        }
-        return response()->json([
-            'status' => 'true',
-            'message' => 'please verifictaion your email !',
-            'data' => $data,
-        ], 201);
-    }
-
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $email = $request->email;
-        $password = $request->password;
-
-        $user = User::where('email', '=', $email)->first();
-        if (!$user || !Hash::check($password, $user->password) || !$user->email_verified_at) {
-            return response()->json([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-        }
-        $token = $user->createToken($email)->plainTextToken;
-        return response()->json([
-            'status' => true,
-            'message' => 'Login Succesfuly !',
-            'data' => [
-                'id_user' => "$user->id",
-                'name' => $user->name,
-                'email' => $user->email,
-                'verify_at' => $user->email_verified_at
-            ],
-            'api_token' => $token,
-        ], 201);
-    }
+    
 
 
     public function verify(Request $request, $id)

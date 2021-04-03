@@ -12,6 +12,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\ComentController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +35,10 @@ Route::get('/', function () {
     ],200);
 });
 
-Route::post('/login',[UsersController::class,'login'])->name('login');
-Route::post('/register',[UsersController::class,'register'])->name('register');
-Route::get('/verify/{id}',[UsersController::class,'verify'])->name('verify');
+Route::post('/login',[AuthController::class,'login'])->name('login');
+Route::post('/register',[AuthController::class,'register'])->name('register');
+Route::post('/logout',[AuthController::class,'logout']);
+Route::get('/verify/{id}',[AuthController::class,'verify'])->name('verify');
 
 // payment handling
 Route::post('/webhooks',[WebhooksController::class,'midtransHandler']);
@@ -46,7 +48,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     // user handling
     Route::get('/user',[UsersController::class,'show']);
     Route::get('/user/{id}',[UsersController::class,'show']);
-    Route::get('/logout',[UsersController::class,'logout']);
     Route::post('/edit/{id}',[UsersController::class,'update']);
     Route::get('/destroy/{id}',[UsersController::class,'destroy']);
 
