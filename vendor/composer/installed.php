@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '96bc9680c23f7cb25f0c6924097a15505fcacdef',
+    'reference' => '3adc2eda0d80c6ebbc4f3ee4a124e80559b46ce7',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -445,7 +445,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '96bc9680c23f7cb25f0c6924097a15505fcacdef',
+      'reference' => '3adc2eda0d80c6ebbc4f3ee4a124e80559b46ce7',
     ),
     'laravel/sanctum' => 
     array (
@@ -769,8 +769,8 @@
     array (
       'provided' => 
       array (
-        0 => '1.0',
-        1 => '1.0.0',
+        0 => '1.0.0',
+        1 => '1.0',
       ),
     ),
     'psr/simple-cache' => 
@@ -968,6 +968,15 @@
       array (
       ),
       'reference' => 'c6c1022351a901512170118436c764e473f6de8c',
+    ),
+    'spatie/laravel-permission' => 
+    array (
+      'pretty_version' => '4.0.1',
+      'version' => '4.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '29c05324c170c0be108ccb86dd29f6a719c0a617',
     ),
     'swiftmailer/swiftmailer' => 
     array (
