@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\ComentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,12 +40,17 @@ Route::get('/', function () {
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);
-Route::get('/verify/{id}',[AuthController::class,'verify'])->name('verify');
+Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class,'verify'])->middleware(['auth:sanctum'])->name('verification.verify');
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice'); // untuk redirect ke halaman verifikasi, di dokumentasi laravel ini important, tapi gw kga tau klo di api cara atur nya kaya gimana
+Route::post('/email/verify/verification-notification',[VerifyEmailController::class,'resend'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
+
 
 // payment handling
 Route::post('/webhooks',[WebhooksController::class,'midtransHandler']);
 
-Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+Route::prefix('v1')->middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // user handling
     Route::get('/user',[UsersController::class,'show']);
@@ -81,7 +88,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     // roles
     Route::get('/roles',[RoleController::class,'index']);
-    Route::get('/roles/{id}',[RoleController::class,'index']);
+    Route::get('/roles/{id}',[RoleController::class,'show']);
     Route::post('/create/roles',[RoleController::class,'store']);
     Route::post('/update/roles/{id}',[RoleController::class,'update']);
     Route::get('/destroy/roles/{id}',[RoleController::class,'destroy']);

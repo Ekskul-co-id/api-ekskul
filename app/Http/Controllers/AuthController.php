@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +31,7 @@ class AuthController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
-        try {
+        
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -38,13 +39,15 @@ class AuthController extends Controller
             ]);
             
             $user->syncRoles('user');
+            
+            event(new Registered($user));
+            
+            // $user->sendEmailVerificationNotification();
         
             // Mail::to($user->email)->send(new EkskulIdMail($user->email, $user->username));
 
             return $this->response("Successfully registered.", $user, 201);
-        } catch (\Exception $e) {
-            return $this->response("Registration failed.", $e, 409);
-        }
+        
     }
     
     public function login(Request $request)

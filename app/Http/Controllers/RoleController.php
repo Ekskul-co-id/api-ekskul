@@ -2,39 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use App\Models\Role;
+use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    use APIResponse;
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id = null)
+    public function index()
     {
-        if($id){
-            $role = Role::where('id_role','=',$id)->first();
-            if(!$role){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Roles not be found !'
-                ],404);
-            }
-            return response()->json([
-                'status' => true,
-                'message' => 'Roles found !',
-                'data' => $role,
-            ],200);
-        }
+        $roles = Role::all();
 
-        $role = Role::get();
-        return response()->json([
-            'status' => true,
-            'message' => 'Roles found !',
-            'data' => $role,
-        ],200);
+        return $this->response("Success get roles.", $roles, 200);
     }
 
     /**
@@ -55,18 +41,23 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'role_name' => 'required',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:4|max:50',
         ]);
 
-        Role::insert(['role_name' => $request->role_name]);
-        return response([
-            'status' => true,
-            'message' => 'role hass created!',
-            'data' => [
-                'role_name' => $request->role_name
-                ]
-        ],201);
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+
+        try {
+            $role = Role::create([
+                'name' => $request->name,
+            ]);
+            
+            return $this->response("Successfully create role.", $request->all(), 201);
+        } catch (\Exception $e) {
+            return $this->response("Failed to create role.", $e, 409);
+        }
     }
 
     /**
@@ -77,7 +68,9 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $role = Role::findOrFail($id);
+
+        return $this->response('Success get role', $role, 200);
     }
 
     /**
@@ -100,21 +93,25 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $check = Role::Where('id_role','=',$id)->first();
-        if(!$check){
-            return response()->josn([
-                'status' => false,
-                'message' => 'Roles Not be found!'
-            ],404);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:4|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
         }
-        Role::Where('id_role','=',$id)->update(['role_name' => $request->role_name]);
-        return response([
-            'status' => true,
-            'message' => 'role hass updated!',
-            'data' => [
-                'role_name' => $request->role_name
-                ]
-        ],201);
+
+        try {
+            $role = Role::findOrFail($id);
+
+            $role->update([
+                'name' => $request->name,
+            ]);
+
+            return $this->response("Successfully update role.", $request->all(), 201);
+        } catch (\Exception $e) {
+            return $this->response("Failed to update role.", $e, 409);
+        }
     }
 
     /**
@@ -125,17 +122,14 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $destroy = Role::where('id_role','=',$id)->delete();
-        if(!$destroy){
-            return response()->json([
-                'status' => false,
-                'message' => 'Roles not found !'
-            ],404);
-        }
+        try {
+            $role = Role::findOrFail($id);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Roles sucessfuly deleted!'
-        ],201);
+            $role->delete();
+
+            return $this->response("Successfully delete role.", null, 201);
+        } catch (\Exception $e) {
+            return $this->response("Failed to delete role.", $e, 409);
+        }
     }
 }

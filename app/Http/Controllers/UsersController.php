@@ -10,23 +10,6 @@ use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
-    
-
-
-    public function verify(Request $request, $id)
-    {
-        $find = User::where('email', '=', base64_decode($id))->first();
-        if (!$find) {
-            return response()->json([
-                'status' => false,
-                'message' => 'errr verify your data !',
-            ], 400);
-        }
-        User::where('email', '=', base64_decode($id))->update(['email_verified_at' => date('d-m-Y H:m:s')]);
-        return view('mail/thanks');
-    }
-
-
     public function update(Request $request, $id)
     {
         $req = $request->all();
@@ -77,18 +60,6 @@ class UsersController extends Controller
             'data' => $user,
         ], 200);
     }
-
-    public function logout(Request $request)
-    {
-        $user = request()->user(); //or Auth::user()
-        // Revoke current user token
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
-        return response()->json([
-            'uuid' => $user->currentAccessToken()->id,
-            'logout' => true
-        ], 200);
-    }
-
 
     public function destroy(Request $request, $id)
     {
