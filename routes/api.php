@@ -40,11 +40,8 @@ Route::get('/', function () {
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);
-Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class,'verify'])->middleware(['auth:sanctum'])->name('verification.verify');
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice'); // untuk redirect ke halaman verifikasi, di dokumentasi laravel ini important, tapi gw kga tau klo di api cara atur nya kaya gimana
-Route::post('/email/verify/verification-notification',[VerifyEmailController::class,'resend'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
+Route::post('/verify', [VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
+Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
 
 
 // payment handling

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerificationMail;
 use App\Models\User;
+use App\Models\Verification;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -31,7 +33,7 @@ class AuthController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
-        
+        try {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -40,14 +42,21 @@ class AuthController extends Controller
             
             $user->syncRoles('user');
             
-            event(new Registered($user));
+            $code = rand(11111, 99999);
             
-            // $user->sendEmailVerificationNotification();
+            $verify = Verification::create([
+                'code' => $code,
+                'user_id' => $user->id
+            ]);
         
-            // Mail::to($user->email)->send(new EkskulIdMail($user->email, $user->username));
+            Mail::to($user->email)->send(new VerificationMail($user, $code));
+            
+            $token = $user->createToken($user->email)->plainTextToken;
 
-            return $this->response("Successfully registered.", $user, 201);
-        
+            return $this->response("Successfully registered.", ['user' => $user, 'token' => $token], 201);
+        } catch (\Exception $e) {
+            return $this->response("Registration failed.", $e, 409);
+        }
     }
     
     public function login(Request $request)
