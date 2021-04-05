@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WebhooksController;
 use App\Http\Controllers\SettingsController;
@@ -50,10 +50,10 @@ Route::post('/webhooks',[WebhooksController::class,'midtransHandler']);
 Route::prefix('v1')->middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // user handling
-    Route::get('/user',[UsersController::class,'show']);
-    Route::get('/user/{id}',[UsersController::class,'show']);
-    Route::post('/edit/{id}',[UsersController::class,'update']);
-    Route::get('/destroy/{id}',[UsersController::class,'destroy']);
+    Route::get('/user',[UserController::class,'index']);
+    Route::get('/user/{id}',[UserController::class,'show']);
+    Route::post('/edit/{id}',[UserController::class,'update']);
+    Route::get('/destroy/{id}',[UserController::class,'destroy']);
 
     // payment handling
     Route::post('/create/order',[OrderController::class,'createOrder']);
