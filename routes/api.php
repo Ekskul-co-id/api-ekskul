@@ -15,6 +15,7 @@ use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\ComentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerifyEmailController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,16 @@ Route::get('/', function () {
     return response()->json([
         "works" => "it workss"
     ],200);
+});
+
+Route::get('fresh-db', function () {
+    Artisan::call('migrate:fresh --seed --force');
+
+    return response()->json([
+        "status" => "success",
+        "message" => "Success fresh database.",
+        "data" => null
+    ], 200);
 });
 
 Route::post('/login',[AuthController::class,'login'])->name('login');
