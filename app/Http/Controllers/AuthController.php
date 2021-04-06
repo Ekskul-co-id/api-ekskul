@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+
 class AuthController extends Controller
 {
     use APIResponse;
@@ -20,6 +21,34 @@ class AuthController extends Controller
     {
         $this->middleware('auth:sanctum', ['except' => ['login', 'register']]);
     }
+    
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Register",
+     *     description="Register with name, email, password",
+     *     operationId="authRegister",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Pass register credentials",
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password"},
+     *             @OA\Property(property="name", type="string", format="text", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="EkSkuLPassword"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="EkSkuLPassword"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Wrong credentials response",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *         )
+     *     )
+     * )
+     */
     
     public function register(Request $request)
     {
@@ -59,6 +88,32 @@ class AuthController extends Controller
         }
     }
     
+   /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="Login",
+     *     description="Login with email, password",
+     *     operationId="authLogin",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Pass register credentials",
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="EkSkuLPassword"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Wrong credentials response",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *         )
+     *     )
+     * )
+     */
+    
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -82,6 +137,34 @@ class AuthController extends Controller
 
         return $this->response("Login successfully.", ['user' => $user, 'token' => $token], 201);
     }
+    
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Logout",
+     *     description="Logout",
+     *     operationId="authLogout",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Pass register credentials",
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password"},
+     *             @OA\Property(property="name", type="string", format="text", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="EkSkuLPassword"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="EkSkuLPassword"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Wrong credentials response",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *         )
+     *     ),
+     * )
+     */
     
     public function logout()
     {

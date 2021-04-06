@@ -58,7 +58,7 @@ Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middlewar
 // payment handling
 Route::post('/webhooks',[WebhooksController::class,'midtransHandler']);
 
-Route::prefix('v1')->middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], function () {
 
     // user handling
     Route::get('/user',[UserController::class,'index']);

@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         
         // Other 
+        L5Swagger\L5SwaggerServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
 
     ],
