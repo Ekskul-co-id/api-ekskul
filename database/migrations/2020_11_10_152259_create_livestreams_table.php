@@ -14,12 +14,12 @@ class CreateLivestreamsTable extends Migration
     public function up()
     {
         Schema::create('livestreams', function (Blueprint $table) {
-            $table->increments('id_livestream');
-            $table->string('videoid');
+            $table->id();
+            $table->string('video_id');
             $table->string('start_date');
             $table->string('end_date');
             $table->string('title');
-            $table->string('gambar');
+            $table->string('image');
             $table->text('description');
             $table->timestamps();
         });

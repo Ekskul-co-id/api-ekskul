@@ -14,12 +14,12 @@ class CreatePlaylistsTable extends Migration
     public function up()
     {
         Schema::create('playlists', function (Blueprint $table) {
-            $table->increments('id_playlist');
-            $table->integer('id_category');
-            $table->string('playlist_name');
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories');
+            $table->string('name');
             $table->string('image');
-            $table->text('about_playlist');
-            $table->string('harga');
+            $table->text('about');
+            $table->string('price');
             $table->string('rating');
             $table->string('silabus1');
             $table->string('silabus2');

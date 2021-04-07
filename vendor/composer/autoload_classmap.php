@@ -19,6 +19,7 @@ return array(
     'App\\Http\\Controllers\\PlaylistController' => $baseDir . '/app/Http/Controllers/PlaylistController.php',
     'App\\Http\\Controllers\\RoleController' => $baseDir . '/app/Http/Controllers/RoleController.php',
     'App\\Http\\Controllers\\SettingsController' => $baseDir . '/app/Http/Controllers/SettingsController.php',
+    'App\\Http\\Controllers\\SkeletonController' => $baseDir . '/app/Http/Controllers/SkeletonController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',
     'App\\Http\\Controllers\\VerifyEmailController' => $baseDir . '/app/Http/Controllers/VerifyEmailController.php',
     'App\\Http\\Controllers\\VideoController' => $baseDir . '/app/Http/Controllers/VideoController.php',

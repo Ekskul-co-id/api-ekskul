@@ -14,11 +14,11 @@ class CreatePaymentLogsTable extends Migration
     public function up()
     {
         Schema::create('payment_logs', function (Blueprint $table) {
-            $table->increments('id_payment_logs');
+            $table->id();
             $table->string('status');
             $table->string('payment_type');
             $table->json('raw_response');
-            $table->integer('id_checkout');
+            $table->foreignId('checkout_id')->constrained('checkouts');
             $table->timestamps();
         });
     }
