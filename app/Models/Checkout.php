@@ -12,8 +12,8 @@ class Checkout extends Model
     protected $table = 'checkouts';
 
     protected $fillable = [
-        'id_user',
-        'id_playlist',
+        'user_id',
+        'playlist_id',
         'qty',
         'snap_url',
         'metadata',
@@ -25,4 +25,14 @@ class Checkout extends Model
         'updated_at' => 'datetime:Y-m-d H:m:s',
         'metadata' => 'array',
     ];
+    
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+    
+    public function playlist()
+    {
+        return $this->belongsTo('App\Models\Playlist');
+    }
 }

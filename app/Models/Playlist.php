@@ -10,15 +10,20 @@ class Playlist extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_category',
-        'playlist_name',
+        'category_id',
+        'name',
         'image',
-        'about_playlist',
-        'harga',
+        'about',
+        'price',
         'rating',
         'silabus1',
         'silabus2',
         'silabus3',
         'silabus4',
     ];
+    
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category');
+    }
 }

@@ -9,14 +9,12 @@ class Livestream extends Model
 {
     use HasFactory;
 
-    protected $table = 'livestreams';
-
     protected $fillable = [
-        'videoid',
+        'video_id',
         'start_date',
         'end_date',
         'title',
-        'gambar',
+        'image',
         'description',
     ];
 }

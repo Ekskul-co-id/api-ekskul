@@ -9,10 +9,8 @@ class Payment_logs extends Model
 {
     use HasFactory;
 
-    protected $table = 'payment_logs';
-
     protected $fillable = [
-        'status','payment_type','id_checkout','raw_response'
+        'status','payment_type','checkout_id','raw_response'
     ];
 
     protected $casts = [
@@ -20,5 +18,8 @@ class Payment_logs extends Model
         'updated_at' => 'datetime:Y-m-d H:m:s',
     ];
 
-
+    public function checkout()
+    {
+        return $this->belongsTo('App\Models\Checkout');
+    }
 }

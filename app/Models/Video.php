@@ -10,9 +10,14 @@ class Video extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_playlist',
-        'videoid',
+        'playlist_id',
+        'video_id',
         'title',
         'description'
     ];
+    
+    public function playlist()
+    {
+        return $this->belongsTo('App\Models\Playlist');
+    }
 }
