@@ -1,5 +1,7 @@
-on: push
 name: Auto Deploy
+on:
+  push:
+    branches: [ master ]
 jobs:
   web-deploy:
     name: Deploy
