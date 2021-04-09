@@ -3,39 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    use APIResponse;
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,$id = null)
+    public function index()
     {
-        if($id){
-            $data = Category::where('id_category','=',$id)->first();
-            if(!$data){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'detailscategory not be found !'
-                ],404);
-            }
-
-            return response()->json([
-                'status' => true,
-                'message' => 'detailscategory found !',
-                'data' => $data,
-            ],200);
-        }
-
-        $data = Category::get();
-        return response()->json([
-            'status' => true,
-            'message' => 'category found !',
-            'data' => $data,
-        ],200);
+        $categories = Category::get();
+        
+        return $this->response("Category found!", $categories, 200);
     }
 
     /**
@@ -56,28 +42,28 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'category_name' => 'required',
-            'icon_category' => '|mimes:jpeg,jpg,png,svg|max:2048',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'icon' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
         ]);
 
-        $fileName = time().'.'.$request->icon_category->extension();
-        $path = 'icon';
-        $request->icon_category->move(public_path($path), $fileName);
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
 
-        Category::create([
-            'icon_category' => $path.'/'.$fileName, 
-            'category_name' => $request->category_name,
+        $fileName = time().'.'.$request->icon->extension();
+        
+        $path = "icon";
+        
+        $request->icon->move(public_path($path), $fileName);
+
+        $category = Category::create([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'icon' => $path.'/'.$fileName,
         ]);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'category has created !',
-            'data' => [
-                'icon_category' => $path.'/'.$fileName,
-                'category_name' => $request->category_name
-            ],
-        ],201);
+        
+        return $this->response("Category has created!", $category, 201);
     }
 
     /**
@@ -88,7 +74,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::with('playlist')->findOrFail($id);
+        
+        return $this->response("Category found!", $category, 201);
     }
 
     /**
@@ -111,32 +99,34 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = Category::where('id_category','=',$id)->first();
-
-        if(!$category){
-            return response()->json([
-                'status' => false,
-                'message' => 'Category Not Be Found !',
-            ],404);
-        }
-
-        $fileName = time().'.'.$request->icon_category->extension();
-        $path = 'icon';
-        $request->icon_category->move(public_path($path), $fileName);
-
-        Category::where('id_category','=',$id)->update([
-            'icon_category' => $path.'/'.$fileName, 
-            'category_name' => $request->category_name,
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'icon' => 'mimes:jpeg,jpg,png,svg|max:2048',
         ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'category has updated !',
-            'data' => [
-                'icon_category' => $path.'/'.$fileName,
-                'category_name' => $request->category_name
-            ],
-        ],201);
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+        
+        $category = Category::findOrFail($id);
+        
+        if($request->hasFile('icon')){
+            $fileName = time().'.'.$request->icon->extension();
+            
+            $path = "icon";
+            
+            $request->icon->move(public_path($path), $fileName);
+            
+            $icon = $path.'/'.$fileName;
+        }
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'icon' => $icon ?? $category->icon // fungsi dari ?? kalau tidak ada request icon (hanya update name saja) maka dia akan ngambil value dari $category->icon yang dijadikan value untuk update
+        ]);
+
+        return $this->response("Category has updated!", $category, 201);
     }
 
     /**
@@ -147,17 +137,10 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $destroy = Category::where('id_category','=',$id)->delete();
-        if(!$destroy){
-            return response()->json([
-                'status' => false,
-                'message' => 'category not found !'
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'category sucessfuly deleted!'
-        ],201);
+        $category = Category::findOrFail($id);
+        
+        $category->delete();
+        
+        return $this->response("Category has deleted!", null, 201);
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use App\Models\Comentar;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ComentController extends Controller
 {
+    use APIResponse;
+    
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +18,9 @@ class ComentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::with('user', 'livestream')->get();
+        
+        return $this->response("Comment found!", $comments, 200);
     }
 
     /**
@@ -36,22 +41,23 @@ class ComentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_user' => 'required',
-            'id_livestream' => 'required',
-            'comentar' => 'required',
-        ]);
-        $coment = Comentar::create([
-            'id_user' => $request->id_user,
-            'id_livestream' => $request->id_livestream,
-            'comentar' => $request->comentar,
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'livestream_id' => 'required|integer',
+            'comment' => 'required'
         ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'data has created !',
-            'data' => $coment,
-        ],201);
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+        
+        $comment = Comment::create([
+            'user_id' => $request->user_id,
+            'livestream_id' => $request->livestream_id,
+            'comment' => $request->comment,
+        ]);
+
+        return $this->response("Comment created!", $comment, 201);
     }
 
     /**
@@ -62,36 +68,9 @@ class ComentController extends Controller
      */
     public function show($id = null)
     {
-        if($id){
-
-            $live = DB::table('comentars')
-            ->join('users','comentars.id_user','=','users.id')
-            ->join('livestreams','comentars.id_livestream','=','livestreams.id_livestream')
-            ->where('id_comentar','=',$id)
-            ->first();
-
-            if(!$live){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'error Comentars not be found !'
-                ],404);
-            }
-            return response()->json([
-                'status' => true,
-                'message' => 'details Comentars be found !',
-                'data' => $live,
-            ],200);
-        }
-        $coment = DB::table('comentars')
-                    ->join('users','comentars.id_user','=','users.id')
-                    ->join('livestreams','comentars.id_livestream','=','livestreams.id_livestream')
-                    ->get();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Comentars be found !',
-            'data' => $coment,
-        ],200);
+        $comment = Comment::with('user', 'livestream')->findOrFail($id);
+        
+        return $this->response("Comment found!", $comment, 200);
 
     }
 
@@ -115,25 +94,25 @@ class ComentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $check = Comentar::where('id_comentar','=',$id)->first();
-        if(!$check){
-            return response()->json([
-                'status' => false,
-                'message' => 'Comentars not be found !'
-            ],404);
-        }
-
-        $coment = Comentar::Where('id_comentar','=',$id)->update([
-            'id_user' => $request->id_user,
-            'id_livestream' => $request->id_livestream,
-            'comentar' => $request->comentar,
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'livestream_id' => 'required|integer',
+            'comment' => 'required'
         ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'data has updated !',
-            'data' => $coment,
-        ],201);
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+        
+        $comment = Comment::findOrFail($id);
+        
+        $comment->update([
+            'user_id' => $request->user_id,
+            'livestream_id' => $request->livestream_id,
+            'comment' => $request->comment,
+        ]);
+
+        return $this->response("Comment updated!", $comment, 201);
     }
 
     /**
@@ -144,17 +123,10 @@ class ComentController extends Controller
      */
     public function destroy($id)
     {
-        $data = Comentar::where('id_Comentar','=',$id)->delete();
-        if(!$data){
-            return response()->json([
-                'status' => false,
-                'message' => 'Comentar not be found !'
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Comentar hass delete!'
-        ],200);
+        $comment = Comment::findOrFail($id);
+        
+        $comment->delete();
+        
+        return $this->response("Comment deleted!", null, 201);
     }
 }

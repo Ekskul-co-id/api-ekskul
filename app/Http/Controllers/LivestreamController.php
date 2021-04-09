@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Livestream;
+use App\Traits\APIResponse;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LivestreamController extends Controller
 {
+    use APIResponse;
+    
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,9 @@ class LivestreamController extends Controller
      */
     public function index()
     {
-        //
+        $livestreams = Livestream::get();
+        
+        return $this->response("Livestreams found!", $livestreams, 200);
     }
 
     /**
@@ -35,33 +42,38 @@ class LivestreamController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'videod' => 'reqired',
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'image' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
+            'description' => 'required',
+            'video_id' => 'required',
             'start_date' => 'required',
-            'title' => 'required',
-            'gambar' => 'required',
-            'description' => 'required'
+            'end_date' => 'required',
         ]);
 
-        $fileName = time().'.'.$request->gambar->extension();
-        $path = 'stream';
-        $request->gambar->move(public_path($path), $fileName);
-
-        $req = $request->all();
-        $data = [
-            'videoid' => $req['videoid'],
-            'start_date' => $req['start_date'],
-            'end_date' => $req['end_date'],
-            'title' => $req['title'],
-            'gambar' => $path.'/'.$fileName,
-            'description' => $req['description']
-        ];
-        Livestream::create($data);
-        return response()->json([
-            'status' => true,
-            'message' => 'data has created!',
-            'data' => $data,
-        ],201);
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+        
+        $fileName = time().'.'.$request->image->extension();
+        
+        $path = "stream";
+        
+        $request->image->move(public_path($path), $fileName);
+        
+        $start_date = date('Y/m/d H:i', strtotime($request->start_date));
+        
+        $end_date = date('Y/m/d H:i', strtotime($request->end_date));
+        
+        $livestream = Livestream::create([
+            'title' => $request->title,
+            'image' => $path.'/'.$fileName,
+            'description' => $request->description,
+            'video_id' => $request->video_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
+        return $this->response("Livestream created!", $livestream, 201);
     }
 
     /**
@@ -72,26 +84,9 @@ class LivestreamController extends Controller
      */
     public function show($id = null)
     {
-        if($id){
-            $live = Livestream::where('id_livestream','=',$id)->first();
-            if($live){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'error livestreeam not be found !'
-                ],404);
-            }
-            return response()->json([
-                'status' => true,
-                'message' => 'details livestreeam be found !',
-                'data' => $live,
-            ],200);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'livestreeam be found !',
-            'data' => Livestream::get(),
-        ],200);
+        $livestream = Livestream::findOrFail($id);
+        
+        return $this->response("Livestream found!", $livestream, 200);
 
     }
 
@@ -115,33 +110,44 @@ class LivestreamController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $check = Livestream::where('id_livestream','=',$id)->first();
-        if(!$check){
-            return response()->json([
-                'status' => false,
-                'message' => 'data not be found!',
-            ],404);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'image' => 'mimes:jpeg,jpg,png,svg|max:2048',
+            'description' => 'required',
+            'video_id' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
         }
-
-        $fileName = time().'.'.$request->gambar->extension();
-        $path = 'stream';
-        $request->gambar->move(public_path($path), $fileName);
-
-        $req = $request->all();
-        $data = [
-            'videoid' => $req['videoid'],
-            'start_date' => $req['start_date'],
-            'end_date' => $req['end_date'],
-            'title' => $req['title'],
-            'gambar' => $path.'/'.$fileName,
-            'description' => $req['description']
-        ];
-        Livestream::where('id_livestream','=',$id)->update($data);
-        return response()->json([
-            'status' => true,
-            'message' => 'data has updated!',
-            'data' => $data,
-        ],201);
+        
+        $livestream = Livestream::findOrFail($id);
+        
+        if($request->hasFile('image')){
+            $fileName = time().'.'.$request->image->extension();
+            
+            $path = "stream";
+            
+            $request->image->move(public_path($path), $fileName);
+            
+            $image = $path.'/'.$fileName;
+        }
+        
+        $start_date = date('Y/m/d H:i', strtotime($request->start_date));
+        
+        $end_date = date('Y/m/d H:i', strtotime($request->end_date));
+        
+        $livestream->update([
+            'title' => $request->title,
+            'image' => $image ?? $livestream->image,
+            'description' => $request->description,
+            'video_id' => $request->video_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
+        return $this->response("Livestream updated!", $livestream, 201);
     }
 
     /**
@@ -152,17 +158,10 @@ class LivestreamController extends Controller
      */
     public function destroy($id)
     {
-        $data = Livestream::where('id_livestream','=',$id)->delete();
-        if(!$data){
-            return response()->json([
-                'status' => false,
-                'message' => 'livestream not be found !'
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'livestream hass delete!'
-        ],200);
+        $livestream = Livestream::findOrFail($id);
+        
+        $livestream->delete();
+        
+        return $this->response("Livestream deleted!", null, 201);
     }
 }

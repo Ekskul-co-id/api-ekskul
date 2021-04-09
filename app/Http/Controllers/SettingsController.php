@@ -2,40 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use App\Models\Settings;
 
 class SettingsController extends Controller
 {
+    use APIResponse;
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id = null)
+    public function index()
     {
-        if($id){
-            $seting = Settings::where('id_setting','=',$id)->first();
-            if(!$seting){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'setings not found !'
-                ],404);
-            }
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Details setings has Get !',
-                'data' => $seting,
-            ]);
-
-        }
-        $seting = Settings::get();
-        return response()->json([
-            'status' => true,
-            'message' => 'Data setings has Get !',
-            'data' => $seting,
-        ]);
+        $setings = Setting::get();
+        
+        return $this->response("Settings found!", $settings, 200);
     }
 
     /**
@@ -56,21 +40,25 @@ class SettingsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:jpeg,jpg,png|max:2048',
         ]);
-  
+        
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+        
         $fileName = time().'.'.$request->file->extension();
-        $path = 'settings';
+        
+        $path = "settings";
+        
         $request->file->move(public_path($path), $fileName);
-        Settings::insert(['image_baner' => $fileName]);
+        
+        $setting = Setting::create([
+            'image_baner' => $fileName
+        ]);
 
-        return  response()->json([
-            'status' => true,
-            'message' => 'data sucessfuly stored!',
-            'image' => $path.'/'.$fileName,
-        ],201);
-
+        return  $this->response("Setting created!", $setting, 201);
     }
 
     /**
@@ -104,25 +92,27 @@ class SettingsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $seting = Settings::where('id_setting','=',$id)->first();
-
-        if(!$seting){
-            return response()->json([
-                'status' => false,
-                'message' => 'setings not found !'
-            ],404);
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:jpeg,jpg,png|max:2048',
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
         }
         
+        $setting = Setting::findOrFail($id);
+        
         $fileName = time().'.'.$request->file->extension();
-        $path = 'settings';
+        
+        $path = "settings";
+        
         $request->file->move(public_path($path), $fileName);
-        Settings::where('id_setting','=',$id)->update(['image_baner' => $fileName]);
+        
+        $setting->update([
+            'image_baner' => $fileName
+        ]);
 
-        return  response()->json([
-            'status' => true,
-            'message' => 'data sucessfuly updated!',
-            'image' => $path.'/'.$fileName,
-        ],201);
+        return  $this->response("Setting updated!", $setting, 201);
     }
 
     /**
@@ -133,17 +123,10 @@ class SettingsController extends Controller
      */
     public function destroy($id)
     {
-        $user = Settings::where('id_setting','=',$id)->delete();
-        if(!$user){
-            return response()->json([
-                'status' => false,
-                'message' => 'Settings Baner not found !'
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Settings Baner sucessfuly deleted!'
-        ],404);
+        $setting = Setting::findOrFail($id);
+        
+        $setting->delete();
+        
+        return $this->response("Setting deleted!", null, 201);
     }
 }

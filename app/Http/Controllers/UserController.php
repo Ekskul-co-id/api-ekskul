@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,9 +53,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-
-        DB::beginTransaction();
-
+        
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -118,13 +115,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-
-        if ($request->role == 'admin' && !Auth::user()->hasRole('admin')) {
-            return $this->response("Only users with the admin role can choose this role.", null, 403);
-        }
-
-        DB::beginTransaction();
-
+        
         try {
             $user->update([
                 'name' => $request->name,
@@ -136,7 +127,7 @@ class UserController extends Controller
 
             return $this->response("Successfully update user.", $request->all(), 201);
         } catch (\Exception $e) {
-            return $this->response("Falied to create user.", $e, 409);
+            return $this->response("Falied to update user.", $e, 409);
         }
     }
 
