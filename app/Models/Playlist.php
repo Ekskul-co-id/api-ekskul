@@ -26,4 +26,9 @@ class Playlist extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
+    
+    public function video()
+    {
+        return $this->hasMany('App\Models\Video', 'playlist_id');
+    }
 }

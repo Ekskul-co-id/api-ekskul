@@ -14,4 +14,9 @@ class Category extends Model
         'slug',
         'icon',
     ];
+    
+    public function playlist()
+    {
+        return $this->hasMany('App\Models\Playlist', 'category_id');
+    }
 }
