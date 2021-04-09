@@ -7,8 +7,8 @@ use App\Models\Playlist;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class PlaylistController extends Controller
 {
@@ -69,6 +69,7 @@ class PlaylistController extends Controller
 
         $playlist = Playlist::create([
             'name' => $request->name,
+            'slug' => Str::slug($request->name),
             'category_id' => $request->category_id,
             'about' => $request->about,
             'price' => $request->price,
@@ -146,6 +147,7 @@ class PlaylistController extends Controller
         }
         $playlist->update([
             'name' => $request->name,
+            'slug' => Str::slug($request->name),
             'category_id' => $request->category_id,
             'about' => $request->about,
             'price' => $request->price,

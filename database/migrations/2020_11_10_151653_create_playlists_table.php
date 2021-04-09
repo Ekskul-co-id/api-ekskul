@@ -15,8 +15,9 @@ class CreatePlaylistsTable extends Migration
     {
         Schema::create('playlists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('categories');
             $table->string('name');
+            $table->string('slug');
+            $table->foreignId('category_id')->constrained('categories');
             $table->string('image');
             $table->text('about');
             $table->string('price');

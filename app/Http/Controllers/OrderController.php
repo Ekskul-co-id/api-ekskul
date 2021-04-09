@@ -37,8 +37,6 @@ class OrderController extends Controller
     public function index()
     {
         $checkouts = Checkout::with('user', 'playlist')->get();
-        
-        $ok = $checkouts[0]->playlist->category;
                         
         return $this->response("Transaction found!", $checkouts, 200);
     }
