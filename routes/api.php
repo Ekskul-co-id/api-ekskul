@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\WebhooksController;
-use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\PlaylistController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\VideoController;
-use App\Http\Controllers\LivestreamController;
-use App\Http\Controllers\ComentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ComentController;
+use App\Http\Controllers\LivestreamController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifyEmailController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WebhookController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,76 +51,118 @@ Route::get('fresh-db', function () {
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);
-Route::post('/verify', [VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
+Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
 Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
 
 
-// payment handling
-Route::post('/webhooks',[WebhooksController::class,'midtransHandler']);
+// Payment handling
+Route::post('/webhooks',[WebhookController::class,'midtransHandler']);
 
-Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], function () {
+Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], function () {
+    Route::get('/', function () {
+        return response()->json([
+            "status" => "success",
+            "message" => "Api Ekskul.co.id v1",
+            "data" => null
+        ],200);
+    });
+    
+    Route::group(['prefix' => 'admin'], function () {
+        Route::get('/', function () {
+            return response()->json([
+                "status" => "success",
+                "message" => "Welcome admin.",
+                "data" => null
+            ],200);
+        });
+        
+        // User handling 
+        Route::group(['prefix' => 'users'], function () {
+            Route::get('/',[UserController::class,'index']);
+            Route::post('/',[UserController::class,'store']);
+            Route::get('/{id}',[UserController::class,'show']);
+            Route::put('/{id}',[UserController::class,'update']);
+            Route::delete('/{id}',[UserController::class,'destroy']);
+        });
 
-    // user handling
-    Route::get('/user',[UserController::class,'index']);
-    Route::get('/user/{id}',[UserController::class,'show']);
-    Route::post('/edit/{id}',[UserController::class,'update']);
-    Route::get('/destroy/{id}',[UserController::class,'destroy']);
+        // Settings 
+        Route::group(['prefix' => 'settings'], function () {
+            Route::get('/',[SettingsController::class,'index']);
+            Route::post('/',[SettingsController::class,'store']);
+            Route::get('/{id}',[SettingsController::class,'show']);
+            Route::post('/{id}',[SettingsController::class,'update']);
+            Route::get('/{id}',[SettingsController::class,'destroy']);
+        });
 
-    // payment handling
-    Route::post('/create/order',[OrderController::class,'createOrder']);
-    Route::get('/orders',[OrderController::class,'index']);
-    Route::get('/orders/{id}',[OrderController::class,'index']);
+        // Playlist 
+        Route::group(['prefix' => 'playlists'], function () {
+            Route::get('/',[PlaylistController::class,'index']);
+            Route::post('/',[PlaylistController::class,'store']);
+            Route::get('/{id}',[PlaylistController::class,'show']);
+            Route::post('/{id}',[PlaylistController::class,'update']);
+            Route::get('/{id}',[PlaylistController::class,'destroy']);
+        });
 
-    // settings
-    Route::get('/setings',[SettingsController::class,'index']);
-    Route::get('/setings/{id}',[SettingsController::class,'index']);
-    Route::post('upload/setings',[SettingsController::class,'store']);
-    Route::post('update/setings/{id}',[SettingsController::class,'update']);
-    Route::get('destroy/setings/{id}',[SettingsController::class,'destroy']);
+        // Category 
+        Route::group(['prefix' => 'categories'], function () {
+            Route::get('/',[CategoryController::class,'index']);
+            Route::post('/',[CategoryController::class,'store']);
+            Route::get('/{id}',[CategoryController::class,'show']);
+            Route::put('/{id}',[CategoryController::class,'update']);
+            Route::delete('/{id}',[CategoryController::class,'destroy']);
+        });
 
-    // playlist
-    Route::get('/playlists/{id}',[PlaylistController::class,'showDetails']);
-    Route::get('/playlist/{id}',[PlaylistController::class,'index']);
-    Route::get('/playlist/cat/{id}',[PlaylistController::class,'show']);
-    Route::post('/create/playlist',[PlaylistController::class,'create']);
-    Route::post('/update/playlist/{id}',[PlaylistController::class,'update']);
-    Route::get('/destroy/playlist/{id}',[PlaylistController::class,'destroy']);
-    Route::post('/search/playlist',[PlaylistController::class,'search']);
+        // Roles 
+        Route::group(['prefix' => 'roles'], function () {
+            Route::get('/',[RoleController::class,'index']);
+            Route::post('/',[RoleController::class,'store']);
+            Route::get('/{id}',[RoleController::class,'show']);
+            Route::put('/{id}',[RoleController::class,'update']);
+            Route::delete('/{id}',[RoleController::class,'destroy']);
+        });
 
-    // category
-    Route::get('/category',[CategoryController::class,'index']);
-    Route::get('/category/{id}',[CategoryController::class,'index']);
-    Route::post('/create/category',[CategoryController::class,'store']);
-    Route::post('/update/category/{id}',[CategoryController::class,'update']);
-    Route::get('/destroy/category/{id}',[CategoryController::class,'destroy']);
+        // Video Managemnt 
+        Route::group(['prefix' => 'videos'], function () {
+            Route::get('/',[VideoController::class,'index']);
+            Route::post('/',[VideoController::class,'store']);
+            Route::get('/{id}',[VideoController::class,'show']);
+            Route::put('/{id}',[VideoController::class,'update']);
+            Route::delete('/{id}',[VideoController::class,'destroy']);
+        });
 
-    // roles
-    Route::get('/roles',[RoleController::class,'index']);
-    Route::get('/roles/{id}',[RoleController::class,'show']);
-    Route::post('/create/roles',[RoleController::class,'store']);
-    Route::post('/update/roles/{id}',[RoleController::class,'update']);
-    Route::get('/destroy/roles/{id}',[RoleController::class,'destroy']);
+        // Livestream 
+        Route::group(['prefix' => 'livestreams'], function () {
+            Route::get('/',[LivestreamController::class,'index']);
+            Route::post('/',[LivestreamController::class,'store']);
+            Route::get('/{id}',[LivestreamController::class,'show']);
+            Route::put('/{id}',[LivestreamController::class,'update']);
+            Route::delete('/{id}',[LivestreamController::class,'destroy']);
+        });
 
-    // Video Managemnt
-    Route::get('/videos',[VideoController::class,'index']);
-    Route::get('/videos/{id}',[VideoController::class,'index']);
-    Route::post('/create/videos',[VideoController::class,'store']);
-    Route::post('/update/videos/{id}',[VideoController::class,'update']);
-    Route::get('/destroy/videos/{id}',[VideoController::class,'destroy']);
+        // Comment livestream 
+        Route::group(['prefix' => 'comments'], function () {
+            Route::get('/',[ComentController::class,'index']);
+            Route::post('/',[ComentController::class,'store']);
+            Route::get('/{id}',[ComentController::class,'show']);
+            Route::put('/{id}',[ComentController::class,'update']);
+            Route::delete('/{id}',[ComentController::class,'destroy']);
+        });
+    });
 
-    // livestream 
-    Route::get('livestream',[LivestreamController::class,'show']);
-    Route::get('livestream/{id}',[LivestreamController::class,'show']);
-    Route::post('create/livestream',[LivestreamController::class,'store']);
-    Route::post('update/livestream/{id}',[LivestreamController::class,'update']);
-    Route::get('destroy/livestream/{id}',[LivestreamController::class,'destroy']);
-
-    // coment livestream
-    Route::get('/coment',[ComentController::class,'show']);
-    Route::get('/coment/{id}',[ComentController::class,'show']);
-    Route::post('create/coment',[ComentController::class,'store']);
-    Route::post('update/coment/{id}',[ComentController::class,'update']);
-    Route::get('destroy/coment/{id}',[ComentController::class,'destroy']);
-
-
+    // User route
+    Route::group(['prefix' => 'orders'], function () {
+        Route::get('/',[OrderController::class,'index']);
+        Route::post('/',[OrderController::class,'store']);
+        Route::get('/{id}',[OrderController::class,'show']);
+    });
+    
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/',[MenuController::class,'listCategory']); // list semua category
+        Route::get('/{slug}',[MenuController::class,'detailCategory']); // show detail category dengan list playlist berdasarkan category yang di pilih
+    });
+    
+    Route::group(['prefix' => 'playlists'], function () {
+            Route::get('/',[MenuController::class,'listPlaylist']); // list semua playlist
+            Route::get('/{slug}',[MenuController::class,'detailPlaylist']); // detail playlist beserta video
+        });
 });
