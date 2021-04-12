@@ -19,9 +19,9 @@ class CreatePlaylistsTable extends Migration
             $table->string('slug');
             $table->foreignId('category_id')->constrained('categories');
             $table->string('image');
+            $table->string('preview')->nullable();
             $table->text('about');
             $table->string('price');
-            $table->string('rating');
             $table->string('silabus1');
             $table->string('silabus2');
             $table->string('silabus3');
