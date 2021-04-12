@@ -32,4 +32,9 @@ class Playlist extends Model
     {
         return $this->hasMany('App\Models\Video', 'playlist_id');
     }
+    
+    public function rating()
+    {
+        return $this->hasMany('App\Models\Rating', 'playlist_id');
+    }
 }

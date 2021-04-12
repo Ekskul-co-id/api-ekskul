@@ -39,10 +39,10 @@ class VideoSeeder extends Seeder
             'playlist_id' => '2',
         ]);
         Video::create([
-            'title' => '03 Setup video',
+            'title' => '02 Setup video',
             'video_id' => 'DMI2LgVRHWw',
             'description' => 'Pada video ini kita belajar cara memilih video untuk di edit',
-            'playlist_id' => '1',
+            'playlist_id' => '2',
         ]);
     }
 }

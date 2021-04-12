@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Playlist;
+use App\Models\Rating;
 use Illuminate\Database\Seeder;
 
 class PlaylistSeeder extends Seeder
@@ -41,5 +42,7 @@ class PlaylistSeeder extends Seeder
             'silabus3' => 'example',
             'silabus4' => 'example',
         ]);
+        
+        Rating::factory(20)->create();
     }
 }

@@ -39,5 +39,7 @@ class RoleSeeder extends Seeder
         ]);
         
         $user->syncRoles($roleUser);
+        
+        User::factory(35)->create();
     }
 }

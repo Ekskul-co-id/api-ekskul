@@ -7,6 +7,7 @@ use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
@@ -147,6 +148,15 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
             Route::put('/{id}',[ComentController::class,'update']);
             Route::delete('/{id}',[ComentController::class,'destroy']);
         });
+
+        // Rating
+        Route::group(['prefix' => 'ratings'], function () {
+            Route::get('/',[RatingController::class,'index']);
+            Route::post('/',[RatingController::class,'store']);
+            Route::get('/{id}',[RatingController::class,'show']);
+            Route::put('/{id}',[RatingController::class,'update']);
+            Route::delete('/{id}',[RatingController::class,'destroy']);
+        });
     });
 
     // User route
@@ -162,7 +172,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     });
     
     Route::group(['prefix' => 'playlists'], function () {
-            Route::get('/',[MenuController::class,'listPlaylist']); // list semua playlist
-            Route::get('/{slug}',[MenuController::class,'detailPlaylist']); // detail playlist beserta video
-        });
+        Route::get('/',[MenuController::class,'listPlaylist']); // list semua playlist
+        Route::get('/{slug}',[MenuController::class,'detailPlaylist']); // detail playlist beserta video
+        Route::post('/{slug}/ratings',[MenuController::class,'storeRating']);
+        Route::put('/{slug}/ratings',[MenuController::class,'updateRating']);
+    });
 });
