@@ -40,15 +40,11 @@ class AuthController extends Controller
      *         ),
      *     ),
      *     @OA\Response(
-     *         response=422,
-     *         description="Wrong credentials response",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *         )
-     *     )
+     *         response=201,
+     *         description="Success",
+     *     ),
      * )
      */
-    
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -104,15 +100,11 @@ class AuthController extends Controller
      *         ),
      *     ),
      *     @OA\Response(
-     *         response=422,
-     *         description="Wrong credentials response",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *         )
-     *     )
+     *         response=201,
+     *         description="Success",
+     *     ),
      * )
      */
-    
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -143,28 +135,14 @@ class AuthController extends Controller
      *     summary="Logout",
      *     description="Logout",
      *     operationId="authLogout",
+     *     security={{ "bearer_token": {} }},
      *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Pass register credentials",
-     *         @OA\JsonContent(
-     *             required={"name", "email", "password"},
-     *             @OA\Property(property="name", type="string", format="text", example="John Doe"),
-     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="EkSkuLPassword"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="EkSkuLPassword"),
-     *         ),
-     *     ),
      *     @OA\Response(
-     *         response=422,
-     *         description="Wrong credentials response",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *         )
+     *         response=201,
+     *         description="Success",
      *     ),
      * )
      */
-    
     public function logout()
     {
         Auth::user()->tokens()->delete();

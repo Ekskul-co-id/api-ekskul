@@ -66,21 +66,8 @@
                     }
                 },
                 "responses": {
-                    "422": {
-                        "description": "Wrong credentials response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Sorry, wrong email address or password. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                    "201": {
+                        "description": "Success"
                     }
                 }
             }
@@ -121,21 +108,8 @@
                     }
                 },
                 "responses": {
-                    "422": {
-                        "description": "Wrong credentials response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Sorry, wrong email address or password. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                    "201": {
+                        "description": "Success"
                     }
                 }
             }
@@ -148,37 +122,40 @@
                 "summary": "Logout",
                 "description": "Logout",
                 "operationId": "authLogout",
+                "responses": {
+                    "201": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/verify": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verification",
+                "description": "Verification email",
+                "operationId": "authVerify",
                 "requestBody": {
-                    "description": "Pass register credentials",
+                    "description": "Pass verify credentials",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "name",
-                                    "email",
-                                    "password"
+                                    "code"
                                 ],
                                 "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "format": "text",
-                                        "example": "John Doe"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "EkSkuLPassword"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "EkSkuLPassword"
+                                    "code": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": "52413"
                                     }
                                 },
                                 "type": "object"
@@ -187,32 +164,49 @@
                     }
                 },
                 "responses": {
-                    "422": {
-                        "description": "Wrong credentials response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Sorry, wrong email address or password. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                    "201": {
+                        "description": "Success"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/verify/resend": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verification",
+                "description": "Resend verification code",
+                "operationId": "authVerifyResend",
+                "responses": {
+                    "201": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         }
     },
-    "tags": [
-        {
-            "name": "Projects",
-            "description": "API Endpoints of Projects"
+    "components": {
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "A short description for security scheme",
+                "name": "Authorization",
+                "in": "header",
+                "scheme": "Bearer"
+            }
         }
-    ],
+    },
     "security": [
         []
     ]
