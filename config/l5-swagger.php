@@ -159,7 +159,7 @@ return [
                         'write'
                     ],
 
-                    'passport' => [],
+                    'passport' => []
                     */
                 ],
             ],
