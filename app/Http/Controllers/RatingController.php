@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+use App\Models\Rating;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class SettingsController extends Controller
+class RatingController extends Controller
 {
     use APIResponse;
     
@@ -17,9 +18,9 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $setings = Setting::get();
+        $ratings = Rating::get();
         
-        return $this->response("Settings found!", $settings, 200);
+        return $this->response("Ratings found!", $ratings, 200);
     }
 
     /**
@@ -41,24 +42,22 @@ class SettingsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,jpg,png|max:2048',
+            'playlist_id' => 'required|integer',
+            'user_id' => 'required|integer|unique:ratings',
+            'value' => 'required|integer',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
         
-        $fileName = time().'.'.$request->file->extension();
-        
-        $path = "settings";
-        
-        $request->file->move(public_path($path), $fileName);
-        
-        $setting = Setting::create([
-            'image_baner' => $fileName
+        $rating = Rating::create([
+            'playlist_id' => $request->playlist_id,
+            'user_id' => $request->user_id,
+            'value' => $request->value,
         ]);
-
-        return  $this->response("Setting created!", $setting, 201);
+        
+        return $this->response("Rating created!", $rating, 201);
     }
 
     /**
@@ -69,7 +68,9 @@ class SettingsController extends Controller
      */
     public function show($id)
     {
-        //
+        $rating = Rating::finfOrFail($id);
+        
+        return $this->response("Rating found!", $rating, 200);
     }
 
     /**
@@ -92,27 +93,25 @@ class SettingsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,jpg,png|max:2048',
-        ]);
+        $rating = Rating::finfOrFail($id);
         
+        $validator = Validator::make($request->all(), [
+            'playlist_id' => 'required|integer',
+            'user_id' => 'required|integer|unique:ratings,user_id,'.$rating->user->id,
+            'value' => 'required|integer',
+        ]);
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
         
-        $setting = Setting::findOrFail($id);
-        
-        $fileName = time().'.'.$request->file->extension();
-        
-        $path = "settings";
-        
-        $request->file->move(public_path($path), $fileName);
-        
-        $setting->update([
-            'image_baner' => $fileName
+        $rating->update([
+            'playlist_id' => $request->playlist_id,
+            'user_id' => $request->user_id,
+            'value' => $request->value,
         ]);
-
-        return  $this->response("Setting updated!", $setting, 201);
+        
+        return $this->response("Rating updated!", $rating, 201);
     }
 
     /**
@@ -123,10 +122,10 @@ class SettingsController extends Controller
      */
     public function destroy($id)
     {
-        $setting = Setting::findOrFail($id);
+        $rating = Rating::finfOrFail($id);
         
-        $setting->delete();
+        $rating->delete();
         
-        return $this->response("Setting deleted!", null, 201);
+        return $this->response("Rating deleted!", null, 201);
     }
 }

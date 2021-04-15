@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLivestreamsTable extends Migration
+class CreateAuditsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateLivestreamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('livestreams', function (Blueprint $table) {
+        Schema::create('audits', function (Blueprint $table) {
             $table->id();
-            $table->string('video_id');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->string('title');
-            $table->string('image');
+            $table->foreignId('user_id')->constrained('users');
             $table->text('description');
             $table->timestamps();
         });
@@ -32,6 +28,6 @@ class CreateLivestreamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('livestreams');
+        Schema::dropIfExists('audits');
     }
 }

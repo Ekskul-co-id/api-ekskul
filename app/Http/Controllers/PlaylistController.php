@@ -3,191 +3,180 @@
 namespace App\Http\Controllers;
 
 use App\Models\Checkout;
-use Illuminate\Http\Request;
 use App\Models\Playlist;
-use Illuminate\Support\Facades\DB;
+use App\Traits\APIResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class PlaylistController extends Controller
 {
-    public function index(Request $request,$id = null)
+    use APIResponse;
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-
-        $order = Checkout::where([['status','=','success'],['id_user','=',$id]])->get();
-        $a = [];
-        foreach($order as $row){
-            array_push($a,$row->id_playlist);
-        }
-
-        $data = DB::table('playlists')
-                    ->join('categories','playlists.id_category','=','categories.id_category')
-                    ->whereNotIn('id_playlist',$a)
-                    ->get();
-                    
-        return response()->json([
-            'status' => true,
-            'message' => 'playlist found!',
-            'data' => $data,
-        ],200);
-
+        $playlists = Playlist::get();
+        
+        return $this->response("Playlists found!", $playlists, 200);
     }
     
-    
-    public function showDetails($id = null)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        if($id){
-            $data = DB::table('playlists')
-                        ->join('categories','playlists.id_category','=','categories.id_category')
-                        ->where('id_playlist','=',$id)
-                        ->first();
-            if(!$data){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'playlist not found !'
-                ],404);
-            }
-            return response()->json([
-                'status' => true,
-                'message' => 'details playlist found!',
-                'data' => $data,
-            ],200);
-        }
-
+        //
     }
 
-
-    public function show(Request $request,$id)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        $data = DB::table('playlists')
-                    ->join('categories','playlists.id_category','=','categories.id_category')
-                    ->where('categories.id_category','=',$id)
-                    ->get();
-        if(!$data){
-            return response()->json([
-                'status' => false,
-                'message' => 'playlist based on category not found!'
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'playlist based on category found!',
-            'data' => $data,
-        ],200);
-    }
-
-
-    public function create(Request $request)
-    {
-        $request->validate([
-            'id_category' => 'required',
-            'playlist_name' => 'required',
-            'image' => 'required|mimes:jpeg,jpg,png|max:2048',
-            'about_playlist' => 'required',
-            'harga' => 'required',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
+            'about' => 'required',
+            'price' => 'required',
             'rating' => 'required',
+            'image' => 'required|mimes:jpeg,jpg,png|max:2048',
             'silabus1' => 'required',
             'silabus2' => 'required',
             'silabus3' => 'required',
             'silabus4' => 'required',
         ]);
-        $req = $request->all();
+        
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
 
         $fileName = time().'.'.$request->image->extension();
-        $path = 'playlist';
+        
+        $path = "playlist";
+        
         $request->image->move(public_path($path), $fileName);
 
-        $data = [
-            'id_category' => $req['id_category'],
-            'playlist_name' => $req['playlist_name'],
+        $playlist = Playlist::create([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'category_id' => $request->category_id,
+            'about' => $request->about,
+            'price' => $request->price,
+            'rating' => $request->rating,
             'image' => $path.'/'.$fileName,
-            'about_playlist' => $req['about_playlist'],
-            'harga' => $req['harga'],
-            'rating' => $req['rating'],
-            'silabus1' => $req['silabus1'],
-            'silabus2' => $req['silabus2'],
-            'silabus3' => $req['silabus3'],
-            'silabus4' => $req['silabus4'],
-        ];
-        Playlist::create($data);
+            'silabus1' => $request->silabus1,
+            'silabus2' => $request->silabus2,
+            'silabus3' => $request->silabus3,
+            'silabus4' => $request->silabus4,
+        ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'new playlist created !',
-            'data' => $data,
-        ],201);
+        return $this->response("Playlist created!", $playlist, 201);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $playlist = Playlist::with('category', 'video')->findOrFail($id);
+        
+        return $this->response("Playlist found!", $playlist, 200);
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request,$id)
     {
-        $palylist = Playlist::where('id_playlist','=',$id)->first();
-        if(!$palylist){
-            return response()->json([
-                'status' => false,
-                'message' => 'playlist not found!'
-            ],404);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
+            'about' => 'required',
+            'price' => 'required',
+            'rating' => 'required',
+            'image' => 'required|mimes:jpeg,jpg,png|max:2048',
+            'silabus1' => 'required',
+            'silabus2' => 'required',
+            'silabus3' => 'required',
+            'silabus4' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
         }
+        
+        $playlist = Playlist::findOrFail($id);
+        
+        if($request->hasFile('image')){
+            $fileName = time().'.'.$request->image->extension();
+            
+            $path = "playlist";
+            
+            $request->image->move(public_path($path), $fileName);
+            
+            unlink(public_path($path . $playlist->image));
+            
+            $image = $path.'/'.$fileName;
+        }
+        
+        $playlist->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'category_id' => $request->category_id,
+            'about' => $request->about,
+            'price' => $request->price,
+            'rating' => $request->rating,
+            'image' => $image ?? $playlist->image,
+            'silabus1' => $request->silabus1,
+            'silabus2' => $request->silabus2,
+            'silabus3' => $request->silabus3,
+            'silabus4' => $request->silabus4,
+        ]);
 
-        $req = $request->all();
-
-        $fileName = time().'.'.$request->image->extension();
-        $path = 'playlist';
-        $request->image->move(public_path($path), $fileName);
-
-        $data = [
-            'id_category' => $req['id_category'],
-            'playlist_name' => $req['playlist_name'],
-            'image' => $path.'/'.$fileName,
-            'about_playlist' => $req['about_playlist'],
-            'harga' => $req['harga'],
-            'rating' => $req['rating'],
-            'silabus1' => $req['silabus1'],
-            'silabus2' => $req['silabus2'],
-            'silabus3' => $req['silabus3'],
-            'silabus4' => $req['silabus4'],
-        ];
-        Playlist::where('id_playlist','=',$id)->update($data);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'playlist updated!',
-            'data' => $data,
-        ],201);
+        return $this->response("Playlist updated!", $playlist, 201);
     }
-
-
-    public function destroy(Request $request,$id)
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
     {
-        $data = Playlist::where('id_playlist','=',$id)->delete();
-        if(!$data){
-            return response()->json([
-                'status' => false,
-                'message' => 'playlist not be found !'
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'playlist hass delete!'
-        ],200);
+        $playlist = Playlist::findOrFail($id);
+        
+        $playlist->delete();
+        
+        return $this->response("Playlist deleted!", null, 201);
     }
-
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $search = Playlist::where('playlist_name','like','%'.$keyword.'%')->get();
-        if(!$search){
-            return response()->json([
-                'status' => false,
-                'message' => 'course not be found',
-            ],404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'course be found',
-            'data' => $search,
-        ],200);
-
-    }
-
 }

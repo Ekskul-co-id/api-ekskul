@@ -10,7 +10,13 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category_name',
-        'icon_category',
+        'name',
+        'slug',
+        'icon',
     ];
+    
+    public function playlist()
+    {
+        return $this->hasMany('App\Models\Playlist', 'category_id');
+    }
 }

@@ -29,11 +29,14 @@ class Controller extends BaseController
      *      url=L5_SWAGGER_CONST_HOST,
      *      description="Ekskul.co.id"
      * )
-
      *
-     * @OA\Tag(
-     *     name="Projects",
-     *     description="API Endpoints of Projects"
+     * @OA\SecurityScheme(
+     *     type="apiKey",
+     *     name="Token based Based",
+     *     in="header",
+     *     scheme="Bearer",
+     *     bearerFormat="Bearer",
+     *     securityScheme="bearer_token",
      * )
      */
 }

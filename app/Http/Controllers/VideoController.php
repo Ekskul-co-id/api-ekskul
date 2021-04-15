@@ -2,43 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Video;
+use App\Traits\APIResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class VideoController extends Controller
 {
+    use APIResponse;
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id = null)
+    public function index()
     {
-        if ($id) {
-            $vid = DB::table('videos')
-                ->join('playlists', 'videos.id_playlist', '=', 'playlists.id_playlist')
-                ->where('id_video', '=', $id)
-                ->first();
-            if (!$vid) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'videos not be found !'
-                ], 404);
-            }
-
-            return response()->json([
-                'status' => true,
-                'message' => 'details video has geted !',
-                'data' => $vid,
-            ], 200);
-        }
-        $vid = DB::table('videos')->join('playlists', 'videos.id_playlist', '=', 'playlists.id_playlist')->paginate(5);
-        return response()->json([
-            'status' => true,
-            'message' => 'data has geted !',
-            'data' => $vid,
-        ], 200);
+        $videos = Video::get();
+        
+        return $this->response("Videos found!", $videos, 200);
     }
 
     /**
@@ -59,25 +42,25 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_playlist' => 'required',
-            'videoid' => 'required',
-            'title' => 'required|max:100',
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:100',
+            'playlist_id' => 'required|integer',
+            'description' => 'required',
+            'video_id' => 'required',
         ]);
+        
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
 
-        $req = $request->all();
-        $data = [
-            'id_playlist' => $req['id_playlist'],
-            'videoid' => $req['videoid'],
-            'title' => $req['title'],
-            'description' => $req['description']
-        ];
-        Video::insert($data);
-        return response()->json([
-            'status' => true,
-            'message' => 'video succesfuly inserted !',
-            'data' => $data,
-        ], 201);
+        $video = Video::create([
+            'title' => $request->title,
+            'playlist_id' => $request->playlist_id,
+            'description' => $request->description,
+            'video_id' => $request->video_id,
+        ]);
+        
+        return $this->response("Video created!", $video, 201);
     }
 
     /**
@@ -88,7 +71,9 @@ class VideoController extends Controller
      */
     public function show($id)
     {
-        //
+        $video = Video::with('playlist')->findOrFail($id);
+        
+        return $this->response("Video found!", $video, 200);
     }
 
     /**
@@ -111,26 +96,27 @@ class VideoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $chcek = Video::Where('id_video', '=', $id)->first();
-        if (!$chcek) {
-            return response()->json([
-                'status' => false,
-                'message' => 'video not be found !',
-            ], 404);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:100',
+            'playlist_id' => 'required|integer',
+            'description' => 'required',
+            'video_id' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
         }
-        $req = $request->all();
-        $data = [
-            'id_playlist' => $req['id_playlist'],
-            'videoid' => $req['videoid'],
-            'title' => $req['title'],
-            'description' => $req['description']
-        ];
-        Video::Where('id_video', '=', $id)->update($data);
-        return response()->json([
-            'status' => true,
-            'message' => 'video succesfuly update!',
-            'data' => $data,
-        ], 201);
+        
+        $video = Video::findOrFail($id);
+
+        $video->update([
+            'title' => $request->title,
+            'playlist_id' => $request->playlist_id,
+            'description' => $request->description,
+            'video_id' => $request->video_id,
+        ]);
+        
+        return $this->response("Video updated!", $video, 201);
     }
 
     /**
@@ -141,17 +127,10 @@ class VideoController extends Controller
      */
     public function destroy($id)
     {
-        $video = Video::where('id_video', '=', $id)->delete();
-        if (!$video) {
-            return response()->json([
-                'status' => false,
-                'message' => 'video not found !'
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Video sucessfuly deleted!'
-        ], 201);
+        $video = Video::findOrFail($id);
+        
+        $video->delete();
+        
+        return $this->response("Video deleted", null, 201);
     }
 }

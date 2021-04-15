@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 
 class AuditController extends Controller
 {
+    use APIResponse;
     /**
      * Display a listing of the resource.
      *

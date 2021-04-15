@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentLog;
+use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 
 class LogController extends Controller
