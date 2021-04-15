@@ -15,6 +15,10 @@ class WebhookController extends Controller
     {
         $data = json_decode($request->getContent(), true);
         
+        if(empty($data)){
+            return $this->response("Invalid data.", null, 422);
+        }
+        
         $signaturKey = $data['signature_key'];
         
         $orderId = $data['order_id'];
@@ -39,7 +43,11 @@ class WebhookController extends Controller
 
         $checkoutId = explode('-', $orderId);
         
-        $order = Checkout::findOrFail($checkoutId[0]);
+        $order = Checkout::find($checkoutId[0]);
+        
+        if (empty($order)) {
+            return $this->response("Order not found.", null, 404);
+        }
 
         if ($transactionStatus == 'capture') {
             if ($fraudStatus == 'challenge') {
