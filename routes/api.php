@@ -7,6 +7,7 @@ use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingsController;
@@ -159,7 +160,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         });
     });
 
-    // User route
+    // Menu
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/',[OrderController::class,'index']);
         Route::post('/',[OrderController::class,'store']);
@@ -176,5 +177,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         Route::get('/{slug}',[MenuController::class,'detailPlaylist']); // detail playlist beserta video
         Route::post('/{slug}/ratings',[MenuController::class,'storeRating']);
         Route::put('/{slug}/ratings',[MenuController::class,'updateRating']);
+    });
+    
+    // Profile
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('/',[ProfileController::class,'index']);
+        Route::put('/',[ProfileController::class,'update']);
+        Route::put('/password',[ProfileController::class,'changePassword']);
     });
 });
