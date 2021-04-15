@@ -13,26 +13,28 @@ class WebhookController extends Controller
     
     public function midtransHandler(Request $request)
     {
-        $signaturKey = $request->signature_key;
+        $data = json_decode($request->getContent(), true);
         
-        $orderId = $request->order_id;
+        $signaturKey = $data['signature_key'];
         
-        $statusCode = $request->status_code;
+        $orderId = $data['order_id'];
         
-        $grossAmount = $request->gross_amount;
+        $statusCode = $data['status_code'];
+        
+        $grossAmount = $data['gross_amount'];
         
         $serverKey = env('MIDTRANS_SERVER_KEY');
 
         $mySignaturKey = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
 
-        $transactionStatus = $request->transaction_status;
+        $transactionStatus = $data['transaction_status'];
         
-        $paymentType = $request->payment_type;
+        $paymentType = $data['payment_type'];
         
-        $fraudStatus = $request->fraud_status;
+        $fraudStatus = $data['fraud_status'];
 
         if($signaturKey !== $mySignaturKey){
-            return $this->response("Invalid signature.", null, 400);
+            return $this->response("Invalid signature.", null, 422);
         }
 
         $checkoutId = explode('-', $orderId);

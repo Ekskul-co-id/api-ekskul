@@ -117,6 +117,8 @@ class CategoryController extends Controller
             
             $request->icon->move(public_path($path), $fileName);
             
+            unlink(public_path($path . $category->icon));
+            
             $icon = $path.'/'.$fileName;
         }
 

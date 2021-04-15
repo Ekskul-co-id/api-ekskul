@@ -143,8 +143,11 @@ class PlaylistController extends Controller
             
             $request->image->move(public_path($path), $fileName);
             
+            unlink(public_path($path . $playlist->image));
+            
             $image = $path.'/'.$fileName;
         }
+        
         $playlist->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),

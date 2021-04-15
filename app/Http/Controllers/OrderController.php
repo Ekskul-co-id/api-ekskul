@@ -38,7 +38,7 @@ class OrderController extends Controller
     {
         $checkouts = Checkout::with('user', 'playlist')->get();
                         
-        return $this->response("Transaction found!", $checkouts, 200);
+        return $this->response("Details transaction found!", $checkouts, 200);
     }
 
     /**
@@ -133,9 +133,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $checkout = Checkout::with('user', 'playlist')
-                        ->where(['id' => $id, 'status' => 'success'])
-                        ->firstOrFail();
+        $checkout = Checkout::with('user', 'playlist')->findOrFail($id);
         
         return $this->response("Details transaction found!", $checkout, 200);
     }

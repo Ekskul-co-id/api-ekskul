@@ -50,6 +50,17 @@ Route::get('fresh-db', function () {
     ], 200);
 });
 
+Route::get('refresh-cache', function () {
+    Artisan::call('optimize');
+    Artisan::call('optimize:clear');
+
+    return response()->json([
+        "status" => "success",
+        "message" => "Success refresh cache.",
+        "data" => null
+    ], 200);
+});
+
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);

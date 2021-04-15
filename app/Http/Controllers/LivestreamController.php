@@ -73,6 +73,7 @@ class LivestreamController extends Controller
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
+        
         return $this->response("Livestream created!", $livestream, 201);
     }
 
@@ -132,6 +133,8 @@ class LivestreamController extends Controller
             
             $request->image->move(public_path($path), $fileName);
             
+            unlink(public_path($path . $livestream->image));
+            
             $image = $path.'/'.$fileName;
         }
         
@@ -147,6 +150,7 @@ class LivestreamController extends Controller
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
+        
         return $this->response("Livestream updated!", $livestream, 201);
     }
 
