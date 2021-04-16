@@ -117,7 +117,7 @@ class MenuController extends Controller
         return $this->response("Rating created!", $rating, 201);
     }
     
-    public function upateRating(Request $request, $slug)
+    public function updateRating(Request $request, $slug)
     {
         $validator = Validator::make($request->all(), [
             'value' => 'required|integer'

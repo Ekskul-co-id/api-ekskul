@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -17,7 +18,7 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $setings = Setting::get();
+        $settings = Setting::get();
         
         return $this->response("Settings found!", $settings, 200);
     }

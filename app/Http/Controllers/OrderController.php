@@ -7,7 +7,7 @@ use App\Models\Checkout;
 use App\Models\Playlist;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Midtrans\Config;
@@ -36,7 +36,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $checkouts = Checkout::with('user', 'playlist')->get();
+        $userId = Auth::user()->id;
+        
+        $checkouts = Checkout::with('playlist')->where('user_id', $userId)->get();
                         
         return $this->response("Details transaction found!", $checkouts, 200);
     }
@@ -60,7 +62,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
             'playlist_id' => 'required|integer'
         ]);
 
@@ -68,9 +69,11 @@ class OrderController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
+        $userId = Auth::user()->id;
+        
         $check = Checkout::with('user', 'playlist')
                 ->where([
-                    'user_id' => $request->user_id,
+                    'user_id' => $userId,
                     'playlist_id' => $request->playlist_id,
                     'status' => 'pending',
                 ])
@@ -81,7 +84,7 @@ class OrderController extends Controller
         }
 
         $createOrder = Checkout::create([
-            'user_id' => $request->user_id,
+            'user_id' => $userId,
             'playlist_id' => $request->playlist_id,
             'qty' => 1,
         ]);
@@ -133,7 +136,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $checkout = Checkout::with('user', 'playlist')->findOrFail($id);
+        $checkout = Checkout::with('playlist')->findOrFail($id);
         
         return $this->response("Details transaction found!", $checkout, 200);
     }

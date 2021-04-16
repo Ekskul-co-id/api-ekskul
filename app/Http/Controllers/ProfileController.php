@@ -21,9 +21,9 @@ class ProfileController extends Controller
     
     public function index()
     {
-        $userId = Auth::user();
+        $user = Auth::user();
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('id');
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $user->id])->get()->pluck('id');
         
         $myPlaylist = Playlist::with('category')
         ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
