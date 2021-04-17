@@ -34,7 +34,7 @@ class ProfileController extends Controller
             ->groupBy('playlist_id')
         ])
         ->whereIn('playlists.id', $orderId)
-        ->get();
+        ->paginate(10);
         
         $data = [
             'user' => $user,

@@ -190,10 +190,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         Route::put('/{slug}/ratings',[MenuController::class,'updateRating']);
     });
     
-    // Profile
+    // User menu    
     Route::group(['prefix' => 'profile'], function () {
         Route::get('/',[ProfileController::class,'index']);
         Route::put('/',[ProfileController::class,'update']);
         Route::put('/password',[ProfileController::class,'changePassword']);
     });
+    
+    Route::get('/my-playlists',[MenuController::class,'myPlaylist']);;
 });

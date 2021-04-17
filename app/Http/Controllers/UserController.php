@@ -46,7 +46,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:6',
             'role' => 'required',
         ]);
 
@@ -108,7 +108,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'password' => 'required|string|min:8',
+            'password' => 'string|min:6',
             'role' => 'required',
         ]);
 
@@ -116,11 +116,13 @@ class UserController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
+        $password = !empty($request->password) ? Hash::make($request->password) : $user->password;
+        
         try {
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => $password,
             ]);
 
             $user->syncRoles($request->role);
