@@ -60,7 +60,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'icon' => $path.'/'.$fileName,
+            'icon' => env('APP_URL').'/'.$path.'/'.$fileName,
         ]);
         
         return $this->response("Category has created!", $category, 201);
@@ -119,7 +119,7 @@ class CategoryController extends Controller
             
             unlink(public_path($path . $category->icon));
             
-            $icon = $path.'/'.$fileName;
+            $icon = env('APP_URL').'/'.$path.'/'.$fileName;
         }
 
         $category->update([

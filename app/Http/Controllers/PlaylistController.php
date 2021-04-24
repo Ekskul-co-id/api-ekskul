@@ -72,7 +72,7 @@ class PlaylistController extends Controller
             'category_id' => $request->category_id,
             'about' => $request->about,
             'price' => $request->price,
-            'image' => $path.'/'.$fileName,
+            'image' => env('APP_URL').'/'.$path.'/'.$fileName,
             'silabus1' => $request->silabus1,
             'silabus2' => $request->silabus2,
             'silabus3' => $request->silabus3,
@@ -142,7 +142,7 @@ class PlaylistController extends Controller
             
             unlink(public_path($path . $playlist->image));
             
-            $image = $path.'/'.$fileName;
+            $image = env('APP_URL').'/'.$path.'/'.$fileName;
         }
         
         $playlist->update([

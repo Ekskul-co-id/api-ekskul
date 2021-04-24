@@ -68,7 +68,7 @@ class ProfileController extends Controller
             
             if (($user->avatar !== "avatar/default.png") || (!$user->avatar)) unlink(public_path($path . $user->avatar));
             
-            $avatar = $path.'/'.$fileName;
+            $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
         }
         
         $user->update([

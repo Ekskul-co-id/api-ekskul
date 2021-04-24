@@ -17,22 +17,22 @@ class CategorySeeder extends Seeder
         Category::create([
             'name' => 'Bahasa',
             'slug' => 'bahasa',
-            'icon' => 'icon/bahasa.png'
+            'icon' => env('APP_URL').'/icon/bahasa.png'
         ]);
         Category::create([
             'name' => 'Multimedia',
             'slug' => 'multimedia',
-            'icon' => 'icon/multimedia.png'
+            'icon' => env('APP_URL').'/icon/multimedia.png'
         ]);
         Category::create([
             'name' => 'Musik',
             'slug' => 'musik',
-            'icon' => 'icon/musik.png'
+            'icon' => env('APP_URL').'/icon/musik.png'
         ]);
         Category::create([
             'name' => 'Teknik',
             'slug' => 'teknik',
-            'icon' => 'icon/teknik.png'
+            'icon' => env('APP_URL').'/icon/teknik.png'
         ]);
     }
 }

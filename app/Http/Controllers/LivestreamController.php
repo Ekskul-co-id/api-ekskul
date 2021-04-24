@@ -67,7 +67,7 @@ class LivestreamController extends Controller
         
         $livestream = Livestream::create([
             'title' => $request->title,
-            'image' => $path.'/'.$fileName,
+            'image' => env('APP_URL').'/'.$path.'/'.$fileName,
             'description' => $request->description,
             'video_id' => $request->video_id,
             'start_date' => $start_date,
@@ -135,7 +135,7 @@ class LivestreamController extends Controller
             
             unlink(public_path($path . $livestream->image));
             
-            $image = $path.'/'.$fileName;
+            $image = env('APP_URL').'/'.$path.'/'.$fileName;
         }
         
         $start_date = date('Y/m/d H:i', strtotime($request->start_date));
