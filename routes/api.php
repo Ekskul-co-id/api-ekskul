@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComentController;
 use App\Http\Controllers\LivestreamController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlaylistController;
@@ -66,6 +67,7 @@ Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);
 Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
 Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
+Route::get('/banner',[SettingsController::class,'index']);
 
 
 // Payment handling
@@ -168,6 +170,15 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
             Route::get('/{id}',[RatingController::class,'show']);
             Route::put('/{id}',[RatingController::class,'update']);
             Route::delete('/{id}',[RatingController::class,'destroy']);
+        });
+        
+        // Payment log
+        Route::group(['prefix' => 'logs'], function () {
+            Route::get('/',[LogController::class,'index']);
+            Route::post('/',[LogController::class,'store']);
+            Route::get('/{id}',[LogController::class,'show']);
+            Route::put('/{id}',[LogController::class,'update']);
+            Route::delete('/{id}',[LogController::class,'destroy']);
         });
     });
 
