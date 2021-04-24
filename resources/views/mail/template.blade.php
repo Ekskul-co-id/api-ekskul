@@ -207,7 +207,7 @@
                                 <tr>
                                     <td width="33%" valign="middle" style="text-align:left; padding:20px 0 10px 0;">
                                         <a href="">
-                                        <img src="https://raw.githubusercontent.com/Anggasayogo/Rest-Api-Ekskul.co.id/master/public/logoe.png" width="136" height="22" border="0" alt="Ekskul.co.id" style="width:136px; height:50px;" />
+                                        <img src="{{ asset('logo.svg') }}" border="0" alt="Ekskul.co.id" style="width:135px; height:auto;" />
                                         </a>
                                     </td>
                                     <td width="66%" valign="middle" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: right; padding-top: 12px; vertical-align: middle;"></td>
