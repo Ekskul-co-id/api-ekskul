@@ -196,6 +196,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     
     Route::group(['prefix' => 'playlists'], function () {
         Route::get('/',[MenuController::class,'listPlaylist']); // list semua playlist
+        Route::get('/popular',[MenuController::class,'popularPlaylist']);
         Route::get('/{slug}',[MenuController::class,'detailPlaylist']); // detail playlist beserta video
         Route::post('/{slug}/ratings',[MenuController::class,'storeRating']);
         Route::put('/{slug}/ratings',[MenuController::class,'updateRating']);

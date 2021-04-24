@@ -84,6 +84,23 @@ class MenuController extends Controller
         return $this->response("Playlists found!", $data, 200);
     }
     
+    public function popularPlaylist()
+    {
+        $playlists = Playlist::with('category')
+            ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
+                ->whereColumn('playlist_id', 'playlists.id')
+                ->groupBy('playlist_id')
+            ,'user_rated' => Rating::selectRaw('count(value) as total')
+                ->whereColumn('playlist_id', 'playlists.id')
+                ->groupBy('playlist_id')
+            ,'total_videos' => Video::selectRaw('count(id) as total')
+                ->whereColumn('playlist_id', 'playlists.id')
+                ->groupBy('playlist_id')
+            ])->orderByDesc('user_rated')->limit(5)->get();
+        
+        return $this->response("Playlists found!", $playlists, 200);
+    }
+    
     public function detailPlaylist($slug)
     {
         $playlist = Playlist::with('category', 'video')->where('slug', $slug)->firstOrFail();
