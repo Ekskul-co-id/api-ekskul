@@ -67,8 +67,6 @@ Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);
 Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
 Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
-Route::get('/banner',[SettingsController::class,'index']);
-
 
 // Payment handling
 Route::post('/webhooks',[WebhookController::class,'midtransHandler']);
@@ -183,6 +181,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     });
 
     // Menu
+    Route::get('/banner',[SettingsController::class,'index']);
+    
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/',[OrderController::class,'index']);
         Route::post('/',[OrderController::class,'store']);
