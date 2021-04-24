@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $request->file->move(public_path($path), $fileName);
         
         $setting = Setting::create([
-            'image_baner' => $fileName
+            'image_baner' => env('APP_URL').'/'.$fileName
         ]);
 
         return  $this->response("Setting created!", $setting, 201);
@@ -110,7 +110,7 @@ class SettingsController extends Controller
         $request->file->move(public_path($path), $fileName);
         
         $setting->update([
-            'image_baner' => $fileName
+            'image_baner' => env('APP_URL').'/'.$fileName
         ]);
 
         return  $this->response("Setting updated!", $setting, 201);
