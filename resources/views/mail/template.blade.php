@@ -207,7 +207,7 @@
                                 <tr>
                                     <td width="33%" valign="middle" style="text-align:left; padding:20px 0 10px 0;">
                                         <a href="">
-                                        <img src="{{ asset('logo.svg') }}" border="0" alt="Ekskul.co.id" style="width:135px; height:auto;" />
+                                        <img src="https://service.ekskul.co.id/logo.svg" border="0" alt="Ekskul.co.id" style="width:135px; height:auto;" />
                                         </a>
                                     </td>
                                     <td width="66%" valign="middle" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: right; padding-top: 12px; vertical-align: middle;"></td>
@@ -232,8 +232,6 @@
                                     <td colspan="2" style="background: #fff; border-radius: 8px;">
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
-                                                <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-                                            <tr class="">
                                                 <td class="grid__col" style="font-family: 'Helvetica neue', Helvetica, arial, sans-serif; padding: 32px 40px; ">
                                                     <h2 style="color: #404040; font-weight: 300; margin: 0 0 12px 0; font-size: 24px; line-height: 30px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; ">
                                                         Hi {{ $user->name }},
@@ -260,8 +258,6 @@
                                                         <p>Admin Ekskul.co.id</p>
                                                     </a>
                                                 </td>
-                                            </tr>
-                                            </td>
                                             </tr>
                                         </table>
                                     </td>
@@ -363,7 +359,7 @@
                                         </table>
                                     </td>
                                 </tr>
-                                <tr class="">
+                                <tr>
                                     <td class="grid__col" style="font-family: 'Helvetica neue', Helvetica, arial, sans-serif; padding: 24px 0; text-align: center;">
                                         <div style="color: #666666; font-weight: 400; font-size: 13px; line-height: 18px; font-family: 'Helvetica neue', Helvetica, arial, sans-serif; font-weight: 300; padding-bottom: 6px;" class="">
                                             <span style='' class=''>
