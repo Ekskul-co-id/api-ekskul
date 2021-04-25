@@ -29,6 +29,6 @@ class VerificationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.template', ['user' => $this->user, 'code' => $this->code]);
+        return $this->view('mail.verification', ['user' => $this->user, 'code' => $this->code]);
     }
 }
