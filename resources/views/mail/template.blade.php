@@ -207,7 +207,7 @@
                                 <tr>
                                     <td width="33%" valign="middle" style="text-align:left; padding:20px 0 10px 0;">
                                         <a href="">
-                                        <img src="https://service.ekskul.co.id/logo.svg" border="0" alt="Ekskul.co.id" style="width:135px; height:auto;" />
+                                        <img src="https://service.ekskul.co.id/logo.png" border="0" alt="Ekskul.co.id" style="width:135px; height:auto;" />
                                         </a>
                                     </td>
                                     <td width="66%" valign="middle" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: right; padding-top: 12px; vertical-align: middle;"></td>
