@@ -69,12 +69,14 @@ class ProfileController extends Controller
             if (($user->avatar !== "avatar/default.png") || (!$user->avatar)) unlink(public_path($path . $user->avatar));
             
             $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
+        } else {
+            $userAvatar = 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=svg';
         }
         
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'avatar' => $avatar ?? $user->avatar,
+            'avatar' => $avatar ?? $userAvatar,
             'address' => $request->address,
         ]);
     }

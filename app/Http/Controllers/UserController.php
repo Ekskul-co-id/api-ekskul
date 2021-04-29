@@ -58,6 +58,7 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=svg',
                 'email_verified_at' => now(),
                 'password' => Hash::make($request->password),
             ]);
@@ -108,6 +109,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=svg',
             'password' => 'string|min:6',
             'role' => 'required',
         ]);
