@@ -10,7 +10,7 @@ class PaymentLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'status','payment_type','checkout_id','raw_response'
+        'status', 'checkout_id', 'payment_type', 'raw_response', 'fcm_response'
     ];
 
     protected $casts = [

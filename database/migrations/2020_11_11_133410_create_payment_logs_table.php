@@ -16,9 +16,10 @@ class CreatePaymentLogsTable extends Migration
         Schema::create('payment_logs', function (Blueprint $table) {
             $table->id();
             $table->string('status');
+            $table->foreignId('checkout_id')->constrained('checkouts');
             $table->string('payment_type');
             $table->json('raw_response');
-            $table->foreignId('checkout_id')->constrained('checkouts');
+            $table->json('fcm_response')->nullable();
             $table->timestamps();
         });
     }

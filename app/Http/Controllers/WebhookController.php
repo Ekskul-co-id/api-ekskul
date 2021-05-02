@@ -102,9 +102,10 @@ class WebhookController extends Controller
         
         PaymentLog::create([
             'status' => $transactionStatus,
-            'raw_response' => $request->getContent(),
             'checkout_id' => $checkoutId[0],
-            'payment_type' => $paymentType, 
+            'payment_type' => $paymentType,
+            'raw_response' => $request->getContent(),
+            'fcm_response' => $data,
         ]);
        
         return response()->json([
