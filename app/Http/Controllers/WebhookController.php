@@ -6,6 +6,7 @@ use App\Models\Checkout;
 use App\Models\PaymentLog;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class WebhookController extends Controller
 {
@@ -59,14 +60,56 @@ class WebhookController extends Controller
             }
         } else if ($transactionStatus == 'settlement') {
             // TODO set transaction status on your database to 'success'
+            $body = "Transaksi sukses";
+            
             $order->update(['status' => 'success']);
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
             // TODO set transaction status on your database to 'failure'
+            $body = "Transaksi gagal";
+            
             $order->update(['status' => 'failure']);
         } else if ($transactionStatus == 'pending') {
             // TODO set transaction status on your database to 'pending' / waiting payment
+            $body = "Transaksi pending";
+            
             $order->update(['status' => 'pending']);
         }
+        
+        $url = "https://fcm.googleapis.com/fcm/send";
+        
+        $server_key = env('FCM_SERVER_KEY');
+        
+        $headers = [
+            'Content-Type:application/json',
+            'Authorization:key='.$server_key
+        ];
+        
+        $data = [
+            'to' => $checkout->user->device_token,
+            'priority' => 'high',
+            'soundName' => 'default',
+            'notification' => [
+                'name' => $transactionStatus,
+                'body' => $body ?? ''
+            ]
+        ];
+        
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'key='.$server_key
+        ])->post('https://fcm.googleapis.com/fcm/send', json_encode($data));
+        
+        /*$ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        $result = curl_exec($ch);
+        curl_close($ch);*/
+        
         
         PaymentLog::create([
             'status' => $transactionStatus,
