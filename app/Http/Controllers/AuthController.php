@@ -63,6 +63,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=svg',
                 'password' => Hash::make($request->password),
+                'device_token' => $request->device_token
             ]);
             
             $user->syncRoles('user');
@@ -124,6 +125,10 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+        
+        $user->update([
+            'device_token' => $request->device_token
+        ]);
         
         $token = $user->createToken($user->email)->plainTextToken;
 
