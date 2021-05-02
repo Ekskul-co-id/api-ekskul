@@ -105,9 +105,9 @@ class WebhookController extends Controller
             'checkout_id' => $checkoutId[0],
             'payment_type' => $paymentType,
             'raw_response' => $request->getContent(),
-            'raw_response' => json_encode($response->json())
+            'fcm_response' => json_encode($response->json())
         ]);
-       
+        
         return response()->json([
             'status' => $transactionStatus,
             'data' => $response->json()
