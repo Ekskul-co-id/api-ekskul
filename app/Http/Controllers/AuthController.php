@@ -21,30 +21,6 @@ class AuthController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['login', 'register']]);
     }
     
-    /**
-     * @OA\Post(
-     *     path="/api/register",
-     *     summary="Register",
-     *     description="Register with name, email, password",
-     *     operationId="authRegister",
-     *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Pass register credentials",
-     *         @OA\JsonContent(
-     *             required={"name", "email", "password"},
-     *             @OA\Property(property="name", type="string", format="text", example="John Doe"),
-     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="EkSkuLPassword"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="EkSkuLPassword"),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Success",
-     *     ),
-     * )
-     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -85,28 +61,6 @@ class AuthController extends Controller
         }
     }
     
-   /**
-     * @OA\Post(
-     *     path="/api/login",
-     *     summary="Login",
-     *     description="Login with email, password",
-     *     operationId="authLogin",
-     *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Pass register credentials",
-     *         @OA\JsonContent(
-     *             required={"email", "password"},
-     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="EkSkuLPassword"),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Success",
-     *     ),
-     * )
-     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -135,20 +89,6 @@ class AuthController extends Controller
         return $this->response("Login successfully.", ['user' => $user, 'token' => $token], 201);
     }
     
-    /**
-     * @OA\Post(
-     *     path="/api/logout",
-     *     summary="Logout",
-     *     description="Logout",
-     *     operationId="authLogout",
-     *     security={{ "bearer_token": {} }},
-     *     tags={"Auth"},
-     *     @OA\Response(
-     *         response=201,
-     *         description="Success",
-     *     ),
-     * )
-     */
     public function logout()
     {
         Auth::user()->tokens()->delete();

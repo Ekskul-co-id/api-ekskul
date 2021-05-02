@@ -15,28 +15,6 @@ class VerifyEmailController extends Controller
 {
     use APIResponse;
     
-    /**
-     * @OA\Post(
-     *     path="/api/verify",
-     *     summary="Verification",
-     *     description="Verification email",
-     *     operationId="authVerify",
-     *     security={{ "bearer_token": {} }},
-     *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Pass verify credentials",
-     *         @OA\JsonContent(
-     *             required={"code"},
-     *             @OA\Property(property="code", type="integer", format="int", example="52413"),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Success",
-     *     ),
-     * )
-     */
     public function verify(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -74,20 +52,6 @@ class VerifyEmailController extends Controller
         }
     }
     
-    /**
-     * @OA\Post(
-     *     path="/api/verify/resend",
-     *     summary="Verification",
-     *     description="Resend verification code",
-     *     operationId="authVerifyResend",
-     *     security={{ "bearer_token": {} }},
-     *     tags={"Auth"},
-     *     @OA\Response(
-     *         response=201,
-     *         description="Success",
-     *     ),
-     * )
-     */
     public function resend()
     {
         $user = Auth::user();
