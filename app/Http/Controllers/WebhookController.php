@@ -75,8 +75,6 @@ class WebhookController extends Controller
             $order->update(['status' => 'pending']);
         }
         
-        $url = env('FCM_SENDER_URL');
-        
         $server_key = env('FCM_SERVER_KEY');
         
         $headers = [
@@ -98,7 +96,7 @@ class WebhookController extends Controller
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'key='.$server_key
-        ])->post('https://fcm.googleapis.com/fcm/send', $data);
+        ])->post($url, $data);
         
         PaymentLog::create([
             'status' => $transactionStatus,
