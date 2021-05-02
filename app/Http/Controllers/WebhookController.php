@@ -75,7 +75,7 @@ class WebhookController extends Controller
             $order->update(['status' => 'pending']);
         }
         
-        $url = "https://fcm.googleapis.com/fcm/send";
+        $url = env('FCM_SENDER_URL');
         
         $server_key = env('FCM_SERVER_KEY');
         
@@ -89,8 +89,9 @@ class WebhookController extends Controller
             'priority' => 'high',
             'soundName' => 'default',
             'notification' => [
-                'name' => $transactionStatus,
-                'body' => $body ?? ''
+                'title' => $transactionStatus,
+                'image' => $order->playlist->image,
+                'body' => $body
             ]
         ];
         
@@ -98,7 +99,6 @@ class WebhookController extends Controller
             'Content-Type' => 'application/json',
             'Authorization' => 'key='.$server_key
         ])->post('https://fcm.googleapis.com/fcm/send', $data);
-        
         
         PaymentLog::create([
             'status' => $transactionStatus,
@@ -109,7 +109,7 @@ class WebhookController extends Controller
        
         return response()->json([
             'status' => $transactionStatus,
-            'data' => $response
+            'data' => $response->json()
         ], 201);
     }
 }
