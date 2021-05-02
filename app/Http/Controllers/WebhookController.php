@@ -85,7 +85,7 @@ class WebhookController extends Controller
         ];
         
         $data = [
-            'to' => $checkout->user->device_token,
+            'to' => $order->user->device_token,
             'priority' => 'high',
             'soundName' => 'default',
             'notification' => [
@@ -108,7 +108,7 @@ class WebhookController extends Controller
         ]);
        
         return response()->json([
-            'status' => $transactionStatus
+            'status' => $transactionStatus,
             'data' => $response
         ], 201);
     }
