@@ -16,7 +16,7 @@ class WebhookController extends Controller
     {
         $data = json_decode($request->getContent(), true);
         
-        if(empty($data)){
+        if (empty($data)) {
             return $this->response("Invalid data.", null, 422);
         }
         
@@ -38,7 +38,7 @@ class WebhookController extends Controller
         
         $fraudStatus = $data['fraud_status'];
 
-        if($signaturKey !== $mySignaturKey){
+        if ($signaturKey !== $mySignaturKey) {
             return $this->response("Invalid signature.", null, 422);
         }
 
@@ -52,24 +52,33 @@ class WebhookController extends Controller
 
         if ($transactionStatus == 'capture') {
             if ($fraudStatus == 'challenge') {
-                // TODO set transaction status on your database to 'challenge'
                 $order->update(['status' => 'challenge']);
             } else if ($fraudStatus == 'accept') {
-                // TODO set transaction status on your database to 'success'
                 $order->update(['status' => 'success']);
             }
         } else if ($transactionStatus == 'settlement') {
-            // TODO set transaction status on your database to 'success'
-            $body = "Transaksi sukses";
+            $title = "Transaksi berhasil!";
+            
+            $body = "Berhasil membeli course ".$order->playlist->name.".";
             
             $order->update(['status' => 'success']);
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
-            // TODO set transaction status on your database to 'failure'
-            $body = "Transaksi gagal";
+            if ($transactionStatus == 'cancel') {
+                $title = "Pembayaran dibatalkan!";
+            
+                $body = "Pembayaran ".$order->playlist->name." dibatalkan.";
+            } else if ($transactionStatus == 'deny') {
+                $title = "Pembayaran ditolak!";
+            
+                $body = "Pembayaran ".$order->playlist->name." ditolak.";
+            } else if ($transactionStatus == 'expire') {
+                $title = "Pembayaran berkahir!";
+            
+                $body = "Waktu pembayaran course ".$order->playlist->name." telah berkahir.";
+            }
             
             $order->update(['status' => 'failure']);
         } else if ($transactionStatus == 'pending') {
-            // TODO set transaction status on your database to 'pending' / waiting payment
             $body = "Transaksi pending";
             
             $order->update(['status' => 'pending']);
@@ -77,35 +86,37 @@ class WebhookController extends Controller
         
         $url = env('FCM_SENDER_URL');
         
-        $server_key = env('FCM_SERVER_KEY');
+        $serverKey = env('FCM_SERVER_KEY');
         
         $headers = [
             'Content-Type:application/json',
-            'Authorization:key='.$server_key
+            'Authorization:key='.$serverKey
         ];
         
-        $data = [
-            'to' => $order->user->device_token,
-            'priority' => 'high',
-            'soundName' => 'default',
-            'notification' => [
-                'title' => $transactionStatus,
-                'image' => $order->playlist->image,
-                'body' => $body
-            ]
-        ];
-        
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => 'key='.$server_key
-        ])->post($url, $data);
+        if (!empty($title) && !empty($body)) {
+            $data = [
+                'to' => $order->user->device_token,
+                'priority' => 'high',
+                'soundName' => 'default',
+                'notification' => [
+                    'title' => $title,
+                    'image' => $order->playlist->image,
+                    'body' => $body
+                ]
+            ];
+            
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => 'key='.$server_key
+            ])->post($url, $data);
+        }
         
         PaymentLog::create([
             'status' => $transactionStatus,
             'checkout_id' => $checkoutId[0],
             'payment_type' => $paymentType,
             'raw_response' => $request->getContent(),
-            'fcm_response' => json_encode($response->json())
+            'fcm_response' => json_encode($response->json()) //klo di set sukses & gagal doang, pas pending column ini bakal kosong, gimana tuh?
         ]);
         
         return response()->json([
