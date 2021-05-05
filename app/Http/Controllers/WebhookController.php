@@ -89,8 +89,8 @@ class WebhookController extends Controller
         $serverKey = env('FCM_SERVER_KEY');
         
         $headers = [
-            'Content-Type:application/json',
-            'Authorization:key='.$serverKey
+            'Content-Type' => 'application/json',
+            'Authorization' => 'key='.$serverKey
         ];
         
         if (!empty($title) && !empty($body)) {
@@ -105,10 +105,7 @@ class WebhookController extends Controller
                 ]
             ];
             
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Authorization' => 'key='.$server_key
-            ])->post($url, $data);
+            $response = Http::withHeaders($headers)->post($url, $data);
         }
         
         PaymentLog::create([
