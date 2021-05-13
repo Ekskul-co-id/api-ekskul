@@ -106,19 +106,23 @@ class WebhookController extends Controller
             ];
             
             $response = Http::withHeaders($headers)->post($url, $data);
+        }else{
+            $response = null;
         }
+        
+        $result = $response ? $response->json() : '';
         
         PaymentLog::create([
             'status' => $transactionStatus,
             'checkout_id' => $checkoutId[0],
             'payment_type' => $paymentType,
             'raw_response' => $request->getContent(),
-            'fcm_response' => json_encode($response->json())
+            'fcm_response' => json_encode($result)
         ]);
         
         return response()->json([
             'status' => $transactionStatus,
-            'data' => $response->json()
+            'data' => $result
         ], 201);
     }
 }

@@ -19,3 +19,7 @@ Route::get('/', function () {
         "date" => date('Y-m-d')
     ],200);
 });
+
+Route::get('/transaction-success', function () {
+    return view('transactionSuccess');
+});
