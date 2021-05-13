@@ -160,7 +160,7 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('id');
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('playlist_id');
         
         $value = e($request->get('q'));
         
