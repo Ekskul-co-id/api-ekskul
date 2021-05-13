@@ -124,6 +124,146 @@ class PlaylistSeeder extends Seeder
             'silabus4' => 'example',
         ]);
         
+        Playlist::create([
+            'name' => 'Dummy 1',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 2',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        
+        Playlist::create([
+            'name' => 'Dummy 3',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 4',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 5',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 6',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 7',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 8',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 9',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
+        
+        Playlist::create([
+            'name' => 'Dummy 10',
+            'slug' => 'editing-sendal-seperti-film-film-hollywood',
+            'category_id' => 2,
+            'image' => env('APP_URL').'/playlist/1605859951.png',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'Di playlist ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
+            'price' => '180000',
+            'silabus1' => 'example',
+            'silabus2' => 'example',
+            'silabus3' => 'example',
+            'silabus4' => 'example',
+        ]);
         Rating::factory(150)->create();
     }
 }
