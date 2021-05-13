@@ -51,7 +51,7 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'avatar' => 'mimes:jpeg,jpg,png,svg|max:2048',
+            'avatar' => 'mimes:jpeg,jpg,png|max:2048',
             'address' => 'required|string',
         ]);
         
@@ -70,7 +70,7 @@ class ProfileController extends Controller
             
             $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
         } else {
-            $userAvatar = 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=svg';
+            $userAvatar = 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=png';
         }
         
         $user->update([

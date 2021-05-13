@@ -23,7 +23,7 @@ class RoleSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@ekskul.co.id',
-            'avatar' => 'https://ui-avatars.com/api/?name=Admin&background=FBBF24&color=ffffff&bold=true&format=svg',
+            'avatar' => 'https://ui-avatars.com/api/?name=Admin+Ekskul&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'address' => 'Indonesia' 
@@ -34,7 +34,7 @@ class RoleSeeder extends Seeder
         $user = User::create([
             'name' => 'John',
             'email' => 'john@example.com',
-            'avatar' => 'https://ui-avatars.com/api/?name=John&background=FBBF24&color=ffffff&bold=true&format=svg',
+            'avatar' => 'https://ui-avatars.com/api/?name=John&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'address' => 'Japan' 
