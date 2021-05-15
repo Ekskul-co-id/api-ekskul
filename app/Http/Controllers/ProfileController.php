@@ -60,7 +60,7 @@ class ProfileController extends Controller
         }
         
         if ($request->hasFile('avatar')) {
-            $fileName = time().'.'.$request->icon->extension();
+            $fileName = time().'.'.$request->avatar->extension();
             
             $path = "avatar";
             
