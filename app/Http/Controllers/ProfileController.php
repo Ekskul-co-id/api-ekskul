@@ -79,6 +79,8 @@ class ProfileController extends Controller
             'avatar' => $avatar ?? $userAvatar,
             'address' => $request->address,
         ]);
+        
+        return $this->response("Successfully update profile.", null, 201);
     }
     
     public function changePassword(Request $request)
