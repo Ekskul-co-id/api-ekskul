@@ -59,6 +59,8 @@ class ProfileController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
+        $userAvatar = 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=png';
+        
         if ($request->hasFile('avatar')) {
             $fileName = time().'.'.$request->avatar->extension();
             
@@ -66,11 +68,9 @@ class ProfileController extends Controller
             
             $request->file('avatar')->move(public_path($path), $fileName);
             
-            if (($user->avatar !== "avatar/default.png") || (!$user->avatar)) unlink(public_path($path . $user->avatar));
+            if ($user->avatar !== $userAvatar) unlink(public_path($path . $user->avatar));
             
             $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
-        } else {
-            $userAvatar = 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=png';
         }
         
         $user->update([
