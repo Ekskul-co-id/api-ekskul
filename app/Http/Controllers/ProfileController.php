@@ -61,6 +61,10 @@ class ProfileController extends Controller
         
         $userAvatar = 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=png';
         
+        if (!$user->has_update_avatar) {
+            $avatar = $userAvatar;
+        }
+        
         if ($request->hasFile('avatar')) {
             $fileName = time().'.'.$request->avatar->extension();
             
@@ -71,16 +75,21 @@ class ProfileController extends Controller
             if ($user->avatar !== $userAvatar) unlink(public_path($path . str_replace(env('APP_URL').'/avatar', '', $user->avatar)));
             
             $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
+            
+            $hasUpdateAvatar = true;
+        } else {
+            $hasUpdateAvatar = $user->has_update_avatar;
         }
         
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'avatar' => $avatar ?? $userAvatar,
+            'avatar' => $avatar ?? $user->avatar,
             'address' => $request->address,
+            'has_update_avatar' => $hasUpdateAvatar,
         ]);
         
-        return $this->response("Successfully update profile.", null, 201);
+        return $this->response("Successfully update profile.", $user, 201);
     }
     
     public function changePassword(Request $request)

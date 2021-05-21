@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->text('address')->nullable();
             $table->string('device_token')->nullable();
+            $table->boolean('has_update_avatar')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
