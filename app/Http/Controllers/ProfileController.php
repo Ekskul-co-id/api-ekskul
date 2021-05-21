@@ -68,7 +68,7 @@ class ProfileController extends Controller
             
             $request->file('avatar')->move(public_path($path), $fileName);
             
-            if ($user->avatar !== $userAvatar) unlink(public_path($path . $user->avatar));
+            if ($user->avatar !== $userAvatar) unlink(public_path($path . str_replace(env('APP_URL').'/avatar', '', $user->avatar)));
             
             $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
         }
