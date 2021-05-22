@@ -10,13 +10,13 @@ class Rating extends Model
     use HasFactory;
     
     protected $fillable = [
-        'playlist_id',
+        'course_id',
         'user_id',
         'value',
     ];
     
-    public function playlist()
+    public function course()
     {
-        return $this->belongsTo('App\Models\Playlist');
+        return $this->belongsTo('App\Models\Course');
     }
 }

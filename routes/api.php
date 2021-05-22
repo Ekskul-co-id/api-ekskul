@@ -7,7 +7,7 @@ use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoleController;
@@ -107,13 +107,13 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
             Route::get('/{id}',[SettingsController::class,'destroy']);
         });
 
-        // Playlist 
-        Route::group(['prefix' => 'playlists'], function () {
-            Route::get('/',[PlaylistController::class,'index']);
-            Route::post('/',[PlaylistController::class,'store']);
-            Route::get('/{id}',[PlaylistController::class,'show']);
-            Route::post('/{id}',[PlaylistController::class,'update']);
-            Route::get('/{id}',[PlaylistController::class,'destroy']);
+        // Course 
+        Route::group(['prefix' => 'courses'], function () {
+            Route::get('/',[CourseController::class,'index']);
+            Route::post('/',[CourseController::class,'store']);
+            Route::get('/{id}',[CourseController::class,'show']);
+            Route::post('/{id}',[CourseController::class,'update']);
+            Route::get('/{id}',[CourseController::class,'destroy']);
         });
 
         // Category 
@@ -191,13 +191,13 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     
     Route::group(['prefix' => 'categories'], function () {
         Route::get('/',[MenuController::class,'listCategory']); // list semua category
-        Route::get('/{slug}',[MenuController::class,'detailCategory']); // show detail category dengan list playlist berdasarkan category yang di pilih
+        Route::get('/{slug}',[MenuController::class,'detailCategory']); // show detail category dengan list course berdasarkan category yang di pilih
     });
     
-    Route::group(['prefix' => 'playlists'], function () {
-        Route::get('/',[MenuController::class,'listPlaylist']); // list semua playlist
-        Route::get('/popular',[MenuController::class,'popularPlaylist']);
-        Route::get('/{slug}',[MenuController::class,'detailPlaylist']); // detail playlist beserta video
+    Route::group(['prefix' => 'courses'], function () {
+        Route::get('/',[MenuController::class,'listCourse']); // list semua course
+        Route::get('/popular',[MenuController::class,'popularCourse']);
+        Route::get('/{slug}',[MenuController::class,'detailCourse']); // detail course beserta video
         Route::post('/{slug}/ratings',[MenuController::class,'storeRating']);
         Route::put('/{slug}/ratings',[MenuController::class,'updateRating']);
     });
@@ -209,5 +209,5 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         Route::put('/password',[ProfileController::class,'changePassword']);
     });
     
-    Route::get('/my-playlists',[MenuController::class,'myPlaylist']);;
+    Route::get('/my-courses',[MenuController::class,'myCourse']);;
 });

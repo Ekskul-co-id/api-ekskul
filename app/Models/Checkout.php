@@ -13,7 +13,7 @@ class Checkout extends Model
 
     protected $fillable = [
         'user_id',
-        'playlist_id',
+        'course_id',
         'qty',
         'snap_url',
         'metadata',
@@ -31,8 +31,8 @@ class Checkout extends Model
         return $this->belongsTo('App\Models\User');
     }
     
-    public function playlist()
+    public function course()
     {
-        return $this->belongsTo('App\Models\Playlist');
+        return $this->belongsTo('App\Models\Course');
     }
 }

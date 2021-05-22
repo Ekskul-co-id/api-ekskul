@@ -15,10 +15,10 @@ class CreateVideosTable extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('playlist_id')->constrained('playlists')->nullable();
-            $table->string('video_id');
             $table->string('title');
-            $table->text('description');
+            $table->string('video_id');
+            $table->foreignId('playlist_id')->constrained('playlists')->nullable();
+            $table->integer('duration');
             $table->timestamps();
         });
     }

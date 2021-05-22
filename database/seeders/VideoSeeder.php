@@ -15,77 +15,77 @@ class VideoSeeder extends Seeder
     public function run()
     {
         Video::create([
-            'title' => '01 Memegang gitar',
+            'title' => '01 Memegang gitar pake jari',
             'video_id' => 'DMI2LgVRHWw',
-            'description' => 'Pada video ini kita belajar cara memegang gitar',
+            'duration' => '12',
             'playlist_id' => '1',
         ]);
         Video::create([
-            'title' => '02 Kunci gitar',
+            'title' => '02 Memegang gitar pake kuku',
             'video_id' => '62mOP9kNz_c',
-            'description' => 'Pada video ini kita belajar macam-macam kunci gitar',
+            'duration' => '19',
             'playlist_id' => '1',
         ]);
         Video::create([
-            'title' => '03 Memetik gitar',
+            'title' => '03 Memegang gitar gapake apa-apa',
             'video_id' => 'oOMBO9i2Lu4',
-            'description' => 'Pada video ini kita belajar cara memetik gitar',
+            'duration' => '16',
             'playlist_id' => '1',
         ]);
         Video::create([
-            'title' => '04 Membuat gitar',
+            'title' => '04 Kunci gitar dengan obeng',
             'video_id' => 'sRMoszxlmp4',
-            'description' => 'Pada video ini kita belajar cara memetik gitar',
-            'playlist_id' => '1',
+            'duration' => '22',
+            'playlist_id' => '2',
         ]);
         Video::create([
-            'title' => '05 Merusak gitar',
+            'title' => '05 Kunci gitar dengan tang',
             'video_id' => 'xoHtzrsMduM',
-            'description' => 'Pada video ini kita belajar cara memetik gitar',
-            'playlist_id' => '1',
+            'duration' => '9',
+            'playlist_id' => '2',
         ]);
         Video::create([
-            'title' => '06 Memegang gitar',
+            'title' => '06 Kunci gitar dengan gembok',
             'video_id' => 'DMI2LgVRHWw',
-            'description' => 'Pada video ini kita belajar cara memegang gitar',
-            'playlist_id' => '1',
+            'duration' => '16',
+            'playlist_id' => '2',
         ]);
         Video::create([
-            'title' => '07 Kunci gitar',
+            'title' => '07 Kunci gitar dengan pinset',
             'video_id' => '62mOP9kNz_c',
-            'description' => 'Pada video ini kita belajar macam-macam kunci gitar',
-            'playlist_id' => '1',
+            'duration' => '18',
+            'playlist_id' => '2',
         ]);
         Video::create([
-            'title' => '08 Memetik gitar',
+            'title' => '08 Memetik gitar kuku',
             'video_id' => 'oOMBO9i2Lu4',
-            'description' => 'Pada video ini kita belajar cara memetik gitar',
-            'playlist_id' => '1',
+            'duration' => '28',
+            'playlist_id' => '3',
         ]);
         Video::create([
-            'title' => '09 Membuat gitar',
+            'title' => '09 Memtik gitar dengan kaki',
             'video_id' => 'sRMoszxlmp4',
-            'description' => 'Pada video ini kita belajar cara memetik gitar',
-            'playlist_id' => '1',
+            'duration' => '17',
+            'playlist_id' => '3',
         ]);
         Video::create([
-            'title' => '10 Merusak gitar',
+            'title' => '10 Membuat gitar dengan semen',
             'video_id' => 'xoHtzrsMduM',
-            'description' => 'Pada video ini kita belajar cara memetik gitar',
-            'playlist_id' => '1',
+            'duration' => '10',
+            'playlist_id' => '4',
         ]);
         
         Video::create([
-            'title' => '01 Aplikasi editing',
+            'title' => '11 Membuat gitar dengan kayu',
             'video_id' => 'DMI2LgVRHWw',
-            'description' => 'Pada video ini kita akan berkenalan dengan aplikasi editing yang akan digunakan',
-            'playlist_id' => '2',
+            'duration' => '21',
+            'playlist_id' => '4',
         ]);
         Video::create([
-            'title' => '02 Setup video',
+            'title' => '12 Menghancurkan gitar dengan kepala',
             'video_id' => 'DMI2LgVRHWw',
-            'description' => 'Pada video ini kita belajar cara memilih video untuk di edit',
-            'playlist_id' => '2',
+            'duration' => '7',
+            'playlist_id' => '5',
         ]);
     }
 }

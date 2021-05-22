@@ -22,7 +22,7 @@ class RatingFactory extends Factory
     public function definition()
     {
         return [
-            'playlist_id' => rand(1, 8),
+            'course_id' => rand(1, 10),
             'user_id' => rand(1, 35),
             'value' => rand(3, 5),
         ];

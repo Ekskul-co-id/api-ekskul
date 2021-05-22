@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Checkout;
-use App\Models\Playlist;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +37,7 @@ class OrderController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $checkouts = Checkout::with('playlist')->where('user_id', $userId)->get();
+        $checkouts = Checkout::with('course')->where('user_id', $userId)->get();
                         
         return $this->response("Details transaction found!", $checkouts, 200);
     }
@@ -62,7 +61,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'playlist_id' => 'required|integer'
+            'course_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -71,10 +70,10 @@ class OrderController extends Controller
         
         $userId = Auth::user()->id;
         
-        $check = Checkout::with('user', 'playlist')
+        $check = Checkout::with('user', 'course')
                 ->where([
                     'user_id' => $userId,
-                    'playlist_id' => $request->playlist_id,
+                    'course_id' => $request->course_id,
                     'status' => 'pending',
                 ])
                 ->first();
@@ -85,19 +84,19 @@ class OrderController extends Controller
 
         $createOrder = Checkout::create([
             'user_id' => $userId,
-            'playlist_id' => $request->playlist_id,
+            'course_id' => $request->course_id,
             'qty' => 1,
         ]);
         
-        $order = Checkout::with('user', 'playlist')->findOrFail($createOrder->id);
+        $order = Checkout::with('user', 'course')->findOrFail($createOrder->id);
         
         $itemDetails = [
             [
-                'id' => $order->playlist->id,
-                'price' => $order->playlist->price,
+                'id' => $order->course->id,
+                'price' => $order->course->price,
                 'quantity' => 1,
-                'name' => $order->playlist->name,
-                'category' => $order->playlist->category->name,
+                'name' => $order->course->name,
+                'category' => $order->course->category->name,
                 'brand' => 'Ekskul.co.id'
             ]
         ];
@@ -105,7 +104,7 @@ class OrderController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => $order->id.'-'.Str::random(5),
-                'gross_amount' => $order->playlist->price,
+                'gross_amount' => $order->course->price,
             ],
             'item_details' => $itemDetails, 
             'customer_details' => [
@@ -119,9 +118,9 @@ class OrderController extends Controller
         $order->update([
             'snap_url' => $snapUrl,
             'metadata' => [
-                'playlist_id' => $order->playlist_id,
-                'price' => $order->playlist->price,
-                'playlist_name' => $order->playlist->name,
+                'course_id' => $order->course_id,
+                'price' => $order->course->price,
+                'course_name' => $order->course->name,
             ]
         ]);
         
@@ -136,7 +135,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $checkout = Checkout::with('playlist')->findOrFail($id);
+        $checkout = Checkout::with('course')->findOrFail($id);
         
         return $this->response("Details transaction found!", $checkout, 200);
     }

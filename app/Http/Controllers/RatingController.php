@@ -42,7 +42,7 @@ class RatingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'playlist_id' => 'required|integer',
+            'course_id' => 'required|integer',
             'user_id' => 'required|integer|unique:ratings',
             'value' => 'required|integer',
         ]);
@@ -52,7 +52,7 @@ class RatingController extends Controller
         }
         
         $rating = Rating::create([
-            'playlist_id' => $request->playlist_id,
+            'course_id' => $request->course_id,
             'user_id' => $request->user_id,
             'value' => $request->value,
         ]);
@@ -96,7 +96,7 @@ class RatingController extends Controller
         $rating = Rating::finfOrFail($id);
         
         $validator = Validator::make($request->all(), [
-            'playlist_id' => 'required|integer',
+            'course_id' => 'required|integer',
             'user_id' => 'required|integer|unique:ratings,user_id,'.$rating->user->id,
             'value' => 'required|integer',
         ]);
@@ -106,7 +106,7 @@ class RatingController extends Controller
         }
         
         $rating->update([
-            'playlist_id' => $request->playlist_id,
+            'course_id' => $request->course_id,
             'user_id' => $request->user_id,
             'value' => $request->value,
         ]);

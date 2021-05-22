@@ -16,7 +16,7 @@ class CreateCheckoutsTable extends Migration
         Schema::create('checkouts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('playlist_id')->constrained('playlists');
+            $table->foreignId('course_id')->constrained('courses');
             $table->string('qty');
             $table->string('status')->default('pending');
             $table->string('snap_url')->nullable();

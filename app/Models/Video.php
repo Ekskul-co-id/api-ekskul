@@ -13,7 +13,7 @@ class Video extends Model
         'playlist_id',
         'video_id',
         'title',
-        'description'
+        'duration'
     ];
     
     public function playlist()

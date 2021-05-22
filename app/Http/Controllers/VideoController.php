@@ -45,8 +45,8 @@ class VideoController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
-            'description' => 'required',
-            'video_id' => 'required',
+            'duration' => 'required|integer',
+            'video_id' => 'required|integer',
         ]);
         
         if ($validator->fails()) {
@@ -56,7 +56,7 @@ class VideoController extends Controller
         $video = Video::create([
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
-            'description' => $request->description,
+            'duration' => $request->duration,
             'video_id' => $request->video_id,
         ]);
         
@@ -99,8 +99,8 @@ class VideoController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
-            'description' => 'required',
-            'video_id' => 'required',
+            'duration' => 'required|integer',
+            'video_id' => 'required|integer',
         ]);
         
         if ($validator->fails()) {
@@ -112,7 +112,7 @@ class VideoController extends Controller
         $video->update([
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
-            'description' => $request->description,
+            'duration' => $request->duration,
             'video_id' => $request->video_id,
         ]);
         

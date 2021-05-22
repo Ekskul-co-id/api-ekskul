@@ -11,30 +11,16 @@ class Playlist extends Model
 
     protected $fillable = [
         'name',
-        'slug',
-        'category_id',
-        'image',
-        'preview',
-        'about',
-        'price',
-        'silabus1',
-        'silabus2',
-        'silabus3',
-        'silabus4',
+        'course_id',
     ];
     
-    public function category()
+    public function course()
     {
-        return $this->belongsTo('App\Models\Category');
+        return $this->belongsTo('App\Models\Course');
     }
     
     public function video()
     {
         return $this->hasMany('App\Models\Video', 'playlist_id');
-    }
-    
-    public function rating()
-    {
-        return $this->hasMany('App\Models\Rating', 'playlist_id');
     }
 }

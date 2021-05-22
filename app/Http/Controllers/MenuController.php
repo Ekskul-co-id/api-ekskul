@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Checkout;
-use App\Models\Playlist;
+use App\Models\Course;
 use App\Models\Rating;
 use App\Models\Video;
 use App\Traits\APIResponse;
@@ -31,25 +31,25 @@ class MenuController extends Controller
         
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('id');
         
-        $playlists = Playlist::with('category')
+        $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ,'user_rated' => Rating::selectRaw('count(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
-            ,'total_videos' => Video::selectRaw('count(id) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
+            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ])
-            ->whereNotIn('playlists.id', $orderId)
+            ->whereNotIn('courses.id', $orderId)
             ->where('category_id', $category->id)
             ->paginate(10);
         
-        return $this->response("Category found!", $playlists, 200);
+        return $this->response("Category found!", $courses, 200);
     }
     
-    public function listPlaylist(Request $request)
+    public function listCourse(Request $request)
     {
         $userId = Auth::user()->id;
         
@@ -57,55 +57,56 @@ class MenuController extends Controller
         
         $value = e($request->get('q'));
         
-        $playlists = Playlist::with('category')
+        $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ,'user_rated' => Rating::selectRaw('count(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
-            ,'total_videos' => Video::selectRaw('count(id) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
+            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ])
-            ->whereNotIn('playlists.id', $orderId);
+            ->whereNotIn('courses.id', $orderId);
             
         if(!empty($value)) {
-            $result = $playlists->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
+            $result = $courses->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
         }else{
-            $result = $playlists->paginate(10);
+            $result = $courses->paginate(10);
         }
         
         $data = [
-            'playlists' => $result,
+            'courses' => $result,
             'search' => $value,
         ];
         
-        return $this->response("Playlists found!", $data, 200);
+        return $this->response("Courses found!", $data, 200);
     }
     
-    public function popularPlaylist()
+    public function popularCourse()
     {
-        $playlists = Playlist::with('category')
+        $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ,'user_rated' => Rating::selectRaw('count(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
-            ,'total_videos' => Video::selectRaw('count(id) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
-            ])->orderByDesc('user_rated')->limit(5)->get();
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
+            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
+            ])
+            ->orderByDesc('user_rated')->limit(5)->get();
         
-        return $this->response("Playlists found!", $playlists, 200);
+        return $this->response("Courses found!", $courses, 200);
     }
     
-    public function detailPlaylist($slug)
+    public function detailCourse($slug)
     {
-        $playlist = Playlist::with('category', 'video')->where('slug', $slug)->firstOrFail();
+        $course = Course::with('category', 'video')->where('slug', $slug)->firstOrFail();
         
-        return $this->response("Playlist found!", $playlist, 200);
+        return $this->response("Course found!", $course, 200);
     }
     
     public function storeRating(Request $request, $slug)
@@ -120,10 +121,10 @@ class MenuController extends Controller
         
         $userId = Auth::user()->id;
         
-        $playlistId = Playlist::where('slug', $slug)->pluck('id')->implode(' ');
+        $courseId = Course::where('slug', $slug)->pluck('id')->implode(' ');
         
         $rating = Rating::create([
-            'playlist_id' => $playlistId,
+            'course_id' => $courseId,
             'user_id' => $userId,
             'value' => $request->value,
         ]);
@@ -143,12 +144,12 @@ class MenuController extends Controller
         
         $userId = Auth::user()->id;
         
-        $playlistId = Playlist::where('slug', $slug)->pluck('id')->implode(' ');
+        $courseId = Course::where('slug', $slug)->pluck('id')->implode(' ');
         
-        $rating = Rating::where(['playlist_id' => $playlistId, 'user_id' => $userId])->firstOrFail();
+        $rating = Rating::where(['course_id' => $courseId, 'user_id' => $userId])->firstOrFail();
         
         $rating->update([
-            'playlist_id' => $playlistId,
+            'course_id' => $courseId,
             'user_id' => $userId,
             'value' => $request->value,
         ]);
@@ -156,38 +157,38 @@ class MenuController extends Controller
         return $this->response("Rating created!", $rating, 201);
     }
     
-    public function myPlaylist(Request $request)
+    public function myCourse(Request $request)
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('playlist_id');
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id');
         
         $value = e($request->get('q'));
         
-        $playlists = Playlist::with('category')
+        $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ,'user_rated' => Rating::selectRaw('count(value) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
-            ,'total_videos' => Video::selectRaw('count(id) as total')
-                ->whereColumn('playlist_id', 'playlists.id')
-                ->groupBy('playlist_id')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
+            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->whereColumn('course_id', 'courses.id')
+                ->groupBy('course_id')
             ])
-            ->whereIn('playlists.id', $orderId);
+            ->whereIn('courses.id', $orderId);
             
         if(!empty($value)) {
-            $result = $playlists->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
+            $result = $courses->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
         }else{
-            $result = $playlists->paginate(10);
+            $result = $courses->paginate(10);
         }
         
         $data = [
-            'playlists' => $result,
+            'courses' => $result,
             'search' => $value,
         ];
         
-        return $this->response("Playlists found!", $data, 200);
+        return $this->response("Courses found!", $data, 200);
     }
 }
