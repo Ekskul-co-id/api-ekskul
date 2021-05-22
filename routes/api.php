@@ -3,11 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComentController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CourseController;
+use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RoleController;
@@ -114,6 +115,15 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
             Route::get('/{id}',[CourseController::class,'show']);
             Route::post('/{id}',[CourseController::class,'update']);
             Route::get('/{id}',[CourseController::class,'destroy']);
+        });
+        
+        // Playlist 
+        Route::group(['prefix' => 'playlists'], function () {
+            Route::get('/',[PlaylistController::class,'index']);
+            Route::post('/',[PlaylistController::class,'store']);
+            Route::get('/{id}',[PlaylistController::class,'show']);
+            Route::post('/{id}',[PlaylistController::class,'update']);
+            Route::get('/{id}',[PlaylistController::class,'destroy']);
         });
 
         // Category 
