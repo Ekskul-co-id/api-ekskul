@@ -23,10 +23,10 @@ class PlaylistSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di playlist ini kita akan belajar cara bermain gitar yang benar dari basic nya hingga advance.',
             'price' => '150000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus1' => 'example 1',
+            'silabus2' => 'example 2',
+            'silabus3' => 'example 3',
+            'silabus4' => 'example 4',
         ]);
         
         Playlist::create([

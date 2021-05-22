@@ -22,16 +22,59 @@ class VideoSeeder extends Seeder
         ]);
         Video::create([
             'title' => '02 Kunci gitar',
-            'video_id' => 'DMI2LgVRHWw',
+            'video_id' => '62mOP9kNz_c',
             'description' => 'Pada video ini kita belajar macam-macam kunci gitar',
             'playlist_id' => '1',
         ]);
         Video::create([
             'title' => '03 Memetik gitar',
-            'video_id' => 'DMI2LgVRHWw',
+            'video_id' => 'oOMBO9i2Lu4',
             'description' => 'Pada video ini kita belajar cara memetik gitar',
             'playlist_id' => '1',
         ]);
+        Video::create([
+            'title' => '04 Membuat gitar',
+            'video_id' => 'sRMoszxlmp4',
+            'description' => 'Pada video ini kita belajar cara memetik gitar',
+            'playlist_id' => '1',
+        ]);
+        Video::create([
+            'title' => '05 Merusak gitar',
+            'video_id' => 'xoHtzrsMduM',
+            'description' => 'Pada video ini kita belajar cara memetik gitar',
+            'playlist_id' => '1',
+        ]);
+        Video::create([
+            'title' => '06 Memegang gitar',
+            'video_id' => 'DMI2LgVRHWw',
+            'description' => 'Pada video ini kita belajar cara memegang gitar',
+            'playlist_id' => '1',
+        ]);
+        Video::create([
+            'title' => '07 Kunci gitar',
+            'video_id' => '62mOP9kNz_c',
+            'description' => 'Pada video ini kita belajar macam-macam kunci gitar',
+            'playlist_id' => '1',
+        ]);
+        Video::create([
+            'title' => '08 Memetik gitar',
+            'video_id' => 'oOMBO9i2Lu4',
+            'description' => 'Pada video ini kita belajar cara memetik gitar',
+            'playlist_id' => '1',
+        ]);
+        Video::create([
+            'title' => '09 Membuat gitar',
+            'video_id' => 'sRMoszxlmp4',
+            'description' => 'Pada video ini kita belajar cara memetik gitar',
+            'playlist_id' => '1',
+        ]);
+        Video::create([
+            'title' => '10 Merusak gitar',
+            'video_id' => 'xoHtzrsMduM',
+            'description' => 'Pada video ini kita belajar cara memetik gitar',
+            'playlist_id' => '1',
+        ]);
+        
         Video::create([
             'title' => '01 Aplikasi editing',
             'video_id' => 'DMI2LgVRHWw',
