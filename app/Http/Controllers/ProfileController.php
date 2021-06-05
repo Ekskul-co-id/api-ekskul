@@ -23,25 +23,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $user->id])->get()->pluck('id');
-        
-        $myPlaylist = Playlist::with('category')
-        ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
-            ->whereColumn('playlist_id', 'playlists.id')
-            ->groupBy('playlist_id')
-        ,'user_rated' => Rating::selectRaw('count(value) as total')
-            ->whereColumn('playlist_id', 'playlists.id')
-            ->groupBy('playlist_id')
-        ])
-        ->whereIn('playlists.id', $orderId)
-        ->paginate(10);
-        
-        $data = [
-            'user' => $user,
-            'my_playlist' => $myPlaylist,
-        ];
-        
-        return $this->response("Welcome ".$user->name, $data, 200);
+        return $this->response("Welcome ".$user->name, $user, 200);
     }
     
     public function update(Request $request)
