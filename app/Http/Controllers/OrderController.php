@@ -90,33 +90,35 @@ class OrderController extends Controller
         
         $order = Checkout::with('user', 'course')->findOrFail($createOrder->id);
         
-        $itemDetails = [
-            [
-                'id' => $order->course->id,
-                'price' => $order->course->price,
-                'quantity' => 1,
-                'name' => $order->course->name,
-                'category' => $order->course->category->name,
-                'brand' => 'Ekskul.co.id'
-            ]
-        ];
+        if (($order->course->is_paid) && ($order->course->price !== 0)) {
+            $itemDetails = [
+               [
+                     'id' => $order->course->id,
+                    'price' => $order->course->price,
+                    'quantity' => 1,
+                    'name' => $order->course->name,
+                    'category' => $order->course->category->name,
+                    'brand' => 'Ekskul.co.id'
+                ]
+            ];
         
-        $params = [
-            'transaction_details' => [
-                'order_id' => $order->id.'-'.Str::random(5),
-                'gross_amount' => $order->course->price,
-            ],
-            'item_details' => $itemDetails, 
-            'customer_details' => [
-                'name' => $order->user->name,
-                'email' => $order->user->email,
-            ],
-        ];
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order->id.'-'.Str::random(5),
+                    'gross_amount' => $order->course->price,
+                ],
+                'item_details' => $itemDetails, 
+                'customer_details' => [
+                    'name' => $order->user->name,
+                    'email' => $order->user->email,
+                ],
+            ];
 
-        $snapUrl = $this->getMidtransUrl($params);
+            $snapUrl = $this->getMidtransUrl($params);
+        }
         
         $order->update([
-            'snap_url' => $snapUrl,
+            'snap_url' => $snapUrl ?? '',
             'metadata' => [
                 'course_id' => $order->course_id,
                 'price' => $order->course->price,
@@ -124,7 +126,7 @@ class OrderController extends Controller
             ]
         ]);
         
-        return $this->response("Order Created.", ['order' => $order, 'snap_url' => $snapUrl], 201);
+        return $this->response("Order Created.", ['order' => $order, 'snap_url' => $snapUrl ?? ''], 201);
     }
 
     /**

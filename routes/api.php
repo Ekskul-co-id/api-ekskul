@@ -219,5 +219,6 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         Route::put('/password',[ProfileController::class,'changePassword']);
     });
     
-    Route::get('/my-courses',[MenuController::class,'myCourse']);;
+    Route::get('/my-courses',[MenuController::class,'myCourse']);
+    Route::get('/my-courses/{slug}',[MenuController::class,'detailMyCourse']);
 });
