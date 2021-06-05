@@ -104,7 +104,7 @@ class MenuController extends Controller
     
     public function detailCourse($slug)
     {
-        $course = Course::with('category', 'video')->where('slug', $slug)->firstOrFail();
+        $course = Course::with('category', 'playlist')->where('slug', $slug)->firstOrFail();
         
         return $this->response("Course found!", $course, 200);
     }
