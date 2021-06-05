@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Checkout;
 use App\Models\Course;
-use App\Models\Playlist;
 use App\Models\Rating;
 use App\Models\Video;
 use App\Traits\APIResponse;
@@ -201,16 +200,7 @@ class MenuController extends Controller
                 $q->with('video');
             })
             ->firstOrFail();
-            
-        $playlist = Playlist::with('video')->find(1);
         
-        echo 'judul course:'.$course->name.'|';
-        
-        foreach ($course->playlist as $playlist) {
-            echo 'nama playlist'.$playlist->name.'|';
-            foreach ($playlist->video as $video) {
-                echo 'judul video'.$video->title.'|';
-            }
-        }
+        return $this->response("Course found!", $course, 200);
     }
 }
