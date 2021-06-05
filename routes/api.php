@@ -39,7 +39,6 @@ Route::get('/', function () {
     return response()->json([
         "works" => "it workss"
     ],200);
-    throw new Exception('My first Sentry error!');
 });
 
 Route::get('fresh-db', function () {
