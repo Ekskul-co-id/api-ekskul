@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComentController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LivestreamController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MenuController;
@@ -68,6 +69,8 @@ Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/logout',[AuthController::class,'logout']);
 Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
 Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
+Route::post('/forgot-password', [ForgotPasswordController::class,'forgot']);
+Route::post('/forgot-password/reset', [ForgotPasswordController::class,'reset']);
 
 // Payment handling
 Route::post('/webhooks',[WebhookController::class,'midtransHandler']);
