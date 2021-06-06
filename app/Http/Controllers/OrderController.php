@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Checkout;
+use App\Models\PaymentLog;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -74,7 +76,6 @@ class OrderController extends Controller
                 ->where([
                     'user_id' => $userId,
                     'course_id' => $request->course_id,
-                    'status' => 'pending',
                 ])
                 ->first();
         
@@ -88,12 +89,12 @@ class OrderController extends Controller
             'qty' => 1,
         ]);
         
-        $order = Checkout::with('user', 'course')->findOrFail($createOrder->id);
+        $order = Checkout::with('user', 'course')->find($createOrder->id);
         
         if (($order->course->is_paid) && ($order->course->price !== 0)) {
             $itemDetails = [
                [
-                     'id' => $order->course->id,
+                    'id' => $order->course->id,
                     'price' => $order->course->price,
                     'quantity' => 1,
                     'name' => $order->course->name,
@@ -115,10 +116,45 @@ class OrderController extends Controller
             ];
 
             $snapUrl = $this->getMidtransUrl($params);
+            
+            $status = 'pending';
+        } else {
+            $url = env('FCM_SENDER_URL');
+            
+            $serverKey = env('FCM_SERVER_KEY');
+            
+            $headers = [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'key='.$serverKey
+            ];
+            
+            $status = 'success';
+            
+            $data = [
+                'to' => $order->user->device_token,
+                'priority' => 'high',
+                'soundName' => 'default',
+                'notification' => [
+                    'title' => "Transaksi berhasil!",
+                    'image' => $order->course->image,
+                    'body' => "Berhasil membeli course ".$order->course->name.".",
+                ]
+            ];
+            
+            $response = Http::withHeaders($headers)->post($url, $data);
+            
+            PaymentLog::create([
+                'status' => $status,
+                'checkout_id' => $order->id,
+                'payment_type' => 'subscribe',
+                'raw_response' => json_encode($order->course),
+                'fcm_response' => json_encode($response->json())
+            ]);
         }
         
         $order->update([
             'snap_url' => $snapUrl ?? '',
+            'status' => $status,
             'metadata' => [
                 'course_id' => $order->course_id,
                 'price' => $order->course->price,

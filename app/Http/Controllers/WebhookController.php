@@ -44,7 +44,7 @@ class WebhookController extends Controller
 
         $checkoutId = explode('-', $orderId);
         
-        $order = Checkout::find($checkoutId[0]);
+        $order = Checkout::with('user', 'course')->find($checkoutId[0]);
         
         if (empty($order)) {
             return $this->response("Order not found.", null, 404);
@@ -59,22 +59,22 @@ class WebhookController extends Controller
         } else if ($transactionStatus == 'settlement') {
             $title = "Transaksi berhasil!";
             
-            $body = "Berhasil membeli course ".$order->playlist->name.".";
+            $body = "Berhasil membeli course ".$order->course->name.".";
             
             $order->update(['status' => 'success']);
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
             if ($transactionStatus == 'cancel') {
                 $title = "Pembayaran dibatalkan!";
             
-                $body = "Pembayaran ".$order->playlist->name." dibatalkan.";
+                $body = "Pembayaran ".$order->course->name." dibatalkan.";
             } else if ($transactionStatus == 'deny') {
                 $title = "Pembayaran ditolak!";
             
-                $body = "Pembayaran ".$order->playlist->name." ditolak.";
+                $body = "Pembayaran ".$order->course->name." ditolak.";
             } else if ($transactionStatus == 'expire') {
                 $title = "Pembayaran berkahir!";
             
-                $body = "Waktu pembayaran course ".$order->playlist->name." telah berkahir.";
+                $body = "Waktu pembayaran course ".$order->course->name." telah berkahir.";
             }
             
             $order->update(['status' => 'failure']);
@@ -100,7 +100,7 @@ class WebhookController extends Controller
                 'soundName' => 'default',
                 'notification' => [
                     'title' => $title,
-                    'image' => $order->playlist->image,
+                    'image' => $order->course->image,
                     'body' => $body
                 ]
             ];
