@@ -25,7 +25,11 @@ class ForgotPasswordController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where('email', $request->email)->first();
+        
+        if (empty($user)) {
+            return $this->response("Email not found, please try again.", null, 404);
+        }
         
         $code = rand(11111, 99999);
         
