@@ -29,7 +29,7 @@ class MenuController extends Controller
         
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id');
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
         
         $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
@@ -42,18 +42,22 @@ class MenuController extends Controller
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
             ])
-            ->whereNotIn('courses.id', $orderId)
             ->where('category_id', $category->id)
             ->paginate(10);
         
-        return $this->response("Category found!", $courses, 200);
+        $data = [
+            'course' => $courses,
+            'has_purchased' => $hasPurchased
+        ];
+        
+        return $this->response("Category found!", $data, 200);
     }
     
     public function listCourse(Request $request)
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id');
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
         
         $value = e($request->get('q'));
         
@@ -67,8 +71,7 @@ class MenuController extends Controller
             ,'course_sold' => Checkout::selectRaw('count(id) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
-            ])
-            ->whereNotIn('courses.id', $orderId);
+            ]);
             
         if(!empty($value)) {
             $result = $courses->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
@@ -78,6 +81,7 @@ class MenuController extends Controller
         
         $data = [
             'courses' => $result,
+            'has_purchased' => $hasPurchased,
             'search' => $value,
         ];
         
@@ -86,6 +90,10 @@ class MenuController extends Controller
     
     public function popularCourse()
     {
+        $userId = Auth::user()->id;
+        
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
+        
         $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
@@ -98,8 +106,13 @@ class MenuController extends Controller
                 ->groupBy('course_id')
             ])
             ->orderByDesc('user_rated')->limit(5)->get();
+            
+        $data = [
+            'course' => $courses,
+            'has_purchased' => $hasPurchased
+        ];
         
-        return $this->response("Courses found!", $courses, 200);
+        return $this->response("Courses found!", $data, 200);
     }
     
     public function detailCourse($slug)
@@ -161,7 +174,7 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id');
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
         
         $value = e($request->get('q'));
         
