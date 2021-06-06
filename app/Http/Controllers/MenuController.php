@@ -29,7 +29,7 @@ class MenuController extends Controller
         
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('id');
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id');
         
         $courses = Course::with('category')
             ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
@@ -53,7 +53,7 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('id');
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id');
         
         $value = e($request->get('q'));
         
