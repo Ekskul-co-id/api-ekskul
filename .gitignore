@@ -11,8 +11,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-/public/avatar
-/public/icon
-/public/playlist
-/public/setting
-/public/stream
+/.idea
+/.vscode
