@@ -32,7 +32,12 @@ class VerifyEmailController extends Controller
         $code = $request->code;
         
         if ($verification->code != $code) {
-            return $this->response("Verification code does not match, please try again.", null, 422);
+            $error = [
+                'code' => [ 
+                    'Verification code does not match.',
+                ]
+            ];
+            return $this->response(null, $error, 422);
         }
         
         $date_expired = $verification->created_at->addMinutes(5);
@@ -40,7 +45,13 @@ class VerifyEmailController extends Controller
         $date_now = now();
         
         if ($date_expired <= $date_now) {
-            return $this->response("The verification code has expired.", null, 422);
+            $error = [
+                'code' => [ 
+                    'The verification code has expired.',
+                ]
+            ];
+            
+            return $this->response(null, $error, 422);
         }
         
         if (!$user->hasVerifiedEmail()) {

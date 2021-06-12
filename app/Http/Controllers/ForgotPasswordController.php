@@ -63,7 +63,13 @@ class ForgotPasswordController extends Controller
         $forgotPassword = ForgotPassword::where('code', $request->code)->first();
 
         if (empty($forgotPassword)) {
-            return $this->response("Forgot password code does not match, please try again.", null, 422);
+            $error = [
+                'code' => [ 
+                    'Forgot password code does not match, please try again.',
+                ]
+            ];
+            
+            return $this->response(null, $error, 422);
         }
         
         $date_expired = $forgotPassword->created_at->addMinutes(5);
@@ -71,7 +77,13 @@ class ForgotPasswordController extends Controller
         $date_now = now();
         
         if ($date_expired <= $date_now) {
-            return $this->response("The forgot password code has expired.", null, 422);
+            $error = [
+                'code' => [ 
+                    'The forgot password code has expired.',
+                ]
+            ];
+            
+            return $this->response(null, $error, 422);
         }
         
         $user = User::where('email', $forgotPassword->user->email)->first();
