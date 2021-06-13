@@ -9,6 +9,7 @@ use App\Models\Rating;
 use App\Models\User;
 use App\Models\Video;
 use App\Models\Verification;
+use App\Rules\CurrentPassword;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +78,7 @@ class ProfileController extends Controller
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string|min:6',
+            'current_password' => 'required|string|min:6|password',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -88,14 +89,6 @@ class ProfileController extends Controller
         $userId = Auth::user()->id;
             
         $user = User::findOrFail($userId);
-            
-        if (Hash::check($request->current_password, $user->password)) {
-            $user->update([
-                'password' => Hash::make($request->password),
-            ]);
-        } else {
-            return $this->response("The current password is incorrect.", null, 422);
-        }
         
         return $this->response("Successfully update password.", null, 201);
     }
