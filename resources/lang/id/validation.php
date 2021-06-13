@@ -128,6 +128,8 @@ return [
         ],
     ],
     'attributes'           => [
+        'address'.     => 'Alamat',
         'new_password' => 'Kata sandi baru',
+        'password'     => 'Kata sandi',
     ],
 ];
