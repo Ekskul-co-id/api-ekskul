@@ -127,5 +127,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'attributes'           => [],
+    'attributes'           => [
+        'new_password' => 'Kata sandi baru',
+    ],
 ];
