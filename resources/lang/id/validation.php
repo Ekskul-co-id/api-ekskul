@@ -128,8 +128,10 @@ return [
         ],
     ],
     'attributes'           => [
-        'address'.     => 'Alamat',
-        'new_password' => 'Kata sandi baru',
-        'password'     => 'Kata sandi',
+        'address'           => 'Alamat',
+        'new_password'      => 'Kata sandi baru',
+        'password'          => 'Kata sandi',
+        'reset_code'        => 'Kode reset kata sandi',
+        'verification_code' => 'Kode verifikasi',
     ],
 ];

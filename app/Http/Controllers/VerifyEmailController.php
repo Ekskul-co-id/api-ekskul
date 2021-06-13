@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\VerificationMail;
 use App\Models\User;
 use App\Models\Verification;
+use App\Rules\ExpireCode;
+use App\Rules\MatchCode;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +20,7 @@ class VerifyEmailController extends Controller
     public function verify(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'code' => 'required|integer|digits:5'
+            'verification_code' => ['bail', 'required', 'integer', 'digits:5', new MatchCode($request->verification_code, 'verify'), new ExpireCode($request->verification_code, 'verify')]
         ]);
         
         if ($validator->fails()) {
@@ -26,33 +28,6 @@ class VerifyEmailController extends Controller
         }
         
         $user = Auth::user();
-        
-        $verification = Verification::where('user_id', $user->id)->latest()->first(); // Get the last user verification code
-        
-        $code = $request->code;
-        
-        if ($verification->code != $code) {
-            $error = [
-                'code' => [ 
-                    'Verification code does not match.',
-                ]
-            ];
-            return $this->response(null, $error, 422);
-        }
-        
-        $date_expired = $verification->created_at->addMinutes(5);
-        
-        $date_now = now();
-        
-        if ($date_expired <= $date_now) {
-            $error = [
-                'code' => [ 
-                    'The verification code has expired.',
-                ]
-            ];
-            
-            return $this->response(null, $error, 422);
-        }
         
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
