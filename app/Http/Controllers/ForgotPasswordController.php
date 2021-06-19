@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Mail\ForgotPasswordMail;
 use App\Models\User;
 use App\Models\ForgotPassword;
+use App\Rules\ExpireCode;
+use App\Rules\MatchCode;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +20,7 @@ class ForgotPasswordController extends Controller
     public function forgot(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255|exists:users,email',
         ]);
         
         if ($validator->fails()) {
@@ -26,16 +28,6 @@ class ForgotPasswordController extends Controller
         }
         
         $user = User::where('email', $request->email)->first();
-        
-        if (empty($user)) {
-            $error = [
-                'email' => [ 
-                    'Email is not registered',
-                ]
-            ];
-            
-            return $this->response("Email not found.", $error, 422);
-        }
         
         $code = rand(11111, 99999);
         
@@ -52,7 +44,7 @@ class ForgotPasswordController extends Controller
     public function reset(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'code' => 'required|integer',
+            'reset_code' => ['bail', 'required', 'integer', 'digits:5', new MatchCode($request->reset_code, 'reset'), new ExpireCode($request->reset_code, 'reset')],
             'new_password' => 'required|string|min:6|confirmed',
         ]);
         
@@ -60,31 +52,7 @@ class ForgotPasswordController extends Controller
             return $this->response(null, $validator->errors(), 422);
         }
         
-        $forgotPassword = ForgotPassword::where('code', $request->code)->first();
-
-        if (empty($forgotPassword)) {
-            $error = [
-                'code' => [ 
-                    'Forgot password code does not match, please try again.',
-                ]
-            ];
-            
-            return $this->response(null, $error, 422);
-        }
-        
-        $date_expired = $forgotPassword->created_at->addMinutes(5);
-        
-        $date_now = now();
-        
-        if ($date_expired <= $date_now) {
-            $error = [
-                'code' => [ 
-                    'The forgot password code has expired.',
-                ]
-            ];
-            
-            return $this->response(null, $error, 422);
-        }
+        $forgotPassword = ForgotPassword::where('code', $request->reset_code)->first();
         
         $user = User::where('email', $forgotPassword->user->email)->first();
         

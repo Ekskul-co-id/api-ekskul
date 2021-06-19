@@ -39,7 +39,7 @@ class OrderController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $checkouts = Checkout::with('course')->where('user_id', $userId)->get();
+        $checkouts = Checkout::with('course', 'payment_log')->where('user_id', $userId)->get();
                         
         return $this->response("Details transaction found!", $checkouts, 200);
     }
