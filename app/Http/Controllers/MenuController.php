@@ -29,16 +29,17 @@ class MenuController extends Controller
         
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+            ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category')
-            ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
+        $courses = Course::with('category')->addSelect([
+            'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'user_rated' => Rating::selectRaw('count(value) as total')
+                ->groupBy('course_id'),
+            'user_rated' => Rating::selectRaw('count(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->groupBy('course_id'),
+            'course_sold' => Checkout::selectRaw('count(id) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
             ])
@@ -57,25 +58,26 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+            ->pluck('course_id')->toArray();
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category')
-            ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
+        $courses = Course::with('category')->addSelect([
+            'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'user_rated' => Rating::selectRaw('count(value) as total')
+                ->groupBy('course_id'),
+            'user_rated' => Rating::selectRaw('count(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->groupBy('course_id'),
+            'course_sold' => Checkout::selectRaw('count(id) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
             ]);
             
-        if(!empty($value)) {
+        if (!empty($value)) {
             $result = $courses->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
-        }else{
+        } else {
             $result = $courses->paginate(10);
         }
         
@@ -92,16 +94,17 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+            ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category')
-            ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
+        $courses = Course::with('category')->addSelect([
+            'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'user_rated' => Rating::selectRaw('count(value) as total')
+                ->groupBy('course_id'),
+            'user_rated' => Rating::selectRaw('count(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->groupBy('course_id'),
+            'course_sold' => Checkout::selectRaw('count(id) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
             ])
@@ -174,26 +177,27 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()->pluck('course_id')->toArray();
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+            ->pluck('course_id')->toArray();
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category')
-            ->addSelect(['rating' => Rating::selectRaw('avg(value) as total')
+        $courses = Course::with('category')->addSelect([
+            'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'user_rated' => Rating::selectRaw('count(value) as total')
+                ->groupBy('course_id'),
+            'user_rated' => Rating::selectRaw('count(value) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
-            ,'course_sold' => Checkout::selectRaw('count(id) as total')
+                ->groupBy('course_id'),
+            'course_sold' => Checkout::selectRaw('count(id) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
             ])
             ->whereIn('courses.id', $orderId);
             
-        if(!empty($value)) {
+        if (!empty($value)) {
             $result = $courses->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
-        }else{
+        } else {
             $result = $courses->paginate(10);
         }
         

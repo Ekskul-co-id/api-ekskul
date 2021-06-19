@@ -35,4 +35,9 @@ class Checkout extends Model
     {
         return $this->belongsTo('App\Models\Course');
     }
+    
+    public function payment_log()
+    {
+        return $this->hasMany('App\Models\PaymentLog', 'checkout_id');
+    }
 }
