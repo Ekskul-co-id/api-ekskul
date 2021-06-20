@@ -81,7 +81,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         
         $user->update([
-            'device_token' => $request->device_token
+            'device_token' => $request->device_token ?? $user->device_token
         ]);
         
         $token = $user->createToken($user->email)->plainTextToken;
