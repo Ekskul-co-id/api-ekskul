@@ -21,8 +21,9 @@ class OrderController extends Controller
     private function getMidtransUrl($params)
     {
         // Set your Merchant Server Key
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        Config::$serverKey = env('MIDTRANS_SERVER_KEY_PROD');
         Config::$isProduction = (bool) env('IS_PRODUCTION');
+        Config::$isSanitized = true;
         Config::$is3ds = (bool) env('IS_3DS');
 
         $snapUrl = Snap::createTransaction($params)->redirect_url;
@@ -98,8 +99,9 @@ class OrderController extends Controller
                     'price' => $order->course->price,
                     'quantity' => 1,
                     'name' => $order->course->name,
+                    'brand' => 'Ekskul.co.id',
                     'category' => $order->course->category->name,
-                    'brand' => 'Ekskul.co.id'
+                    'merchant_name' => 'Ekskul.co.id'
                 ]
             ];
         
@@ -110,8 +112,11 @@ class OrderController extends Controller
                 ],
                 'item_details' => $itemDetails, 
                 'customer_details' => [
-                    'name' => $order->user->name,
+                    'first_name' => $order->user->name,
                     'email' => $order->user->email,
+                ],
+                'enabled_payments' => [
+                    'credit_card', 'cimb_clicks', 'bca_klikbca', 'bca_klikpay', 'bri_epay', 'echannel', 'permata_va', 'bca_va', 'bni_va', 'bri_va', 'other_va', 'gopay', 'indomaret', 'danamon_online', 'akulaku', 'shopeepay'
                 ],
             ];
 
