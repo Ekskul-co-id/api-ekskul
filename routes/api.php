@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComentController;
@@ -191,6 +192,15 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
             Route::put('/{id}',[LogController::class,'update']);
             Route::delete('/{id}',[LogController::class,'destroy']);
         });
+        
+        // Announcement
+        Route::group(['prefix' => 'announcements'], function () {
+            Route::get('/',[AnnouncementController::class,'index']);
+            Route::post('/',[AnnouncementController::class,'store']);
+            Route::get('/{id}',[AnnouncementController::class,'show']);
+            Route::put('/{id}',[AnnouncementController::class,'update']);
+            Route::delete('/{id}',[AnnouncementController::class,'destroy']);
+        });
     });
 
     // Menu
@@ -224,4 +234,6 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     
     Route::get('/my-courses',[MenuController::class,'myCourse']);
     Route::get('/my-courses/{slug}',[MenuController::class,'detailMyCourse']);
+    Route::get('/my-announcements',[MenuController::class,'myAnnouncement']);
+    Route::get('/my-announcements/{id}',[MenuController::class,'detailMyAnnouncement']);
 });

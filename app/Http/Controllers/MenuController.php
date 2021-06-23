@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Checkout;
 use App\Models\Course;
@@ -216,5 +217,21 @@ class MenuController extends Controller
             ->firstOrFail();
         
         return $this->response("Course found!", $course, 200);
+    }
+    
+    public function myAnnouncement()
+    {
+        $userId = Auth::user()->id;
+        
+        $announcements = Announcement::where('type', 'public')->orWhere('user_id', $userId)->get();
+        
+        return $this->response("Announcements found!", $announcements, 200);
+    }
+    
+    public function detailMyAnnouncement($id)
+    {
+        $announcement = Announcement::with('user')->findOrFail($id);
+        
+        return $this->response("Announcement found!", $announcement, 200);
     }
 }
