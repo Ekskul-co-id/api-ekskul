@@ -58,7 +58,7 @@ class AnnouncementController extends Controller
             
             $user = User::findOrFail($userId);
             
-            $deviceToken = $user->device_token;
+            $deviceToken = [$user->device_token];
         } else {
             $userId = null;
             
@@ -75,7 +75,7 @@ class AnnouncementController extends Controller
         ];
         
         $data = [
-            'to' => $deviceToken,
+            'registration_ids' => $deviceToken,
             'priority' => 'high',
             'soundName' => 'default',
             'notification' => [
@@ -95,7 +95,12 @@ class AnnouncementController extends Controller
             'user_id' => $userId
         ]);
         
-        return $this->response("Announcement created!", $announcement, 201);
+        $data = [
+            'announcement' => $announcement,
+            'fcm_response' => $response->json()
+        ];
+        
+        return $this->response("Announcement created!", $data, 201);
     }
 
     /**
