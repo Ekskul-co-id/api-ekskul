@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Checkout;
 use App\Models\PaymentLog;
 use App\Traits\APIResponse;
+use App\Traits\FcmResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,7 @@ use Midtrans\Snap;
 
 class OrderController extends Controller
 {
-    use APIResponse;
+    use APIResponse FcmResponse;
     
     private function getMidtransUrl($params)
     {
@@ -124,36 +125,14 @@ class OrderController extends Controller
             
             $status = 'pending';
         } else {
-            $url = env('FCM_SENDER_URL');
-            
-            $serverKey = env('FCM_SERVER_KEY');
-            
-            $headers = [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'key='.$serverKey
-            ];
-            
-            $status = 'success';
-            
-            $data = [
-                'to' => $order->user->device_token,
-                'priority' => 'high',
-                'soundName' => 'default',
-                'notification' => [
-                    'title' => "Transaksi berhasil!",
-                    'image' => $order->course->image,
-                    'body' => "Berhasil membeli course ".$order->course->name.".",
-                ]
-            ];
-            
-            $response = Http::withHeaders($headers)->post($url, $data);
+            $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
             
             PaymentLog::create([
                 'status' => $status,
                 'checkout_id' => $order->id,
                 'payment_type' => 'subscribe',
                 'raw_response' => json_encode($order->course),
-                'fcm_response' => json_encode($response->json())
+                'fcm_response' => json_encode($fcmResponse)
             ]);
         }
         

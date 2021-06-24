@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Announcement;
 use App\Models\User;
 use App\Traits\APIResponse;
+use App\Traits\FcmResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class AnnouncementController extends Controller
 {
-    use APIResponse;
+    use APIResponse, FcmResponse;
     
     /**
      * Display a listing of the resource.
@@ -65,27 +65,7 @@ class AnnouncementController extends Controller
             $deviceToken = User::whereNotNull('device_token')->get()->pluck('device_token')->toArray();
         }
         
-        $url = env('FCM_SENDER_URL');
-        
-        $serverKey = env('FCM_SERVER_KEY');
-        
-        $headers = [
-            'Content-Type' => 'application/json',
-            'Authorization' => 'key='.$serverKey
-        ];
-        
-        $data = [
-            'registration_ids' => $deviceToken,
-            'priority' => 'high',
-            'soundName' => 'default',
-            'notification' => [
-                'title' => $request->title,
-                'image' => $image,
-                'body' => $request->message
-            ]
-        ];
-        
-        $response = Http::withHeaders($headers)->post($url, $data);
+        $fcmResponse = $this->fcm($deviceToken, $request->title, $image, $request->message);
         
         $announcement = Announcement::create([
             'title' => $request->title,
@@ -97,7 +77,7 @@ class AnnouncementController extends Controller
         
         $data = [
             'announcement' => $announcement,
-            'fcm_response' => $response->json()
+            'fcm_response' => $fcmResponse
         ];
         
         return $this->response("Announcement created!", $data, 201);

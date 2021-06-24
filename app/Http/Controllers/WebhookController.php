@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Checkout;
 use App\Models\PaymentLog;
 use App\Traits\APIResponse;
+use App\Traits\FcmResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class WebhookController extends Controller
 {
-    use APIResponse;
+    use APIResponse, FcmResponse;
     
     public function midtransHandler(Request $request)
     {
@@ -84,33 +85,13 @@ class WebhookController extends Controller
             $order->update(['status' => 'pending']);
         }
         
-        $url = env('FCM_SENDER_URL');
-        
-        $serverKey = env('FCM_SERVER_KEY');
-        
-        $headers = [
-            'Content-Type' => 'application/json',
-            'Authorization' => 'key='.$serverKey
-        ];
-        
         if (!empty($title) && !empty($body)) {
-            $data = [
-                'to' => $order->user->device_token,
-                'priority' => 'high',
-                'soundName' => 'default',
-                'notification' => [
-                    'title' => $title,
-                    'image' => $order->course->image,
-                    'body' => $body
-                ]
-            ];
-            
-            $response = Http::withHeaders($headers)->post($url, $data);
+            $response = $this->fcm([$order->user->device_token], $title, $order->course->image, $body);
         }else{
             $response = null;
         }
         
-        $result = $response ? $response->json() : '';
+        $result = $response ? $response : '';
         
         PaymentLog::create([
             'status' => $transactionStatus,
