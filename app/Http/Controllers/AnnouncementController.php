@@ -58,30 +58,34 @@ class AnnouncementController extends Controller
             
             $user = User::findOrFail($userId);
             
-            $url = env('FCM_SENDER_URL');
-        
-            $serverKey = env('FCM_SERVER_KEY');
-            
-            $headers = [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'key='.$serverKey
-            ];
-            
-            $data = [
-                'to' => $user->device_token,
-                'priority' => 'high',
-                'soundName' => 'default',
-                'notification' => [
-                    'title' => $request->title,
-                    'image' => $image,
-                    'body' => $request->message
-                ]
-            ];
-            
-            $response = Http::withHeaders($headers)->post($url, $data);
+            $deviceToken = $user->device_token;
         } else {
             $userId = null;
+            
+            $deviceToken = User::whereNotNull('device_token')->get()->pluck('device_token')->toArray();
         }
+        
+        $url = env('FCM_SENDER_URL');
+        
+        $serverKey = env('FCM_SERVER_KEY');
+        
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'key='.$serverKey
+        ];
+        
+        $data = [
+            'to' => $deviceToken,
+            'priority' => 'high',
+            'soundName' => 'default',
+            'notification' => [
+                'title' => $request->title,
+                'image' => $image,
+                'body' => $request->message
+            ]
+        ];
+        
+        $response = Http::withHeaders($headers)->post($url, $data);
         
         $announcement = Announcement::create([
             'title' => $request->title,
