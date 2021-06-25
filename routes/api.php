@@ -85,7 +85,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         ],200);
     });
     
-    Route::group(['prefix' => 'admin'], function () {
+    Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin'], function () {
         Route::get('/', function () {
             return response()->json([
                 "status" => "success",
