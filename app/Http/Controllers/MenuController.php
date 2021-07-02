@@ -212,9 +212,18 @@ class MenuController extends Controller
     
     public function detailMyCourse($slug)
     {
+        $userId = Auth::user()->id;
+        
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+            ->pluck('course_id')->toArray();
+            
         $course = Course::with('category', 'playlist.video')
             ->where('slug', $slug)
             ->firstOrFail();
+        
+        if (in_array($course->id, $orderId) {
+            return $this->response("You haven't purchased this course!", null, 422);
+        }
         
         return $this->response("Course found!", $course, 200);
     }
