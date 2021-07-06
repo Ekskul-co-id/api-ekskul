@@ -6,11 +6,13 @@ use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Checkout;
 use App\Models\Course;
+use App\Models\Playlist;
 use App\Models\Rating;
 use App\Models\Video;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class MenuController extends Controller
@@ -33,7 +35,7 @@ class MenuController extends Controller
         $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
             ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category')->addSelect([
+        $courses = Course::with('category', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -64,7 +66,10 @@ class MenuController extends Controller
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category')->addSelect([
+        $idPlaylists = DB::table('playlists')->join('courses', 'playlists.course_id', '=', 'courses.id')
+            ->select('playlists.id')->get()->toArray();
+        
+        $courses = Course::with('category', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -73,7 +78,7 @@ class MenuController extends Controller
                 ->groupBy('course_id'),
             'course_sold' => Checkout::selectRaw('count(id) as total')
                 ->whereColumn('course_id', 'courses.id')
-                ->groupBy('course_id')
+                ->groupBy('course_id'),
             ]);
             
         if (!empty($value)) {
@@ -121,7 +126,8 @@ class MenuController extends Controller
     
     public function detailCourse($slug)
     {
-        $course = Course::with('category', 'playlist')->where('slug', $slug)->firstOrFail();
+        $course = Course::with('category', 'totalDurations', 'playlist.playlistDurations', 'playlist.video')
+            ->where('slug', $slug)->firstOrFail();
         
         return $this->response("Course found!", $course, 200);
     }
@@ -221,7 +227,7 @@ class MenuController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
         
-        if (in_array($course->id, $orderId) {
+        if (in_array($course->id, $orderId)) {
             return $this->response("You haven't purchased this course!", null, 422);
         }
         

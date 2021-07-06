@@ -23,4 +23,10 @@ class Playlist extends Model
     {
         return $this->hasMany('App\Models\Video', 'playlist_id');
     }
+    
+    public function playlistDurations()
+    {
+        return $this->video()->selectRaw('sum(duration) as total, playlist_id')
+            ->groupBy('playlist_id');
+    }
 }

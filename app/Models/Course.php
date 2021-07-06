@@ -38,4 +38,11 @@ class Course extends Model
     {
         return $this->hasMany('App\Models\Rating', 'playlist_id');
     }
+    
+    public function totalDurations()
+    {
+        return $this->hasManyThrough(Video::class, Playlist::class)
+            ->selectRaw('sum(duration) as total, course_id')
+            ->groupBy('course_id');
+    }
 }
