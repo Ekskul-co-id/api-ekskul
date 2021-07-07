@@ -66,8 +66,10 @@ Route::get('refresh-cache', function () {
 });
 
 Route::post('/login',[AuthController::class,'login'])->name('login');
+Route::get('/login/{provider}',[AuthController::class,'redirectToProvider']);
+Route::get('/login/{provider}/callback',[AuthController::class,'handleProviderCallback']);
 Route::post('/register',[AuthController::class,'register'])->name('register');
-Route::post('/logout',[AuthController::class,'logout']);
+Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
 Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
 Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
 Route::post('/forgot-password', [ForgotPasswordController::class,'forgot']);

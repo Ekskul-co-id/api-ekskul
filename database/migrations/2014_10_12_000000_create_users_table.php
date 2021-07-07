@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('avatar');
             $table->string('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->text('address')->nullable();
             $table->string('device_token')->nullable();
             $table->boolean('has_update_avatar')->default(0);

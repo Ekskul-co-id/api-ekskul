@@ -11,15 +11,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
     use APIResponse;
-    
-    public function __construct()
-    {
-        $this->middleware('auth:sanctum', ['except' => ['login', 'register']]);
-    }
     
     public function register(Request $request)
     {
@@ -89,10 +85,63 @@ class AuthController extends Controller
         return $this->response("Login successfully.", ['user' => $user, 'token' => $token], 201);
     }
     
+    public function redirectToProvider(Request $request, $provider)
+    {
+        $deviceToken = $request->get('device_token');
+        
+        return Socialite::driver($provider)->with(['state' => $deviceToken])->stateless()->redirect();
+    }
+    
+    public function handleProviderCallback(Request $request, $provider)
+    {
+        $validated = $this->validateProvider($provider);
+        
+        if (!is_null($validated)) {
+            return $validated;
+        }
+        
+        try {
+            $userSocial = Socialite::driver($provider)->stateless()->user();
+        } catch (ClientException $e) {
+            return $this->response("Invalid credentials provider.", null, 422);
+        }
+        
+        $deviceToken = $request->input('state');
+        
+        $user = User::firstOrCreate([
+            'email' => $userSocial->getEmail(),
+        ],
+        [
+            'name' => $userSocial->getName(),
+            'avatar' => $userSocial->getAvatar(),
+            'device_token' => $deviceToken,
+            'email_verified_at' => now(),
+        ]);
+        
+        $user->providers()->updateOrCreate([
+            'provider' => $provider,
+            'provider_id' => $userSocial->getId(),
+        ],
+        [
+            'user_id' => $user->id,
+        ]);
+        
+        $token = $user->createToken($user->email)->plainTextToken;
+        
+        return $this->response("success", ['user' => $user, 'token' => $token, 'social' => $userSocial], 201);
+    }
+    
     public function logout()
     {
         Auth::user()->tokens()->delete();
 
         return $this->response("Successfully logout.", null, 201, true);
+    }
+    
+    protected function validateProvider($provider)
+    {
+        if (!in_array($provider, ['github', 'facebook', 'google'])) {
+            return $this->response("Please login using github, facebook or google.", null, 422);
+        }
     }
 }
