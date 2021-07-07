@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\VerificationMail;
+use App\Models\SocialProvider;
 use App\Models\User;
 use App\Models\Verification;
 use App\Traits\APIResponse;
@@ -87,6 +88,12 @@ class AuthController extends Controller
     
     public function redirectToProvider(Request $request, $provider)
     {
+        $validated = $this->validateProvider($provider);
+        
+        if (!is_null($validated)) {
+            return $validated;
+        }
+        
         $deviceToken = $request->get('device_token');
         
         return Socialite::driver($provider)->with(['state' => $deviceToken])->stateless()->redirect();
@@ -108,15 +115,34 @@ class AuthController extends Controller
         
         $deviceToken = $request->input('state');
         
-        $user = User::firstOrCreate([
-            'email' => $userSocial->getEmail(),
-        ],
-        [
-            'name' => $userSocial->getName(),
-            'avatar' => $userSocial->getAvatar(),
-            'device_token' => $deviceToken,
-            'email_verified_at' => now(),
-        ]);
+        $hasRegistered = User::where('email', $userSocial->getEmail())->first();
+        
+        $hasProvider = SocialProvider::where(['provider' => $provider, 'provider_id' => $userSocial->getId()])
+            ->first();
+            
+        if ($hasProvider) {
+            $user = $hasRegistered;
+            
+            $msg = "Successfully logged in";
+            
+            $user->update([
+                'device_token' => $deviceToken ?? $user->device_token,
+            ]);
+        } else {
+            if ($hasRegistered) {
+                return $this->response("Email has been used, please try another method.", null, 422);
+            }
+            
+            $user = User::create([
+                'email' => $userSocial->getEmail(),
+                'name' => $userSocial->getName(),
+                'avatar' => $userSocial->getAvatar(),
+                'device_token' => $deviceToken,
+                'email_verified_at' => now(),
+            ]);
+            
+            $msg = "Registration successful!";
+        }
         
         $user->providers()->updateOrCreate([
             'provider' => $provider,
@@ -128,7 +154,7 @@ class AuthController extends Controller
         
         $token = $user->createToken($user->email)->plainTextToken;
         
-        return $this->response("success", ['user' => $user, 'token' => $token, 'social' => $userSocial], 201);
+        return $this->response($msg, ['user' => $user, 'token' => $token, 'social' => $userSocial], 201);
     }
     
     public function logout()
@@ -141,7 +167,7 @@ class AuthController extends Controller
     protected function validateProvider($provider)
     {
         if (!in_array($provider, ['github', 'facebook', 'google'])) {
-            return $this->response("Please login using github, facebook or google.", null, 422);
+            return $this->response("Please using github, facebook or google.", null, 422);
         }
     }
 }
