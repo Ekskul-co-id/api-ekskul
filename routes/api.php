@@ -65,14 +65,17 @@ Route::get('refresh-cache', function () {
     ], 200);
 });
 
-Route::post('/login',[AuthController::class,'login'])->name('login');
-Route::post('/register',[AuthController::class,'register'])->name('register');
-Route::post('/logout',[AuthController::class,'logout']);
-Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
-Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
-Route::post('/forgot-password', [ForgotPasswordController::class,'forgot']);
-Route::post('/forgot-password/reset', [ForgotPasswordController::class,'reset']);
-
+Route::group(['prefix' => 'auth'], function () {
+    Route::get('/{provider}',[AuthController::class,'redirectToProvider']);
+    Route::get('/{provider}/callback',[AuthController::class,'handleProviderCallback']);
+    Route::post('/login',[AuthController::class,'login'])->name('login');
+    Route::post('/register',[AuthController::class,'register'])->name('register');
+    Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
+    Route::post('/verify',[VerifyEmailController::class,'verify'])->middleware('auth:sanctum')->name('verification.verify');
+    Route::post('/verify/resend',[VerifyEmailController::class,'resend'])->middleware('auth:sanctum')->name('verification.send');
+    Route::post('/forgot-password', [ForgotPasswordController::class,'forgot']);
+    Route::post('/forgot-password/reset', [ForgotPasswordController::class,'reset']);
+});
 // Payment handling
 Route::post('/webhooks',[WebhookController::class,'midtransHandler']);
 
