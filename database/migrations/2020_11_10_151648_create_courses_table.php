@@ -23,10 +23,7 @@ class CreateCoursesTable extends Migration
             $table->text('about');
             $table->string('price');
             $table->boolean('is_paid')->default(true);
-            $table->string('silabus1');
-            $table->string('silabus2');
-            $table->string('silabus3');
-            $table->string('silabus4');
+            $table->json('silabus');
             $table->timestamps();
         });
     }

@@ -18,10 +18,11 @@ class Course extends Model
         'about',
         'price',
         'is_paid',
-        'silabus1',
-        'silabus2',
-        'silabus3',
-        'silabus4',
+        'silabus',
+    ];
+    
+    protected $casts = [
+        'silabus' => 'array',
     ];
     
     public function category()

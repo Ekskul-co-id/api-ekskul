@@ -23,10 +23,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara bermain gitar yang benar dari basic nya hingga advance.',
             'price' => '150000',
-            'silabus1' => 'example 1',
-            'silabus2' => 'example 2',
-            'silabus3' => 'example 3',
-            'silabus4' => 'example 4',
+            'silabus' => '["Memegang gitar","Kunci gitar","Memetik gitar","Merusak gitar","Menghancurkan gitar","Membuat gitar","Membakar gitar"]',
         ]);
         
         Course::create([
@@ -38,10 +35,7 @@ class CourseSeeder extends Seeder
             'about' => 'Di Course ini kita akan belajar cara mengedit video yang hasilnya seperti film-film Hollywood.',
             'price' => '0',
             'is_paid' => false,
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         Course::create([
             'name' => 'Bermain piano yang benar',
@@ -51,10 +45,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara bermain piano yang benar dari basic nya hingga advance.',
             'price' => '190000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -65,10 +56,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit foto yang hasilnya seperti film-film Hollywood.',
             'price' => '230000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         Course::create([
             'name' => 'Bermain karet yang benar',
@@ -78,10 +66,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara bermain karet yang benar dari basic nya hingga advance.',
             'price' => '100000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -92,10 +77,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara game video yang hasilnya seperti film-film Hollywood.',
             'price' => '230000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         Course::create([
             'name' => 'Bermain bekel yang benar',
@@ -105,10 +87,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara bermain bekel yang benar dari basic nya hingga advance.',
             'price' => '120000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -119,10 +98,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -133,10 +109,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -147,10 +120,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         
@@ -162,10 +132,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -176,10 +143,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -190,10 +154,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -204,10 +165,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -218,10 +176,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -232,10 +187,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -246,10 +198,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         
         Course::create([
@@ -260,10 +209,7 @@ class CourseSeeder extends Seeder
             'preview' => 'QXiURudUHFE',
             'about' => 'Di Course ini kita akan belajar cara mengedit sendal yang hasilnya seperti film-film Hollywood.',
             'price' => '180000',
-            'silabus1' => 'example',
-            'silabus2' => 'example',
-            'silabus3' => 'example',
-            'silabus4' => 'example',
+            'silabus' => '["Example 1","Example 2","Example 3","Example 4","Example 5"]',
         ]);
         Rating::factory(200)->create();
     }
