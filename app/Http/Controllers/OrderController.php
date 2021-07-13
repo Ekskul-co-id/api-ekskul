@@ -17,7 +17,7 @@ use Midtrans\Snap;
 
 class OrderController extends Controller
 {
-    use APIResponse FcmResponse;
+    use APIResponse, FcmResponse;
     
     private function getMidtransUrl($params)
     {
