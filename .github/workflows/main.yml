@@ -15,3 +15,9 @@ jobs:
         server: ${{ secrets.server }}
         username: ${{ secrets.username_dev }}
         password: ${{ secrets.password_dev }}
+    - name: Build Reporting
+      run: sh .ci-message.sh ✅ 
+
+    - name: Build failure
+      if: failure()
+      run: sh .ci-message.sh ❌
