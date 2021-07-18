@@ -84,7 +84,7 @@ class OrderController extends Controller
         if($check){
             return $this->response("Order has been created.", $check, 201);
         }
-
+        
         $createOrder = Checkout::create([
             'user_id' => $userId,
             'course_id' => $request->course_id,
@@ -125,16 +125,18 @@ class OrderController extends Controller
             
             $status = 'pending';
         } else {
-            $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
-            
-            PaymentLog::create([
-                'status' => $status,
-                'checkout_id' => $order->id,
-                'payment_type' => 'subscribe',
-                'raw_response' => json_encode($order->course),
-                'fcm_response' => json_encode($fcmResponse)
-            ]);
+            $status = 'success';
         }
+        
+        $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
+            
+        PaymentLog::create([
+            'status' => $status,
+            'checkout_id' => $order->id,
+            'payment_type' => 'subscribe',
+            'raw_response' => json_encode($order->course),
+            'fcm_response' => json_encode($fcmResponse)
+        ]);
         
         $order->update([
             'snap_url' => $snapUrl ?? '',
