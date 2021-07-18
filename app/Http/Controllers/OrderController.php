@@ -9,6 +9,7 @@ use App\Traits\APIResponse;
 use App\Traits\FcmResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -22,7 +23,7 @@ class OrderController extends Controller
     private function getMidtransUrl($params)
     {
         // Set your Merchant Server Key
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY_PROD');
+        Config::$serverKey = env('IS_PRODUCTION') ? env('MIDTRANS_SERVER_KEY_PROD') : env('MIDTRANS_SERVER_KEY_DEV');
         Config::$isProduction = (bool) env('IS_PRODUCTION');
         Config::$isSanitized = true;
         Config::$is3ds = (bool) env('IS_3DS');
@@ -85,70 +86,80 @@ class OrderController extends Controller
             return $this->response("Order has been created.", $check, 201);
         }
         
-        $createOrder = Checkout::create([
-            'user_id' => $userId,
-            'course_id' => $request->course_id,
-            'qty' => 1,
-        ]);
+        DB::beginTransaction();
         
-        $order = Checkout::with('user', 'course')->find($createOrder->id);
-        
-        if (($order->course->is_paid) && ($order->course->price !== 0)) {
-            $itemDetails = [
-               [
-                    'id' => $order->course->id,
+        try {
+            $createOrder = Checkout::create([
+                'user_id' => $userId,
+                'course_id' => $request->course_id,
+                'qty' => 1,
+            ]);
+            
+            $order = Checkout::with('user', 'course')->find($createOrder->id);
+            
+            if (($order->course->is_paid) && ($order->course->price !== 0)) {
+                $itemDetails = [
+                   [
+                        'id' => $order->course->id,
+                        'price' => $order->course->price,
+                        'quantity' => 1,
+                        'name' => $order->course->name,
+                        'brand' => 'Ekskul.co.id',
+                        'category' => $order->course->category->name,
+                        'merchant_name' => 'Ekskul.co.id'
+                    ]
+                ];
+            
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->id.'-'.Str::random(5),
+                        'gross_amount' => $order->course->price,
+                    ],
+                    'item_details' => $itemDetails, 
+                    'customer_details' => [
+                        'first_name' => $order->user->name,
+                        'email' => $order->user->email,
+                    ],
+                    'enabled_payments' => [
+                        'credit_card', 'cimb_clicks', 'bca_klikbca', 'bca_klikpay', 'bri_epay', 'echannel', 'permata_va', 'bca_va', 'bni_va', 'bri_va', 'other_va', 'gopay', 'indomaret', 'danamon_online', 'akulaku', 'shopeepay'
+                    ],
+                ];
+    
+                $snapUrl = $this->getMidtransUrl($params);
+                
+                $status = 'pending';
+            } else {
+                $status = 'success';
+            }
+            
+            $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
+                
+            PaymentLog::create([
+                'status' => $status,
+                'checkout_id' => $order->id,
+                'payment_type' => 'subscribe',
+                'raw_response' => json_encode($order->course),
+                'fcm_response' => json_encode($fcmResponse)
+            ]);
+            
+            $order->update([
+                'snap_url' => $snapUrl ?? '',
+                'status' => $status,
+                'metadata' => [
+                    'course_id' => $order->course_id,
                     'price' => $order->course->price,
-                    'quantity' => 1,
-                    'name' => $order->course->name,
-                    'brand' => 'Ekskul.co.id',
-                    'category' => $order->course->category->name,
-                    'merchant_name' => 'Ekskul.co.id'
+                    'course_name' => $order->course->name,
                 ]
-            ];
-        
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $order->id.'-'.Str::random(5),
-                    'gross_amount' => $order->course->price,
-                ],
-                'item_details' => $itemDetails, 
-                'customer_details' => [
-                    'first_name' => $order->user->name,
-                    'email' => $order->user->email,
-                ],
-                'enabled_payments' => [
-                    'credit_card', 'cimb_clicks', 'bca_klikbca', 'bca_klikpay', 'bri_epay', 'echannel', 'permata_va', 'bca_va', 'bni_va', 'bri_va', 'other_va', 'gopay', 'indomaret', 'danamon_online', 'akulaku', 'shopeepay'
-                ],
-            ];
-
-            $snapUrl = $this->getMidtransUrl($params);
+            ]);
             
-            $status = 'pending';
-        } else {
-            $status = 'success';
+            DB::commit();
+            
+            return $this->response("Order Created.", ['order' => $order, 'snap_url' => $snapUrl ?? ''], 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return $this->response("Create order failed.", $e, 201);
         }
-        
-        $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
-            
-        PaymentLog::create([
-            'status' => $status,
-            'checkout_id' => $order->id,
-            'payment_type' => 'subscribe',
-            'raw_response' => json_encode($order->course),
-            'fcm_response' => json_encode($fcmResponse)
-        ]);
-        
-        $order->update([
-            'snap_url' => $snapUrl ?? '',
-            'status' => $status,
-            'metadata' => [
-                'course_id' => $order->course_id,
-                'price' => $order->course->price,
-                'course_name' => $order->course->name,
-            ]
-        ]);
-        
-        return $this->response("Order Created.", ['order' => $order, 'snap_url' => $snapUrl ?? ''], 201);
     }
 
     /**
