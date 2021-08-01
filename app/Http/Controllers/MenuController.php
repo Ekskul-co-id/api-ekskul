@@ -227,7 +227,7 @@ class MenuController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
         
-        if (in_array($course->id, $orderId)) {
+        if (!in_array($course->id, $orderId)) {
             return $this->response("You haven't purchased this course!", null, 422);
         }
         
