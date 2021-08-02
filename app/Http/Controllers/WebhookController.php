@@ -40,7 +40,7 @@ class WebhookController extends Controller
         $fraudStatus = $data['fraud_status'] ?? '';
 
         if ($signaturKey !== $mySignaturKey) {
-            return $this->response("Invalid signature.", [$data, $mySignaturKey], 422);
+            return $this->response("Invalid signature.", null, 422);
         }
 
         $checkoutId = explode('-', $orderId);
