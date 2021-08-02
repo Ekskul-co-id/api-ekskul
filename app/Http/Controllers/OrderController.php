@@ -66,7 +66,8 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'course_id' => 'required|integer'
+            'course_id' => 'required|integer',
+            'type' => 'required|in:course,livestream',
         ]);
 
         if ($validator->fails()) {

@@ -18,6 +18,7 @@ class CreateCheckoutsTable extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('course_id')->constrained('courses');
             $table->string('qty');
+            $table->enum('type', ['course', 'private']);
             $table->string('status')->default('pending');
             $table->string('snap_url')->nullable();
             $table->json('metadata')->nullable();

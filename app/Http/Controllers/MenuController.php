@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Checkout;
 use App\Models\Course;
+use App\Models\Livestream;
 use App\Models\Playlist;
 use App\Models\Rating;
 use App\Models\Video;
@@ -32,7 +33,7 @@ class MenuController extends Controller
         
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
         $courses = Course::with('category', 'totalDurations')->addSelect([
@@ -61,13 +62,10 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
         $value = e($request->get('q'));
-        
-        $idPlaylists = DB::table('playlists')->join('courses', 'playlists.course_id', '=', 'courses.id')
-            ->select('playlists.id')->get()->toArray();
         
         $courses = Course::with('category', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
@@ -100,7 +98,7 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
         $courses = Course::with('category')->addSelect([
@@ -180,11 +178,16 @@ class MenuController extends Controller
         return $this->response("Rating created!", $rating, 201);
     }
     
+    public function listLivestream()
+    {
+        
+    }
+    
     public function myCourse(Request $request)
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
         $value = e($request->get('q'));
@@ -220,7 +223,7 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId])->get()
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
         $course = Course::with('category', 'playlist.video')

@@ -15,6 +15,7 @@ class Checkout extends Model
         'user_id',
         'course_id',
         'qty',
+        'type',
         'snap_url',
         'metadata',
         'status'
