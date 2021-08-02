@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(VideoSeeder::class);
         $this->call(BannerSeeder::class);
         $this->call(AnnouncementSeeder::class);
+        $this->call(LivestreamSeeder::class);
     }
 }

@@ -178,9 +178,30 @@ class MenuController extends Controller
         return $this->response("Rating created!", $rating, 201);
     }
     
-    public function listLivestream()
+    public function listLivestream(Request $request)
     {
+        $userId = Auth::user()->id;
         
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'livestream'])->get()
+            ->pluck('course_id')->toArray();
+        
+        $value = $request->get('q');
+        
+        $livestreams = Livestream::with('user');
+            
+        if (!empty($value)) {
+            $result = $livestreams->whereDate('start_date', '=', $value)->paginate(10);
+        } else {
+            $result = $livestreams->paginate(10);
+        }
+        
+        $data = [
+            'livestreams' => $result,
+            'has_purchased' => $hasPurchased,
+            'search' => $value,
+        ];
+        
+        return $this->response("Livestreams found!", $data, 200);
     }
     
     public function myCourse(Request $request)

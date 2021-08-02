@@ -15,12 +15,16 @@ class CreateLivestreamsTable extends Migration
     {
         Schema::create('livestreams', function (Blueprint $table) {
             $table->id();
-            $table->string('video_id');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
             $table->string('title');
             $table->string('image');
+            $table->string('youtube_id');
             $table->text('description');
+            $table->foreignId('user_id')->constrained('users');
+            $table->string('price');
+            $table->boolean('is_paid')->default(true);
+            $table->string('silabus');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date')->nullable();
             $table->timestamps();
         });
     }

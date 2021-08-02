@@ -10,11 +10,26 @@ class Livestream extends Model
     use HasFactory;
 
     protected $fillable = [
-        'video_id',
-        'start_date',
-        'end_date',
         'title',
         'image',
+        'youtube_id',
         'description',
+        'user_id',
+        'price',
+        'is_paid',
+        'silabus',
+        'start_date',
+        'end_date',
     ];
+    
+    protected $casts = [
+        'silabus' => 'array',
+        'start_date' => 'datetime:Y-m-d H:m',
+        'end_date' => 'datetime:Y-m-d H:m',
+    ];
+    
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }

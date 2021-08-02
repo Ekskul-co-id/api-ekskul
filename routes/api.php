@@ -228,6 +228,11 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
         Route::put('/{slug}/ratings',[MenuController::class,'updateRating']);
     });
     
+    Route::group(['prefix' => 'livestreams'], function () {
+            Route::get('/',[MenuController::class,'listLivestream']);
+            Route::get('/{slug}',[MenuController::class,'detailLivestream']);
+    });
+    
     // User menu    
     Route::group(['prefix' => 'profile'], function () {
         Route::get('/',[ProfileController::class,'index']);
