@@ -29,18 +29,18 @@ class WebhookController extends Controller
         
         $grossAmount = $data['gross_amount'];
         
-        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $serverKey = env('IS_PRODUCTION') ? env('MIDTRANS_SERVER_KEY_PROD') : env('MIDTRANS_SERVER_KEY_DEV');
 
-        $mySignaturKey = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
+        $mySignaturKey = hash("sha512", $orderId.$statusCode.$grossAmount.$serverKey);
 
         $transactionStatus = $data['transaction_status'];
         
         $paymentType = $data['payment_type'];
         
-        $fraudStatus = $data['fraud_status'];
+        $fraudStatus = $data['fraud_status'] ?? '';
 
         if ($signaturKey !== $mySignaturKey) {
-            return $this->response("Invalid signature.", null, 422);
+            return $this->response("Invalid signature.", [$data, $mySignaturKey], 422);
         }
 
         $checkoutId = explode('-', $orderId);
