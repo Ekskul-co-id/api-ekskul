@@ -11,6 +11,7 @@ class Livestream extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'image',
         'youtube_id',
         'description',

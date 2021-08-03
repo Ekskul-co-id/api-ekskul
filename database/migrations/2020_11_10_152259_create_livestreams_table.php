@@ -16,6 +16,7 @@ class CreateLivestreamsTable extends Migration
         Schema::create('livestreams', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug');
             $table->string('image');
             $table->string('youtube_id');
             $table->text('description');

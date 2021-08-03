@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Livestream;
 use App\Traits\APIResponse;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class LivestreamController extends Controller
 {
@@ -35,8 +35,11 @@ class LivestreamController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'image' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
+            'youtube_id' => 'required',
             'description' => 'required',
-            'video_id' => 'required',
+            'user_id' => 'required|integer',
+            'price' => 'required',
+            'silabus' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
@@ -57,9 +60,13 @@ class LivestreamController extends Controller
         
         $livestream = Livestream::create([
             'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'image' => env('APP_URL').'/'.$path.'/'.$fileName,
+            'youtube_id' => $request->youtube_id,
             'description' => $request->description,
-            'video_id' => $request->video_id,
+            'user_id' => $request->user_id,
+            'price' => $request->price,
+            'silabus' => $request->silabus,
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
@@ -73,9 +80,9 @@ class LivestreamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show($id)
     {
-        $livestream = Livestream::findOrFail($id);
+        $livestream = Livestream::with('user')->findOrFail($id);
         
         return $this->response("Livestream found!", $livestream, 200);
 
@@ -93,8 +100,11 @@ class LivestreamController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'image' => 'mimes:jpeg,jpg,png,svg|max:2048',
+            'youtube_id' => 'required',
             'description' => 'required',
-            'video_id' => 'required',
+            'user_id' => 'required|integer',
+            'price' => 'required',
+            'silabus' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
@@ -123,9 +133,13 @@ class LivestreamController extends Controller
         
         $livestream->update([
             'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'image' => $image ?? $livestream->image,
+            'youtube_id' => $request->youtube_id,
             'description' => $request->description,
-            'video_id' => $request->video_id,
+            'user_id' => $request->user_id,
+            'price' => $request->price,
+            'silabus' => $request->silabus,
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
