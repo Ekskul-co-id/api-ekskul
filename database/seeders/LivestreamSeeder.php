@@ -19,6 +19,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[DS3] NEKOmorphs!! nya',
             'slug' => 'ds3-nekomorphs-nya',
+            'category_id' => 2,
             'image' => 'https://i.ytimg.com/vi/YhmEqefSZZc/mqdefault.jpg',
             'youtube_id' => 'YhmEqefSZZc',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -33,6 +34,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => 'TACO BELL: THE STREAM',
             'slug' => 'taco-bell-the-stream',
+            'category_id' => 1,
             'image' => 'https://i.ytimg.com/vi/zuIDDWQlUWg/mqdefault.jpg',
             'youtube_id' => 'zuIDDWQlUWg',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -47,6 +49,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[BUS SIMULATOR] All aboard Goomba\'s bussin Big Rig !',
             'slug' => 'bus-simulator-all-aboard-goombas-bussin-big-rig',
+            'category_id' => 4,
             'image' => 'https://i.ytimg.com/vi/Ds71TFQCr5c/mqdefault.jpg',
             'youtube_id' => 'Ds71TFQCr5c',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -61,6 +64,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[INSIDE] inside what??',
             'slug' => 'inside-inside-what',
+            'category_id' => 3,
             'image' => 'https://i.ytimg.com/vi/jPJSTCAgyjE/mqdefault.jpg',
             'youtube_id' => 'jPJSTCAgyjE',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -75,6 +79,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[MINECRAFT] We bully the Enderdragon #HololiveEN',
             'slug' => 'minecraft-we-bully-the-enderdragon-hololiveen',
+            'category_id' => 2,
             'image' => 'https://i.ytimg.com/vi/JGyaMXShc4g/mqdefault.jpg',
             'youtube_id' => 'JGyaMXShc4g',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -89,6 +94,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[JUMP KING] TACTICAL LEAP',
             'slug' => 'jump-king-tactical-leap',
+            'category_id' => 4,
             'image' => 'https://i.ytimg.com/vi/vci-RuRSios/mqdefault.jpg',
             'youtube_id' => 'vci-RuRSios',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -103,6 +109,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[One Hand Clapping] cl a p',
             'slug' => 'one-hand-clapping-cl-a-p',
+            'category_id' => 2,
             'image' => 'https://i.ytimg.com/vi/4pmBp7C3C1E/mqdefault.jpg',
             'youtube_id' => '4pmBp7C3C1E',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',
@@ -117,6 +124,7 @@ class LivestreamSeeder extends Seeder
         Livestream::create([
             'title' => '[ASSETTO CORSA] SHARK DORIFTO',
             'slug' => 'assetto-corsa-shark-dorifto',
+            'category_id' => 1,
             'image' => 'https://i.ytimg.com/vi/_vldG5PtM44/mqdefault.jpg',
             'youtube_id' => '_vldG5PtM44',
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam libero sit amet felis vehicula, at maximus nibh tincidunt. Fusce scelerisque velit eu risus mattis, in mattis massa ultricies. Donec posuere nunc congue lacinia dignissim. Mauris nec lacus eget sem hendrerit faucibus. Sed consectetur, diam id consequat pharetra, nisi diam efficitur est, ac malesuada risus nibh vitae turpis. Sed quis leo consectetur, congue metus quis, scelerisque risus. Curabitur nunc dui, mollis sed vehicula sit amet, porta eleifend diam. Aenean condimentum metus vitae aliquet egestas. Aenean vitae consequat ex, eu tempus orci. Phasellus finibus ante eget nisl finibus, vel euismod turpis ultricies. Curabitur sed sollicitudin libero, at viverra nisi.',

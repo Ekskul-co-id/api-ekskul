@@ -14,6 +14,7 @@ class Checkout extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'livestream_id',
         'qty',
         'type',
         'snap_url',
@@ -37,7 +38,12 @@ class Checkout extends Model
         return $this->belongsTo('App\Models\Course');
     }
     
-    public function payment_log()
+    public function livestream()
+    {
+        return $this->belongsTo('App\Models\Livestream');
+    }
+    
+    public function paymentLog()
     {
         return $this->hasMany('App\Models\PaymentLog', 'checkout_id');
     }

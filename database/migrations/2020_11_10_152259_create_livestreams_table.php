@@ -17,6 +17,7 @@ class CreateLivestreamsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
+            $table->foreignId('category_id')->constrained('categories');
             $table->string('image');
             $table->string('youtube_id');
             $table->text('description');

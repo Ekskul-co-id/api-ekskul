@@ -12,6 +12,7 @@ class Livestream extends Model
     protected $fillable = [
         'title',
         'slug',
+        'category_id',
         'image',
         'youtube_id',
         'description',
@@ -28,6 +29,11 @@ class Livestream extends Model
         'start_date' => 'datetime:Y-m-d H:m',
         'end_date' => 'datetime:Y-m-d H:m',
     ];
+    
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category');
+    }
     
     public function user()
     {
