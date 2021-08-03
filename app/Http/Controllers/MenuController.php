@@ -204,6 +204,13 @@ class MenuController extends Controller
         return $this->response("Livestreams found!", $data, 200);
     }
     
+    public function detailLivestream($slug)
+    {
+        $livestream = Livestream::with('user')->where('slug', $slug)->firstOrFail();
+        
+        return $this->response("Livestream found!", $livestream, 200);
+    }
+    
     public function myCourse(Request $request)
     {
         $userId = Auth::user()->id;
