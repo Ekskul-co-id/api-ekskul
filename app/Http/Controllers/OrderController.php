@@ -42,19 +42,9 @@ class OrderController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $checkouts = Checkout::with('course', 'payment_log')->where('user_id', $userId)->get();
+        $checkouts = Checkout::with('course', 'paymentLog')->where('user_id', $userId)->get();
                         
         return $this->response("Details transaction found!", $checkouts, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -66,7 +56,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'course_id' => 'required|integer',
+            'item_id' => 'required|integer',
             'type' => 'required|in:course,livestream',
         ]);
 
@@ -76,12 +66,25 @@ class OrderController extends Controller
         
         $userId = Auth::user()->id;
         
-        $check = Checkout::with('user', 'course')
-                ->where([
-                    'user_id' => $userId,
-                    'course_id' => $request->course_id,
-                ])
-                ->first();
+        $type = $request->type;
+        
+        $checkout = Checkout::with('user', 'course');
+        
+        if ($type == 'course') {
+             $checkout->where([
+                'user_id' => $userId,
+                'course_id' => $request->item_id,
+                'type' => $type
+            ]);
+        } elseif ($type == 'livestream') {
+           $checkout->where([
+                'user_id' => $userId,
+                'livestream_id' => $request->item_id,
+                'type' => $type
+            ]);
+        }
+        
+        $check = $checkout->first();
         
         if($check){
             return $this->response("Order has been created.", $check, 201);
@@ -90,15 +93,25 @@ class OrderController extends Controller
         DB::beginTransaction();
         
         try {
-            $createOrder = Checkout::create([
-                'user_id' => $userId,
-                'course_id' => $request->course_id,
-                'qty' => 1,
-            ]);
+            if ($type == 'course') {
+                $createOrder = Checkout::create([
+                    'user_id' => $userId,
+                    'course_id' => $request->item_id,
+                    'type' => $type,
+                    'qty' => 1,
+                ]);
+            } elseif ($type == 'livestream') {
+                $createOrder = Checkout::create([
+                    'user_id' => $userId,
+                    'livestream_id' => $request->item_id,
+                    'type' => $type,
+                    'qty' => 1,
+                ]);
+            }
             
             $order = Checkout::with('user', 'course')->find($createOrder->id);
             
-            if (($order->course->is_paid) && ($order->course->price !== 0)) {
+            if (($order->type == 'course') && ($order->course->is_paid) && ($order->course->price !== 0)) {
                 $itemDetails = [
                    [
                         'id' => $order->course->id,
@@ -129,11 +142,58 @@ class OrderController extends Controller
                 $snapUrl = $this->getMidtransUrl($params);
                 
                 $status = 'pending';
+            } elseif (($order->type == 'livestream') && ($order->livestream->is_paid) && ($order->livestream->price !== 0)) {
+                $itemDetails = [
+                   [
+                        'id' => $order->livestream->id,
+                        'price' => $order->livestream->price,
+                        'quantity' => 1,
+                        'name' => $order->livestream->title,
+                        'brand' => 'Ekskul.co.id',
+                        'category' => $order->livestream->category->name,
+                        'merchant_name' => 'Ekskul.co.id'
+                    ]
+                ];
+            
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->id.'-'.Str::random(5),
+                        'gross_amount' => $order->livestream->price,
+                    ],
+                    'item_details' => $itemDetails, 
+                    'customer_details' => [
+                        'first_name' => $order->user->name,
+                        'email' => $order->user->email,
+                    ],
+                    'enabled_payments' => [
+                        'credit_card', 'cimb_clicks', 'bca_klikbca', 'bca_klikpay', 'bri_epay', 'echannel', 'permata_va', 'bca_va', 'bni_va', 'bri_va', 'other_va', 'gopay', 'indomaret', 'danamon_online', 'akulaku', 'shopeepay'
+                    ],
+                ];
+    
+                $snapUrl = $this->getMidtransUrl($params);
+                
+                $status = 'pending';
             } else {
                 $status = 'success';
             }
             
-            $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
+            if ($order->type == 'course') {
+                $metadata = [
+                    'course_id' => $order->course_id,
+                    'price' => $order->course->price,
+                    'name' => $order->course->name,
+                ];
+                
+                $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
+            } elseif ($order->type == 'livestream') {
+                $metadata = [
+                    'livestream_id' => $order->livestream_id,
+                    'price' => $order->livestream->price,
+                    'name' => $order->livestream->title,
+                ];
+                
+                $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->livestream->image, "Berhasil memesan livestream ".$order->livestream->title.".");
+            }
                 
             PaymentLog::create([
                 'status' => $status,
@@ -146,11 +206,7 @@ class OrderController extends Controller
             $order->update([
                 'snap_url' => $snapUrl ?? '',
                 'status' => $status,
-                'metadata' => [
-                    'course_id' => $order->course_id,
-                    'price' => $order->course->price,
-                    'course_name' => $order->course->name,
-                ]
+                'metadata' => $metadata
             ]);
             
             DB::commit();
@@ -171,20 +227,9 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $checkout = Checkout::with('course')->findOrFail($id);
+        $checkout = Checkout::with('course', 'paymentLog')->findOrFail($id);
         
         return $this->response("Details transaction found!", $checkout, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
