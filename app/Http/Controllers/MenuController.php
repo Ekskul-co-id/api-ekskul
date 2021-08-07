@@ -126,15 +126,21 @@ class MenuController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
         $course = Course::with('category', 'totalDurations', 'playlist.playlistDurations', 'playlist.video')
             ->where('slug', $slug)->firstOrFail();
         
+        if (in_array($course->id, $orderId)) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        
         $data = [
             'course' => $course,
-            'has_purchased' => $hasPurchased
+            'has_purchased' => $status
         ];
         
         return $this->response("Course found!", $data, 200);
