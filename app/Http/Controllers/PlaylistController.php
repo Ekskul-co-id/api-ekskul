@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Checkout;
 use App\Models\Playlist;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class PlaylistController extends Controller
 {

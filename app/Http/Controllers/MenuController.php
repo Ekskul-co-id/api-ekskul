@@ -124,10 +124,20 @@ class MenuController extends Controller
     
     public function detailCourse($slug)
     {
+        $userId = Auth::user()->id;
+        
+        $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
+            ->pluck('course_id')->toArray();
+            
         $course = Course::with('category', 'totalDurations', 'playlist.playlistDurations', 'playlist.video')
             ->where('slug', $slug)->firstOrFail();
         
-        return $this->response("Course found!", $course, 200);
+        $data = [
+            'course' => $course,
+            'has_purchased' => $hasPurchased
+        ];
+        
+        return $this->response("Course found!", $data, 200);
     }
     
     public function storeRating(Request $request, $slug)

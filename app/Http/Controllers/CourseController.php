@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -36,10 +38,7 @@ class CourseController extends Controller
             'about' => 'required',
             'price' => 'required',
             'image' => 'required|mimes:jpeg,jpg,png|max:2048',
-            'silabus1' => 'required',
-            'silabus2' => 'required',
-            'silabus3' => 'required',
-            'silabus4' => 'required',
+            'silabus' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -59,10 +58,7 @@ class CourseController extends Controller
             'about' => $request->about,
             'price' => $request->price,
             'image' => env('APP_URL').'/'.$path.'/'.$fileName,
-            'silabus1' => $request->silabus1,
-            'silabus2' => $request->silabus2,
-            'silabus3' => $request->silabus3,
-            'silabus4' => $request->silabus4,
+            'silabus' => $request->silabus,
         ]);
 
         return $this->response("Course created!", $course, 201);
