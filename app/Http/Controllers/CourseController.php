@@ -67,7 +67,7 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
     public function show(Course $course)
@@ -76,23 +76,12 @@ class CourseController extends Controller
         
         return $this->response("Course found!", $course, 200);
     }
-    
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Course $course)
@@ -102,11 +91,8 @@ class CourseController extends Controller
             'category_id' => 'required|integer',
             'about' => 'required',
             'price' => 'required',
-            'image' => 'required|mimes:jpeg,jpg,png|max:2048',
-            'silabus1' => 'required',
-            'silabus2' => 'required',
-            'silabus3' => 'required',
-            'silabus4' => 'required',
+            'image' => 'mimes:jpeg,jpg,png|max:2048',
+            'silabus' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -132,10 +118,7 @@ class CourseController extends Controller
             'about' => $request->about,
             'price' => $request->price,
             'image' => $image ?? $course->image,
-            'silabus1' => $request->silabus1,
-            'silabus2' => $request->silabus2,
-            'silabus3' => $request->silabus3,
-            'silabus4' => $request->silabus4,
+            'silabus' => $request->silabus,
         ]);
 
         return $this->response("Course updated!", $course, 201);
@@ -144,7 +127,7 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
     public function destroy(Course $course)

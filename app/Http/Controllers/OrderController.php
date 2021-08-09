@@ -222,7 +222,7 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Checkout  $checkout
      * @return \Illuminate\Http\Response
      */
     public function show(Checkout $checkout)
@@ -236,10 +236,10 @@ class OrderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Checkout  $checkout
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Checkout $checkout)
     {
         //
     }
@@ -247,10 +247,10 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Checkout  $checkout
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Checkout $checkout)
     {
         //
     }

@@ -77,7 +77,7 @@ class LivestreamController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
     public function show(Livestream $livestream)
@@ -92,7 +92,7 @@ class LivestreamController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Livestream $livestream)
@@ -148,7 +148,7 @@ class LivestreamController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
     public function destroy(Livestream $livestream)

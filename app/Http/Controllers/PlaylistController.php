@@ -51,7 +51,7 @@ class PlaylistController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
     public function show(Playlist $playlist)
@@ -65,7 +65,7 @@ class PlaylistController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Playlist $playlist)
@@ -90,7 +90,7 @@ class PlaylistController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
     public function destroy(Playlist $playlist)
