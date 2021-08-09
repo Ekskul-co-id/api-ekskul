@@ -59,9 +59,9 @@ class VideoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Video $video)
     {
-        $video = Video::with('playlist')->findOrFail($id);
+        $video->load('playlist');
         
         return $this->response("Video found!", $video, 200);
     }
@@ -73,7 +73,7 @@ class VideoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Video $video)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
@@ -85,8 +85,6 @@ class VideoController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $video = Video::findOrFail($id);
 
         $video->update([
             'title' => $request->title,
@@ -104,10 +102,8 @@ class VideoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Video $video)
     {
-        $video = Video::findOrFail($id);
-        
         $video->delete();
         
         return $this->response("Video deleted", null, 201);

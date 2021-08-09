@@ -56,10 +56,8 @@ class RatingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Rating $rating)
     {
-        $rating = Rating::finfOrFail($id);
-        
         return $this->response("Rating found!", $rating, 200);
     }
 
@@ -70,10 +68,8 @@ class RatingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Rating $rating)
     {
-        $rating = Rating::finfOrFail($id);
-        
         $validator = Validator::make($request->all(), [
             'course_id' => 'required|integer',
             'user_id' => 'required|integer|unique:ratings,user_id,'.$rating->user->id,
@@ -101,8 +97,6 @@ class RatingController extends Controller
      */
     public function destroy($id)
     {
-        $rating = Rating::finfOrFail($id);
-        
         $rating->delete();
         
         return $this->response("Rating deleted!", null, 201);

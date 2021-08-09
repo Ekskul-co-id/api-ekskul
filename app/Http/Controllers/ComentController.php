@@ -56,9 +56,9 @@ class ComentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show(Comment $comment)
     {
-        $comment = Comment::with('user', 'livestream')->findOrFail($id);
+        $comment->load('user', 'livestream');
         
         return $this->response("Comment found!", $comment, 200);
 
@@ -71,7 +71,7 @@ class ComentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comment $comment)
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|integer',
@@ -82,8 +82,6 @@ class ComentController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $comment = Comment::findOrFail($id);
         
         $comment->update([
             'user_id' => $request->user_id,
@@ -100,10 +98,8 @@ class ComentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::findOrFail($id);
-        
         $comment->delete();
         
         return $this->response("Comment deleted!", null, 201);

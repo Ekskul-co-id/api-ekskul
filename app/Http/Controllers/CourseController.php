@@ -70,9 +70,9 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Course $course)
     {
-        $course = Course::with('category', 'video')->findOrFail($id);
+        $course->load('category', 'video');
         
         return $this->response("Course found!", $course, 200);
     }
@@ -95,7 +95,7 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, Course $course)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -112,8 +112,6 @@ class CourseController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $course = Course::findOrFail($id);
         
         if($request->hasFile('image')){
             $fileName = time().'.'.$request->image->extension();
@@ -149,10 +147,8 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Course $course)
     {
-        $course = Course::findOrFail($id);
-        
         $course->delete();
         
         return $this->response("Course deleted!", null, 201);

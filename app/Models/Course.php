@@ -37,7 +37,7 @@ class Course extends Model
     
     public function rating()
     {
-        return $this->hasMany('App\Models\Rating', 'playlist_id');
+        return $this->hasMany('App\Models\Rating', 'course_id');
     }
     
     public function totalDurations()

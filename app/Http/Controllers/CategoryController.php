@@ -62,9 +62,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        $category = Category::with('playlist')->findOrFail($id);
+        $category->load('playlist');
         
         return $this->response("Category found!", $category, 201);
     }
@@ -76,7 +76,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -86,8 +86,6 @@ class CategoryController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $category = Category::findOrFail($id);
         
         if($request->hasFile('icon')){
             $fileName = time().'.'.$request->icon->extension();
@@ -116,10 +114,8 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
-        
         $category->delete();
         
         return $this->response("Category has deleted!", null, 201);

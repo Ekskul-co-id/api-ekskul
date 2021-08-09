@@ -27,11 +27,9 @@ class MenuController extends Controller
         return $this->response("Categories found!", $categories, 200);
     }
     
-    public function detailCategory($slug)
+    public function detailCategory(Category $category)
     {
         $userId = Auth::user()->id;
-        
-        $category = Category::where('slug', $slug)->firstOrFail();
         
         $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
@@ -122,15 +120,14 @@ class MenuController extends Controller
         return $this->response("Courses found!", $data, 200);
     }
     
-    public function detailCourse($slug)
+    public function detailCourse(Course $course)
     {
         $userId = Auth::user()->id;
         
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
-        $course = Course::with('category', 'totalDurations', 'playlist.playlistDurations', 'playlist.video')
-            ->where('slug', $slug)->firstOrFail();
+        $course->load('category', 'totalDurations', 'playlist.playlistDurations');
         
         if (in_array($course->id, $orderId)) {
             $status = true;
@@ -146,7 +143,7 @@ class MenuController extends Controller
         return $this->response("Course found!", $data, 200);
     }
     
-    public function storeRating(Request $request, $slug)
+    public function storeRating(Request $request, Course $course)
     {
         $validator = Validator::make($request->all(), [
             'value' => 'required|integer'
@@ -158,10 +155,8 @@ class MenuController extends Controller
         
         $userId = Auth::user()->id;
         
-        $courseId = Course::where('slug', $slug)->pluck('id')->implode(' ');
-        
         $rating = Rating::create([
-            'course_id' => $courseId,
+            'course_id' => $course->id,
             'user_id' => $userId,
             'value' => $request->value,
         ]);
@@ -169,7 +164,7 @@ class MenuController extends Controller
         return $this->response("Rating created!", $rating, 201);
     }
     
-    public function updateRating(Request $request, $slug)
+    public function updateRating(Request $request, Course $course)
     {
         $validator = Validator::make($request->all(), [
             'value' => 'required|integer'
@@ -181,13 +176,9 @@ class MenuController extends Controller
         
         $userId = Auth::user()->id;
         
-        $courseId = Course::where('slug', $slug)->pluck('id')->implode(' ');
-        
-        $rating = Rating::where(['course_id' => $courseId, 'user_id' => $userId])->firstOrFail();
+        $rating = Rating::where(['course_id' => $course->id, 'user_id' => $userId])->firstOrFail();
         
         $rating->update([
-            'course_id' => $courseId,
-            'user_id' => $userId,
             'value' => $request->value,
         ]);
         
@@ -220,9 +211,9 @@ class MenuController extends Controller
         return $this->response("Livestreams found!", $data, 200);
     }
     
-    public function detailLivestream($slug)
+    public function detailLivestream(Livestream $livestream)
     {
-        $livestream = Livestream::with('user')->where('slug', $slug)->firstOrFail();
+        $livestream->load('user');
         
         return $this->response("Livestream found!", $livestream, 200);
     }
@@ -263,16 +254,14 @@ class MenuController extends Controller
         return $this->response("Courses found!", $data, 200);
     }
     
-    public function detailMyCourse($slug)
+    public function detailMyCourse(Course $course)
     {
         $userId = Auth::user()->id;
         
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
-        $course = Course::with('category', 'playlist.video')
-            ->where('slug', $slug)
-            ->firstOrFail();
+        $course->load('category', 'totalDurations', 'playlist.playlistDurations', 'playlist.video');
         
         if (!in_array($course->id, $orderId)) {
             return $this->response("You haven't purchased this course!", null, 422);
@@ -290,9 +279,9 @@ class MenuController extends Controller
         return $this->response("Announcements found!", $announcements, 200);
     }
     
-    public function detailMyAnnouncement($id)
+    public function detailMyAnnouncement(Announcement $announcement)
     {
-        $announcement = Announcement::with('user')->findOrFail($id);
+        $announcement->load('user');
         
         return $this->response("Announcement found!", $announcement, 200);
     }
