@@ -28,7 +28,8 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=Admin+Ekskul&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'Indonesia' 
+            'address' => 'Indonesia',
+            'profession' => 'CEO Ekskul.co.id',
         ]);
         
         $admin->assignRole($roleAdmin);
@@ -39,7 +40,8 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=John&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'Japan' 
+            'address' => 'Japan',
+            'profession' => 'Student',
         ]);
         
         $user->assignRole($roleUser);
@@ -50,7 +52,8 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=Angga+Maulana&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'Italia' 
+            'address' => 'Italia',
+            'profession' => 'Mobile Developer',
         ]);
         
         $mentor1->assignRole($roleMentor);
@@ -61,7 +64,8 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=Fikri&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'England' 
+            'address' => 'England',
+            'profession' => 'UI/UX Designer'
         ]);
         
         $mentor2->assignRole($roleMentor);
@@ -72,7 +76,8 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=Fauzan+W&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'Japan' 
+            'address' => 'Japan',
+            'profession' => 'Full-Stack Developer'
         ]);
         
         $mentor3->assignRole($roleMentor);
