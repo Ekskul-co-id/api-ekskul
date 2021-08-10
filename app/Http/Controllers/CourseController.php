@@ -19,7 +19,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::get();
+        $courses = Course::with('category', 'mentor')->get();
         
         return $this->response("Courses found!", $courses, 200);
     }
@@ -35,6 +35,7 @@ class CourseController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category_id' => 'required|integer',
+            'user_id' => 'required|integer',
             'about' => 'required',
             'price' => 'required',
             'image' => 'required|mimes:jpeg,jpg,png|max:2048',
@@ -55,6 +56,7 @@ class CourseController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'category_id' => $request->category_id,
+            'user_id' => $request->user_id,
             'about' => $request->about,
             'price' => $request->price,
             'image' => env('APP_URL').'/'.$path.'/'.$fileName,
@@ -72,7 +74,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        $course->load('category', 'video');
+        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations', 'playlist.video');
         
         return $this->response("Course found!", $course, 200);
     }
@@ -89,6 +91,7 @@ class CourseController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category_id' => 'required|integer',
+            'user_id' => 'required|integer',
             'about' => 'required',
             'price' => 'required',
             'image' => 'mimes:jpeg,jpg,png|max:2048',
@@ -115,6 +118,7 @@ class CourseController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'category_id' => $request->category_id,
+            'user_id' => $request->user_id,
             'about' => $request->about,
             'price' => $request->price,
             'image' => $image ?? $course->image,

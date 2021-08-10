@@ -13,6 +13,7 @@ class Course extends Model
         'name',
         'slug',
         'category_id',
+        'user_id',
         'image',
         'preview',
         'about',
@@ -28,6 +29,11 @@ class Course extends Model
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
+    }
+    
+    public function mentor()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
     
     public function playlist()

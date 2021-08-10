@@ -34,7 +34,7 @@ class MenuController extends Controller
         $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category', 'totalDurations')->addSelect([
+        $courses = Course::with('category', 'mentor', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -65,7 +65,7 @@ class MenuController extends Controller
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category', 'totalDurations')->addSelect([
+        $courses = Course::with('category', 'mentor', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -99,7 +99,7 @@ class MenuController extends Controller
         $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category')->addSelect([
+        $courses = Course::with('category', 'mentor')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -127,7 +127,7 @@ class MenuController extends Controller
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
-        $course->load('category', 'totalDurations', 'playlist.playlistDurations');
+        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations');
         
         if (in_array($course->id, $orderId)) {
             $status = true;
@@ -194,7 +194,7 @@ class MenuController extends Controller
         
         $value = $request->get('q');
         
-        $livestreams = Livestream::with('user');
+        $livestreams = Livestream::with('mentor');
             
         if (!empty($value)) {
             $result = $livestreams->whereDate('start_date', '=', $value)->paginate(10);
@@ -213,9 +213,25 @@ class MenuController extends Controller
     
     public function detailLivestream(Livestream $livestream)
     {
+        $userId = Auth::user()->id;
+        
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'livestream'])->get()
+            ->pluck('course_id')->toArray();
+        
         $livestream->load('user');
         
-        return $this->response("Livestream found!", $livestream, 200);
+        if (in_array($livestream->id, $orderId)) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        
+        $data = [
+            'livestream' => $livestream,
+            'has_purchased' => $status
+        ];
+        
+        return $this->response("Livestream found!", $data, 200);
     }
     
     public function myCourse(Request $request)
@@ -227,7 +243,7 @@ class MenuController extends Controller
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category')->addSelect([
+        $courses = Course::with('category', 'mentor')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -261,7 +277,7 @@ class MenuController extends Controller
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
-        $course->load('category', 'totalDurations', 'playlist.playlistDurations', 'playlist.video');
+        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations', 'playlist.video');
         
         if (!in_array($course->id, $orderId)) {
             return $this->response("You haven't purchased this course!", null, 422);

@@ -18,6 +18,7 @@ class CreateCoursesTable extends Migration
             $table->string('name');
             $table->string('slug');
             $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('user_id')->constrained('users');
             $table->string('image');
             $table->string('preview')->nullable();
             $table->text('about');

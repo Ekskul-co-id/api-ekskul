@@ -53,7 +53,7 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            $user->syncRoles($request->role);
+            $user->assignRole($request->role);
 
             return $this->response("Successfully create user.", $request->all(), 201);
         } catch (\Exception $e) {
@@ -104,7 +104,7 @@ class UserController extends Controller
                 'password' => $password,
             ]);
 
-            $user->syncRoles($request->role);
+            $user->assignRole($request->role);
 
             return $this->response("Successfully update user.", $request->all(), 201);
         } catch (\Exception $e) {
