@@ -53,13 +53,11 @@ class RatingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Rating  $rating
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Rating $rating)
     {
-        $rating = Rating::finfOrFail($id);
-        
         return $this->response("Rating found!", $rating, 200);
     }
 
@@ -67,13 +65,11 @@ class RatingController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Rating  $rating
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Rating $rating)
     {
-        $rating = Rating::finfOrFail($id);
-        
         $validator = Validator::make($request->all(), [
             'course_id' => 'required|integer',
             'user_id' => 'required|integer|unique:ratings,user_id,'.$rating->user->id,
@@ -96,13 +92,11 @@ class RatingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Rating  $rating
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $rating = Rating::finfOrFail($id);
-        
         $rating->delete();
         
         return $this->response("Rating deleted!", null, 201);

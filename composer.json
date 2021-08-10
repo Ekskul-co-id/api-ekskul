@@ -13,8 +13,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/socialite": "^5.2",
         "laravel/tinker": "^2.5",
-        "midtrans/midtrans-php": "^2.3",
-        "sentry/sentry-laravel": "^2.6",
+        "midtrans/midtrans-php": "^2.4",
+        "sentry/sentry-laravel": "^2.8",
         "spatie/laravel-permission": "^4.2"
     },
     "require-dev": {
@@ -41,6 +41,9 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

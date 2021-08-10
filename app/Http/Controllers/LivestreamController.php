@@ -77,12 +77,12 @@ class LivestreamController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Livestream $livestream)
     {
-        $livestream = Livestream::with('user')->findOrFail($id);
+        $livestream->load('user');
         
         return $this->response("Livestream found!", $livestream, 200);
 
@@ -92,10 +92,10 @@ class LivestreamController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Livestream $livestream)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
@@ -112,8 +112,6 @@ class LivestreamController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $livestream = Livestream::findOrFail($id);
         
         if($request->hasFile('image')){
             $fileName = time().'.'.$request->image->extension();
@@ -150,13 +148,11 @@ class LivestreamController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Livestream $livestream)
     {
-        $livestream = Livestream::findOrFail($id);
-        
         $livestream->delete();
         
         return $this->response("Livestream deleted!", null, 201);

@@ -35,8 +35,8 @@ class Livestream extends Model
         return $this->belongsTo('App\Models\Category');
     }
     
-    public function user()
+    public function mentor()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

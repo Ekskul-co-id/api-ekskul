@@ -18,6 +18,8 @@ class RoleSeeder extends Seeder
     {
         $roleAdmin = Role::create(['name' => 'admin']);
         
+        $roleMentor = Role::create(['name' => 'mentor']);
+        
         $roleUser = Role::create(['name' => 'user']);
         
         $admin = User::create([
@@ -26,10 +28,11 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=Admin+Ekskul&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'Indonesia' 
+            'address' => 'Indonesia',
+            'profession' => 'CEO Ekskul.co.id',
         ]);
         
-        $admin->syncRoles($roleAdmin);
+        $admin->assignRole($roleAdmin);
         
         $user = User::create([
             'name' => 'John',
@@ -37,10 +40,47 @@ class RoleSeeder extends Seeder
             'avatar' => 'https://ui-avatars.com/api/?name=John&background=FBBF24&color=ffffff&bold=true&format=png',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'address' => 'Japan' 
+            'address' => 'Japan',
+            'profession' => 'Student',
         ]);
         
-        $user->syncRoles($roleUser);
+        $user->assignRole($roleUser);
+        
+        $mentor1 = User::create([
+            'name' => 'Angga Maulana, S.Skom',
+            'email' => 'angga@maulana.com',
+            'avatar' => 'https://ui-avatars.com/api/?name=Angga+Maulana&background=FBBF24&color=ffffff&bold=true&format=png',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'address' => 'Italia',
+            'profession' => 'Mobile Developer',
+        ]);
+        
+        $mentor1->assignRole($roleMentor);
+        
+        $mentor2 = User::create([
+            'name' => 'M.Fikri',
+            'email' => 'fikri@example.com',
+            'avatar' => 'https://ui-avatars.com/api/?name=Fikri&background=FBBF24&color=ffffff&bold=true&format=png',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'address' => 'England',
+            'profession' => 'UI/UX Designer'
+        ]);
+        
+        $mentor2->assignRole($roleMentor);
+        
+        $mentor3 = User::create([
+            'name' => 'M.Fauzan W',
+            'email' => 'pojan@example.com',
+            'avatar' => 'https://ui-avatars.com/api/?name=Fauzan+W&background=FBBF24&color=ffffff&bold=true&format=png',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'address' => 'Japan',
+            'profession' => 'Full-Stack Developer'
+        ]);
+        
+        $mentor3->assignRole($roleMentor);
         
         User::factory(35)->create();
     }
