@@ -207,7 +207,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     });
 
     // Menu
-    Route::get('/banner',[SettingsController::class,'index']);
+    Route::get('/banner',[SettingController::class,'index']);
     
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/',[OrderController::class,'index']);
