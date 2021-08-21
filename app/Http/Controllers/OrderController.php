@@ -74,13 +74,15 @@ class OrderController extends Controller
              $checkout->where([
                 'user_id' => $userId,
                 'course_id' => $request->item_id,
-                'type' => $type
+                'type' => $type,
+                'status' => 'pending'
             ]);
         } elseif ($type == 'livestream') {
            $checkout->where([
                 'user_id' => $userId,
                 'livestream_id' => $request->item_id,
-                'type' => $type
+                'type' => $type,
+                'status' => 'pending'
             ]);
         }
         
