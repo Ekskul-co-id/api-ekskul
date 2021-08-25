@@ -45,10 +45,22 @@ class WebhookController extends Controller
 
         $checkoutId = explode('-', $orderId);
         
-        $order = Checkout::with('user', 'course')->find($checkoutId[0]);
+        $order = Checkout::with('user', 'course', 'livestream')->find($checkoutId[0]);
         
         if (empty($order)) {
             return $this->response("Order not found.", null, 404);
+        }
+        
+        $typeItem = $order->type;
+        
+        if ($typeItem == 'course') {
+            $name = $order->course->name;
+            
+            $image = $order->course->image;
+        } elseif ($typeItem == 'livestream') {
+            $name = $order->livestream->name;
+            
+            $image = $order->livestream->image;
         }
 
         if ($transactionStatus == 'capture') {
@@ -60,22 +72,22 @@ class WebhookController extends Controller
         } else if ($transactionStatus == 'settlement') {
             $title = "Transaksi berhasil!";
             
-            $body = "Berhasil membeli course ".$order->course->name.".";
+            $body = "Berhasil membeli ".$typeItem." ".$name.".";
             
             $order->update(['status' => 'success']);
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
             if ($transactionStatus == 'cancel') {
                 $title = "Pembayaran dibatalkan!";
             
-                $body = "Pembayaran ".$order->course->name." dibatalkan.";
+                $body = "Pembayaran ".$name." dibatalkan.";
             } else if ($transactionStatus == 'deny') {
                 $title = "Pembayaran ditolak!";
             
-                $body = "Pembayaran ".$order->course->name." ditolak.";
+                $body = "Pembayaran ".$name." ditolak.";
             } else if ($transactionStatus == 'expire') {
                 $title = "Pembayaran berkahir!";
             
-                $body = "Waktu pembayaran course ".$order->course->name." telah berkahir.";
+                $body = "Waktu pembayaran ".$typeItem." ".$name." telah berkahir.";
             }
             
             $order->update(['status' => 'failure']);
@@ -86,7 +98,7 @@ class WebhookController extends Controller
         }
         
         if (!empty($title) && !empty($body)) {
-            $response = $this->fcm([$order->user->device_token], $title, $order->course->image, $body);
+            $response = $this->fcm([$order->user->device_token], $title, $image, $body);
         }else{
             $response = null;
         }
@@ -98,7 +110,7 @@ class WebhookController extends Controller
             'checkout_id' => $checkoutId[0],
             'payment_type' => $paymentType,
             'raw_response' => $request->getContent(),
-            'fcm_response' => json_encode($result)
+            'fcm_response' => $result
         ]);
         
         return response()->json([

@@ -42,7 +42,7 @@ class OrderController extends Controller
     {
         $userId = Auth::user()->id;
         
-        $checkouts = Checkout::with('course', 'paymentLog')->where('user_id', $userId)->get();
+        $checkouts = Checkout::with('course', 'livestream', 'paymentLog')->where('user_id', $userId)->get();
                         
         return $this->response("Details transaction found!", $checkouts, 200);
     }
@@ -196,14 +196,16 @@ class OrderController extends Controller
                 
                 $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->livestream->image, "Berhasil memesan livestream ".$order->livestream->title.".");
             }
-                
-            PaymentLog::create([
-                'status' => $status,
-                'checkout_id' => $order->id,
-                'payment_type' => 'subscribe',
-                'raw_response' => json_encode($order->course),
-                'fcm_response' => json_encode($fcmResponse)
-            ]);
+            
+            if ($status == 'success') {
+                PaymentLog::create([
+                    'status' => $status,
+                    'checkout_id' => $order->id,
+                    'payment_type' => 'subscribe',
+                    'raw_response' => $order->course,
+                    'fcm_response' => $fcmResponse
+                ]);
+            }
             
             $order->update([
                 'snap_url' => $snapUrl ?? '',
@@ -229,7 +231,7 @@ class OrderController extends Controller
      */
     public function show(Checkout $checkout)
     {
-        $checkout->load('course', 'paymentLog');
+        $checkout->load('course', 'livestream', 'paymentLog');
         
         return $this->response("Details transaction found!", $checkout, 200);
     }
