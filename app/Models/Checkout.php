@@ -17,9 +17,10 @@ class Checkout extends Model
         'livestream_id',
         'qty',
         'type',
+        'order_id',
         'snap_url',
         'metadata',
-        'status'
+        'status',
     ];
 
     protected $casts = [

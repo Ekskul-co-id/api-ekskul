@@ -42,10 +42,8 @@ class WebhookController extends Controller
         if ($signaturKey !== $mySignaturKey) {
             return $this->response("Invalid signature.", null, 422);
         }
-
-        $checkoutId = explode('-', $orderId);
         
-        $order = Checkout::with('user', 'course', 'livestream')->find($checkoutId[0]);
+        $order = Checkout::with('user', 'course', 'livestream')->where('order_id', $orderId)->first();
         
         if (empty($order)) {
             return $this->response("Order not found.", null, 404);
@@ -107,7 +105,7 @@ class WebhookController extends Controller
         
         PaymentLog::create([
             'status' => $transactionStatus,
-            'checkout_id' => $checkoutId[0],
+            'checkout_id' => $order->id,
             'payment_type' => $paymentType,
             'raw_response' => $request->getContent(),
             'fcm_response' => $result

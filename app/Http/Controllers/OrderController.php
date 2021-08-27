@@ -113,6 +113,8 @@ class OrderController extends Controller
             
             $order = Checkout::with('user', 'course')->find($createOrder->id);
             
+            $orderId = Str::orderedUuid();
+            
             if (($order->type == 'course') && ($order->course->is_paid) && ($order->course->price !== 0)) {
                 $itemDetails = [
                    [
@@ -128,7 +130,7 @@ class OrderController extends Controller
             
                 $params = [
                     'transaction_details' => [
-                        'order_id' => $order->id.'-'.Str::random(5),
+                        'order_id' => $orderId,
                         'gross_amount' => $order->course->price,
                     ],
                     'item_details' => $itemDetails, 
@@ -159,7 +161,7 @@ class OrderController extends Controller
             
                 $params = [
                     'transaction_details' => [
-                        'order_id' => $order->id.'-'.Str::random(5),
+                        'order_id' => $orderId,
                         'gross_amount' => $order->livestream->price,
                     ],
                     'item_details' => $itemDetails, 
@@ -210,7 +212,8 @@ class OrderController extends Controller
             $order->update([
                 'snap_url' => $snapUrl ?? '',
                 'status' => $status,
-                'metadata' => $metadata
+                'metadata' => $metadata,
+                'order_id' => $orderId
             ]);
             
             DB::commit();
