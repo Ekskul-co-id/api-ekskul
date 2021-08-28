@@ -1,7 +1,7 @@
-name: Auto Deploy Service
+name: Auto Deploy Dev
 on:
   push:
-    branches: [ master ]
+    branches: [ dev ]
 jobs:
   web-deploy:
     name: Deploy
@@ -13,8 +13,8 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
         server: ${{ secrets.server }}
-        username: ${{ secrets.username }}
-        password: ${{ secrets.password }}
+        username: ${{ secrets.username_dev }}
+        password: ${{ secrets.password_dev }}
     - name: Build Reporting
       run: sh .ci-message.sh ✅ 
 
