@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Livestream;
 use App\Traits\APIResponse;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class LivestreamController extends Controller
 {
@@ -25,16 +25,6 @@ class LivestreamController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -45,8 +35,11 @@ class LivestreamController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'image' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
+            'youtube_id' => 'required',
             'description' => 'required',
-            'video_id' => 'required',
+            'user_id' => 'required|integer',
+            'price' => 'required',
+            'silabus' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
@@ -67,9 +60,13 @@ class LivestreamController extends Controller
         
         $livestream = Livestream::create([
             'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'image' => env('APP_URL').'/'.$path.'/'.$fileName,
+            'youtube_id' => $request->youtube_id,
             'description' => $request->description,
-            'video_id' => $request->video_id,
+            'user_id' => $request->user_id,
+            'price' => $request->price,
+            'silabus' => $request->silabus,
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
@@ -80,42 +77,34 @@ class LivestreamController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show(Livestream $livestream)
     {
-        $livestream = Livestream::findOrFail($id);
+        $livestream->load('user');
         
         return $this->response("Livestream found!", $livestream, 200);
 
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Livestream $livestream)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'image' => 'mimes:jpeg,jpg,png,svg|max:2048',
+            'youtube_id' => 'required',
             'description' => 'required',
-            'video_id' => 'required',
+            'user_id' => 'required|integer',
+            'price' => 'required',
+            'silabus' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
@@ -123,8 +112,6 @@ class LivestreamController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $livestream = Livestream::findOrFail($id);
         
         if($request->hasFile('image')){
             $fileName = time().'.'.$request->image->extension();
@@ -144,9 +131,13 @@ class LivestreamController extends Controller
         
         $livestream->update([
             'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'image' => $image ?? $livestream->image,
+            'youtube_id' => $request->youtube_id,
             'description' => $request->description,
-            'video_id' => $request->video_id,
+            'user_id' => $request->user_id,
+            'price' => $request->price,
+            'silabus' => $request->silabus,
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
@@ -157,13 +148,11 @@ class LivestreamController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Livestream  $livestream
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Livestream $livestream)
     {
-        $livestream = Livestream::findOrFail($id);
-        
         $livestream->delete();
         
         return $this->response("Livestream deleted!", null, 201);

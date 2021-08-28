@@ -13,11 +13,14 @@ class Checkout extends Model
 
     protected $fillable = [
         'user_id',
-        'playlist_id',
+        'course_id',
+        'livestream_id',
         'qty',
+        'type',
+        'order_id',
         'snap_url',
         'metadata',
-        'status'
+        'status',
     ];
 
     protected $casts = [
@@ -31,8 +34,18 @@ class Checkout extends Model
         return $this->belongsTo('App\Models\User');
     }
     
-    public function playlist()
+    public function course()
     {
-        return $this->belongsTo('App\Models\Playlist');
+        return $this->belongsTo('App\Models\Course');
+    }
+    
+    public function livestream()
+    {
+        return $this->belongsTo('App\Models\Livestream');
+    }
+    
+    public function paymentLog()
+    {
+        return $this->hasMany('App\Models\PaymentLog', 'checkout_id');
     }
 }

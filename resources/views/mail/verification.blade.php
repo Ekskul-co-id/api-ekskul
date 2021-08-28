@@ -436,7 +436,7 @@
   <![endif]-->
   </head>
   <body>
-    <span class="preheader">This is example text for the preheader set via the YAML front-matter for each email.</span>
+    <span class="preheader">Your verification code: {{ $code }}.</span>
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <!-- Email Header -->
       <tr>

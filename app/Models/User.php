@@ -24,7 +24,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
         'password',
         'remember_token',
-        'addres',
+        'address',
+        'profession',
         'device_token',
         'has_update_avatar'
     ];
@@ -47,4 +48,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    public function providers()
+    {
+        return $this->hasMany('App\Models\SocialProvider');
+    }
 }

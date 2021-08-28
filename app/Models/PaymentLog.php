@@ -16,6 +16,8 @@ class PaymentLog extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:m:s',
         'updated_at' => 'datetime:Y-m-d H:m:s',
+        'raw_response' => 'array',
+        'fcm_response' => 'array',
     ];
 
     public function checkout()

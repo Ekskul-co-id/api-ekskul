@@ -7,7 +7,7 @@ use App\Traits\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SettingsController extends Controller
+class SettingController extends Controller
 {
     use APIResponse;
     
@@ -21,16 +21,6 @@ class SettingsController extends Controller
         $settings = Setting::get();
         
         return $this->response("Settings found!", $settings, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -68,18 +58,7 @@ class SettingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function show(Setting $setting)
     {
         //
     }
@@ -91,7 +70,7 @@ class SettingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Setting $setting)
     {
         $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:jpeg,jpg,png|max:2048',
@@ -100,8 +79,6 @@ class SettingsController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $setting = Setting::findOrFail($id);
         
         $fileName = time().'.'.$request->file->extension();
         
@@ -122,10 +99,8 @@ class SettingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Setting $setting)
     {
-        $setting = Setting::findOrFail($id);
-        
         $setting->delete();
         
         return $this->response("Setting deleted!", null, 201);

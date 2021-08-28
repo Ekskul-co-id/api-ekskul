@@ -1,4 +1,4 @@
-name: Auto Deploy
+name: Auto Deploy Service
 on:
   push:
     branches: [ master ]
@@ -8,10 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Get latest code
-      uses: actions/checkout@v2.3.2
+      uses: actions/checkout@v2
     - name: Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
         server: ${{ secrets.server }}
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
+    - name: Build Reporting
+      run: sh .ci-message.sh ✅ 
+
+    - name: Build failure
+      if: failure()
+      run: sh .ci-message.sh ❌

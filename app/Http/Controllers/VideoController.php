@@ -25,16 +25,6 @@ class VideoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -45,8 +35,8 @@ class VideoController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
-            'description' => 'required',
-            'video_id' => 'required',
+            'duration' => 'required|integer',
+            'video_id' => 'required|integer',
         ]);
         
         if ($validator->fails()) {
@@ -56,7 +46,7 @@ class VideoController extends Controller
         $video = Video::create([
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
-            'description' => $request->description,
+            'duration' => $request->duration,
             'video_id' => $request->video_id,
         ]);
         
@@ -66,53 +56,40 @@ class VideoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Video $video)
     {
-        $video = Video::with('playlist')->findOrFail($id);
+        $video->load('playlist');
         
         return $this->response("Video found!", $video, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Video $video)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
-            'description' => 'required',
-            'video_id' => 'required',
+            'duration' => 'required|integer',
+            'video_id' => 'required|integer',
         ]);
         
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $video = Video::findOrFail($id);
 
         $video->update([
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
-            'description' => $request->description,
+            'duration' => $request->duration,
             'video_id' => $request->video_id,
         ]);
         
@@ -122,13 +99,11 @@ class VideoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Video $video)
     {
-        $video = Video::findOrFail($id);
-        
         $video->delete();
         
         return $this->response("Video deleted", null, 201);

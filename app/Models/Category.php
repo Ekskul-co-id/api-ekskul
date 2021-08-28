@@ -15,8 +15,8 @@ class Category extends Model
         'icon',
     ];
     
-    public function playlist()
+    public function courses()
     {
-        return $this->hasMany('App\Models\Playlist', 'category_id');
+        return $this->hasMany('App\Models\Course', 'category_id');
     }
 }

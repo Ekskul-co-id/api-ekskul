@@ -10,11 +10,33 @@ class Livestream extends Model
     use HasFactory;
 
     protected $fillable = [
-        'video_id',
+        'title',
+        'slug',
+        'category_id',
+        'image',
+        'youtube_id',
+        'description',
+        'user_id',
+        'price',
+        'is_paid',
+        'silabus',
         'start_date',
         'end_date',
-        'title',
-        'image',
-        'description',
     ];
+    
+    protected $casts = [
+        'silabus' => 'array',
+        'start_date' => 'datetime:Y-m-d H:m',
+        'end_date' => 'datetime:Y-m-d H:m',
+    ];
+    
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category');
+    }
+    
+    public function mentor()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
 }

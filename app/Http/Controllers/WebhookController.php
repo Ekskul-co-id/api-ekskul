@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Checkout;
 use App\Models\PaymentLog;
 use App\Traits\APIResponse;
+use App\Traits\FcmResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class WebhookController extends Controller
 {
-    use APIResponse;
+    use APIResponse, FcmResponse;
     
     public function midtransHandler(Request $request)
     {
@@ -28,26 +29,36 @@ class WebhookController extends Controller
         
         $grossAmount = $data['gross_amount'];
         
-        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $serverKey = env('IS_PRODUCTION') ? env('MIDTRANS_SERVER_KEY_PROD') : env('MIDTRANS_SERVER_KEY_DEV');
 
-        $mySignaturKey = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
+        $mySignaturKey = hash("sha512", $orderId.$statusCode.$grossAmount.$serverKey);
 
         $transactionStatus = $data['transaction_status'];
         
         $paymentType = $data['payment_type'];
         
-        $fraudStatus = $data['fraud_status'];
+        $fraudStatus = $data['fraud_status'] ?? '';
 
         if ($signaturKey !== $mySignaturKey) {
             return $this->response("Invalid signature.", null, 422);
         }
-
-        $checkoutId = explode('-', $orderId);
         
-        $order = Checkout::find($checkoutId[0]);
+        $order = Checkout::with('user', 'course', 'livestream')->where('order_id', $orderId)->first();
         
         if (empty($order)) {
             return $this->response("Order not found.", null, 404);
+        }
+        
+        $typeItem = $order->type;
+        
+        if ($typeItem == 'course') {
+            $name = $order->course->name;
+            
+            $image = $order->course->image;
+        } elseif ($typeItem == 'livestream') {
+            $name = $order->livestream->name;
+            
+            $image = $order->livestream->image;
         }
 
         if ($transactionStatus == 'capture') {
@@ -59,22 +70,22 @@ class WebhookController extends Controller
         } else if ($transactionStatus == 'settlement') {
             $title = "Transaksi berhasil!";
             
-            $body = "Berhasil membeli course ".$order->playlist->name.".";
+            $body = "Berhasil membeli ".$typeItem." ".$name.".";
             
             $order->update(['status' => 'success']);
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
             if ($transactionStatus == 'cancel') {
                 $title = "Pembayaran dibatalkan!";
             
-                $body = "Pembayaran ".$order->playlist->name." dibatalkan.";
+                $body = "Pembayaran ".$name." dibatalkan.";
             } else if ($transactionStatus == 'deny') {
                 $title = "Pembayaran ditolak!";
             
-                $body = "Pembayaran ".$order->playlist->name." ditolak.";
+                $body = "Pembayaran ".$name." ditolak.";
             } else if ($transactionStatus == 'expire') {
                 $title = "Pembayaran berkahir!";
             
-                $body = "Waktu pembayaran course ".$order->playlist->name." telah berkahir.";
+                $body = "Waktu pembayaran ".$typeItem." ".$name." telah berkahir.";
             }
             
             $order->update(['status' => 'failure']);
@@ -84,40 +95,20 @@ class WebhookController extends Controller
             $order->update(['status' => 'pending']);
         }
         
-        $url = env('FCM_SENDER_URL');
-        
-        $serverKey = env('FCM_SERVER_KEY');
-        
-        $headers = [
-            'Content-Type' => 'application/json',
-            'Authorization' => 'key='.$serverKey
-        ];
-        
         if (!empty($title) && !empty($body)) {
-            $data = [
-                'to' => $order->user->device_token,
-                'priority' => 'high',
-                'soundName' => 'default',
-                'notification' => [
-                    'title' => $title,
-                    'image' => $order->playlist->image,
-                    'body' => $body
-                ]
-            ];
-            
-            $response = Http::withHeaders($headers)->post($url, $data);
+            $response = $this->fcm([$order->user->device_token], $title, $image, $body);
         }else{
             $response = null;
         }
         
-        $result = $response ? $response->json() : '';
+        $result = $response ? $response : '';
         
         PaymentLog::create([
             'status' => $transactionStatus,
-            'checkout_id' => $checkoutId[0],
+            'checkout_id' => $order->id,
             'payment_type' => $paymentType,
             'raw_response' => $request->getContent(),
-            'fcm_response' => json_encode($result)
+            'fcm_response' => $result
         ]);
         
         return response()->json([

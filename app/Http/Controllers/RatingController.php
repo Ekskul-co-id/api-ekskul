@@ -24,16 +24,6 @@ class RatingController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -42,7 +32,7 @@ class RatingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'playlist_id' => 'required|integer',
+            'course_id' => 'required|integer',
             'user_id' => 'required|integer|unique:ratings',
             'value' => 'required|integer',
         ]);
@@ -52,7 +42,7 @@ class RatingController extends Controller
         }
         
         $rating = Rating::create([
-            'playlist_id' => $request->playlist_id,
+            'course_id' => $request->course_id,
             'user_id' => $request->user_id,
             'value' => $request->value,
         ]);
@@ -63,40 +53,25 @@ class RatingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Rating  $rating
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Rating $rating)
     {
-        $rating = Rating::finfOrFail($id);
-        
         return $this->response("Rating found!", $rating, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Rating  $rating
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Rating $rating)
     {
-        $rating = Rating::finfOrFail($id);
-        
         $validator = Validator::make($request->all(), [
-            'playlist_id' => 'required|integer',
+            'course_id' => 'required|integer',
             'user_id' => 'required|integer|unique:ratings,user_id,'.$rating->user->id,
             'value' => 'required|integer',
         ]);
@@ -106,7 +81,7 @@ class RatingController extends Controller
         }
         
         $rating->update([
-            'playlist_id' => $request->playlist_id,
+            'course_id' => $request->course_id,
             'user_id' => $request->user_id,
             'value' => $request->value,
         ]);
@@ -117,13 +92,11 @@ class RatingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Rating  $rating
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $rating = Rating::finfOrFail($id);
-        
         $rating->delete();
         
         return $this->response("Rating deleted!", null, 201);

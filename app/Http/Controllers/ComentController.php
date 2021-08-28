@@ -24,16 +24,6 @@ class ComentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -63,36 +53,25 @@ class ComentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show(Comment $comment)
     {
-        $comment = Comment::with('user', 'livestream')->findOrFail($id);
+        $comment->load('user', 'livestream');
         
         return $this->response("Comment found!", $comment, 200);
 
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comment $comment)
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|integer',
@@ -103,8 +82,6 @@ class ComentController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        $comment = Comment::findOrFail($id);
         
         $comment->update([
             'user_id' => $request->user_id,
@@ -118,13 +95,11 @@ class ComentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::findOrFail($id);
-        
         $comment->delete();
         
         return $this->response("Comment deleted!", null, 201);

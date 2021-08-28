@@ -11,21 +11,12 @@ class Playlist extends Model
 
     protected $fillable = [
         'name',
-        'slug',
-        'category_id',
-        'image',
-        'preview',
-        'about',
-        'price',
-        'silabus1',
-        'silabus2',
-        'silabus3',
-        'silabus4',
+        'course_id',
     ];
     
-    public function category()
+    public function course()
     {
-        return $this->belongsTo('App\Models\Category');
+        return $this->belongsTo('App\Models\Course');
     }
     
     public function video()
@@ -33,8 +24,9 @@ class Playlist extends Model
         return $this->hasMany('App\Models\Video', 'playlist_id');
     }
     
-    public function rating()
+    public function playlistDurations()
     {
-        return $this->hasMany('App\Models\Rating', 'playlist_id');
+        return $this->video()->selectRaw('sum(duration) as total, playlist_id')
+            ->groupBy('playlist_id');
     }
 }
