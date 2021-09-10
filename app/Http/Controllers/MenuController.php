@@ -218,7 +218,7 @@ class MenuController extends Controller
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'livestream'])->get()
             ->pluck('course_id')->toArray();
         
-        $livestream->load('user');
+        $livestream->load('mentor');
         
         if (in_array($livestream->id, $orderId)) {
             $status = true;
