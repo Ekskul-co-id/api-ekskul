@@ -276,8 +276,8 @@ class MenuController extends Controller
         
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
-            
-        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations', 'playlist.video');
+        
+        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations', 'playlist.video.watched');
         
         if (!in_array($course->id, $orderId)) {
             return $this->response("You haven't purchased this course!", null, 422);

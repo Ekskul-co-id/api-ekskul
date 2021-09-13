@@ -20,4 +20,10 @@ class Video extends Model
     {
         return $this->belongsTo('App\Models\Playlist');
     }
+    
+    public function watched()
+    {
+        return $this->belongsToMany('App\Models\User', 'user_video')
+            ->where('user_id', auth()->user()->id);
+    }
 }

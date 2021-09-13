@@ -53,4 +53,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany('App\Models\SocialProvider');
     }
+    
+    public function videos() {
+        return $this->belongsToMany('App\Models\Video')->withPivot('user_id');
+    }
 }
