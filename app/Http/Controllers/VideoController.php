@@ -36,7 +36,7 @@ class VideoController extends Controller
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
             'duration' => 'required|integer',
-            'video_id' => 'required|integer',
+            'youtube_id' => 'required|integer',
         ]);
         
         if ($validator->fails()) {
@@ -47,7 +47,7 @@ class VideoController extends Controller
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
             'duration' => $request->duration,
-            'video_id' => $request->video_id,
+            'youtube_id' => $request->youtube_id,
         ]);
         
         return $this->response("Video created!", $video, 201);
@@ -79,7 +79,7 @@ class VideoController extends Controller
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
             'duration' => 'required|integer',
-            'video_id' => 'required|integer',
+            'youtube_id' => 'required|integer',
         ]);
         
         if ($validator->fails()) {
@@ -90,7 +90,7 @@ class VideoController extends Controller
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
             'duration' => $request->duration,
-            'video_id' => $request->video_id,
+            'youtube_id' => $request->youtube_id,
         ]);
         
         return $this->response("Video updated!", $video, 201);

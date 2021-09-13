@@ -11,7 +11,7 @@ class Video extends Model
 
     protected $fillable = [
         'playlist_id',
-        'video_id',
+        'youtube_id',
         'title',
         'duration'
     ];
