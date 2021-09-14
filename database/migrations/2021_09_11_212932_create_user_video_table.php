@@ -16,7 +16,7 @@ class CreateUserVideoTable extends Migration
         Schema::create('user_video', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('video_id')->constrained('videos');
+            $table->foreignId('video_id')->unique()->constrained('videos');
             $table->timestamps();
         });
     }
