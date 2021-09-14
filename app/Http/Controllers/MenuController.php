@@ -194,7 +194,11 @@ class MenuController extends Controller
         
         $value = $request->get('q');
         
-        $livestreams = Livestream::with('mentor');
+        $livestreams = Livestream::with('category', 'mentor')->addSelect([
+            'livestream_sold' => Checkout::selectRaw('count(id) as total')
+                ->whereColumn('livestream_id', 'livestreams.id')
+                ->groupBy('livestream_id')
+            ]);
             
         if (!empty($value)) {
             $result = $livestreams->whereDate('start_date', '=', $value)->paginate(10);
@@ -218,7 +222,7 @@ class MenuController extends Controller
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'livestream'])->get()
             ->pluck('course_id')->toArray();
         
-        $livestream->load('mentor');
+        $livestream->load('category', 'mentor');
         
         if (in_array($livestream->id, $orderId)) {
             $status = true;
@@ -328,5 +332,51 @@ class MenuController extends Controller
         $announcement->load('user');
         
         return $this->response("Announcement found!", $announcement, 200);
+    }
+    
+    public function myLivestream(Request $request)
+    {
+        $userId = Auth::user()->id;
+        
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'livestream'])->get()
+            ->pluck('livestream_id')->toArray();
+        
+        $value = e($request->get('q'));
+        
+        $livestreams = Livestream::with('category', 'mentor')->addSelect([
+            'livestream_sold' => Checkout::selectRaw('count(id) as total')
+                ->whereColumn('livestream_id', 'livestreams.id')
+                ->groupBy('livestream_id')
+            ])
+            ->whereIn('livestreams.id', $orderId);
+            
+        if (!empty($value)) {
+            $result = $livestreams->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
+        } else {
+            $result = $livestreams->paginate(10);
+        }
+        
+        $data = [
+            'livestreams' => $result,
+            'search' => $value,
+        ];
+        
+        return $this->response("livestreams found!", $data, 200);
+    }
+    
+    public function detailMyLivestream(Livestream $livestream)
+    {
+        $userId = Auth::user()->id;
+        
+        $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'livestream'])->get()
+            ->pluck('livestream_id')->toArray();
+        
+        $livestream->load('category', 'mentor');
+        
+        if (!in_array($livestream->id, $orderId)) {
+            return $this->response("You haven't purchased this livestream!", null, 422);
+        }
+        
+        return $this->response("Livestream found!", $livestream, 200);
     }
 }

@@ -245,4 +245,6 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum','verified']], fu
     Route::post('/my-courses/{course:slug}/mark-watched',[MenuController::class,'markWatched']);
     Route::get('/my-announcements',[MenuController::class,'myAnnouncement']);
     Route::get('/my-announcements/{announcement:id}',[MenuController::class,'detailMyAnnouncement']);
+    Route::get('/my-livestreams',[MenuController::class,'myLivestream']);
+    Route::get('/my-livestreams/{livestream:slug}',[MenuController::class,'detailMyLivestream']);
 });
