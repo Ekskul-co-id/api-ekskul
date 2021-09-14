@@ -300,7 +300,7 @@ class MenuController extends Controller
         
         $video = Video::findOrFail($request->video_id);
         
-        $video->users()->attach($userId);
+        $video->users()->sync($userId);
         
         return $this->response("Success marks the video as watched", null, 201);
     }
