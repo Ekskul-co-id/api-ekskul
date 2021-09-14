@@ -286,6 +286,25 @@ class MenuController extends Controller
         return $this->response("Course found!", $course, 200);
     }
     
+    public function markWatched(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'video_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(null, $validator->errors(), 422);
+        }
+        
+        $userId = Auth::user()->id;
+        
+        $video = Video::findOrFail($request->video_id);
+        
+        $video->users()->attach($userId);
+        
+        return $this->response("Success marks the video as watched", null, 201);
+    }
+    
     public function myAnnouncement()
     {
         $userId = Auth::user()->id;
