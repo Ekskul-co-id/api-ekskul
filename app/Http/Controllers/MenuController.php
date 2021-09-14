@@ -300,9 +300,18 @@ class MenuController extends Controller
         
         $video = Video::findOrFail($request->video_id);
         
-        $video->users()->sync($userId);
+        $check = Video::whereHas('users', function ($q) use($userId, $request) {
+            $q->where('user_id', $userId);
+            $q->where('video_id', $request->video_id);
+        })->get();
         
-        return $this->response("Success marks the video as watched", null, 201);
+        if (!count($check)) {
+            $video->users()->attach($userId);
+            
+            return $this->response("Success marks the video as watched", null, 201);
+        }
+        
+        return $this->response("You haven marks this video as watched", null, 201);
     }
     
     public function myAnnouncement()
