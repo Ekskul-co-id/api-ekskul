@@ -21,9 +21,13 @@ class Video extends Model
         return $this->belongsTo('App\Models\Playlist');
     }
     
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\Video', 'user_video', 'video_id', 'user_id');
+    }
+    
     public function watched()
     {
-        return $this->belongsToMany('App\Models\User', 'user_video')
-            ->where('user_id', auth()->user()->id);
+        return $this->users()->where('user_id', auth()->user()->id);
     }
 }
