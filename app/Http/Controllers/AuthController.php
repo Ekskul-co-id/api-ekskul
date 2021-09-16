@@ -18,6 +18,13 @@ class AuthController extends Controller
 {
     use APIResponse;
     
+    protected function validateProvider($provider)
+    {
+        if (!in_array($provider, ['github', 'facebook', 'google'])) {
+            return $this->response("Please using github, facebook or google.", null, 422);
+        }
+    }
+    
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -157,17 +164,60 @@ class AuthController extends Controller
         return $this->response($msg, ['user' => $user, 'token' => $token, 'social' => $userSocial], 201);
     }
     
+    public function handleOauth(Request $request)
+    {
+        $result = json_decode($request->getContent(), true);
+        
+        $data = $result['providerData'][0];
+        
+        $deviceToken = $result['device_token'];
+        
+        $hasRegistered = User::where('email', $data['email'])->first();
+        
+        $hasProvider = SocialProvider::where(['provider' => $data['providerId'], 'provider_id' => $data['uid']])
+            ->first();
+            
+        if ($hasProvider) {
+            $user = $hasRegistered;
+            
+            $msg = "Successfully logged in";
+            
+            $user->update([
+                'device_token' => $deviceToken ?? $user->device_token,
+            ]);
+        } else {
+            if ($hasRegistered) {
+                return $this->response("Email has been used, please try another method.", null, 422);
+            }
+            
+            $user = User::create([
+                'email' => $data['email'],
+                'name' => $data['displayName'],
+                'avatar' => $data['photoURL'],
+                'device_token' => $deviceToken,
+                'email_verified_at' => now(),
+            ]);
+            
+            $msg = "Registration successful!";
+        }
+        
+        $user->providers()->updateOrCreate([
+            'provider' => $data['providerId'],
+            'provider_id' => $data['uid'],
+        ],
+        [
+            'user_id' => $user->id,
+        ]);
+        
+        $token = $user->createToken($user->email)->plainTextToken;
+        
+        return $this->response($msg, ['user' => $user, 'token' => $token, 'social' => $result], 201);
+    }
+    
     public function logout()
     {
         Auth::user()->tokens()->delete();
 
         return $this->response("Successfully logout.", null, 201, true);
-    }
-    
-    protected function validateProvider($provider)
-    {
-        if (!in_array($provider, ['github', 'facebook', 'google'])) {
-            return $this->response("Please using github, facebook or google.", null, 422);
-        }
     }
 }

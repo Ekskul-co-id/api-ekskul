@@ -68,6 +68,7 @@ Route::get('refresh-cache', function () {
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/{provider}',[AuthController::class,'redirectToProvider']);
     Route::get('/{provider}/callback',[AuthController::class,'handleProviderCallback']);
+    Route::post('/handle-oauth',[AuthController::class,'handleOauth']);
     Route::post('/login',[AuthController::class,'login'])->name('login');
     Route::post('/register',[AuthController::class,'register'])->name('register');
     Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
