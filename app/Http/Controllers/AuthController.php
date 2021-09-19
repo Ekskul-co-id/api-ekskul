@@ -145,8 +145,9 @@ class AuthController extends Controller
                 'name' => $userSocial->getName(),
                 'avatar' => $userSocial->getAvatar(),
                 'device_token' => $deviceToken,
-                'email_verified_at' => now(),
             ]);
+            
+            $user->markEmailAsVerified();
             
             $msg = "Registration successful!";
         }
@@ -195,8 +196,9 @@ class AuthController extends Controller
                 'name' => $data['displayName'],
                 'avatar' => $data['photoURL'],
                 'device_token' => $deviceToken,
-                'email_verified_at' => now(),
             ]);
+            
+            $user->markEmailAsVerified();
             
             $msg = "Registration successful!";
         }
