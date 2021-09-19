@@ -188,6 +188,8 @@ class OrderController extends Controller
                     'name' => $order->course->name,
                 ];
                 
+                $rawResponse = $order->course;
+                
                 $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->course->image, "Berhasil membeli course ".$order->course->name.".");
             } elseif ($order->type == 'livestream') {
                 $metadata = [
@@ -195,6 +197,8 @@ class OrderController extends Controller
                     'price' => $order->livestream->price,
                     'name' => $order->livestream->title,
                 ];
+                
+                $rawResponse = $order->livestream;
                 
                 $fcmResponse = $this->fcm([$order->user->device_token], "Transaksi berhasil!", $order->livestream->image, "Berhasil memesan livestream ".$order->livestream->title.".");
             }
@@ -204,7 +208,7 @@ class OrderController extends Controller
                     'status' => $status,
                     'checkout_id' => $order->id,
                     'payment_type' => 'subscribe',
-                    'raw_response' => $order->course,
+                    'raw_response' => $rawResponse,
                     'fcm_response' => $fcmResponse
                 ]);
             }
