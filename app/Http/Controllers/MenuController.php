@@ -110,7 +110,7 @@ class MenuController extends Controller
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id')
             ])
-            ->orderByDesc('user_rated')->limit(5)->get();
+            ->orderByDesc('user_rated')->limit(10)->get();
             
         $data = [
             'course' => $courses,
