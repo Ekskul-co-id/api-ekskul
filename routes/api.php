@@ -4,6 +4,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComentController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LivestreamController;
@@ -205,6 +206,15 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
             Route::put('/{announcement:id}', [AnnouncementController::class, 'update']);
             Route::delete('/{announcement:id}', [AnnouncementController::class, 'destroy']);
         });
+
+        // Company
+        Route::group(['prefix' => 'companies'], function () {
+            Route::get('/', [CompanyController::class, 'index']);
+            Route::post('/', [CompanyController::class, 'store']);
+            Route::get('/{company:slug}', [CompanyController::class, 'show']);
+            Route::put('/{company:slug}', [CompanyController::class, 'update']);
+            Route::delete('/{company:slug}', [CompanyController::class, 'destroy']);
+        });
     });
 
     // Menu
@@ -232,6 +242,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
     Route::group(['prefix' => 'livestreams'], function () {
         Route::get('/', [MenuController::class, 'listLivestream']);
         Route::get('/{livestream:slug}', [MenuController::class, 'detailLivestream']);
+    });
+    
+    Route::group(['prefix' => 'companies'], function () {
+        Route::get('/', [MenuController::class, 'listCompany']);
+        Route::get('/{company:slug}', [MenuController::class, 'detailCompany']);
+        Route::get('/{company:slug}/courses', [MenuController::class, 'coursesCompany']);
     });
 
     // User menu

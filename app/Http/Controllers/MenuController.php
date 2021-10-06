@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Checkout;
+use App\Models\Company;
 use App\Models\Course;
 use App\Models\Livestream;
 use App\Models\Playlist;
@@ -34,7 +35,7 @@ class MenuController extends Controller
         $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category', 'mentor', 'totalDurations')->addSelect([
+        $courses = Course::with('category', 'mentor', 'company', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -65,7 +66,7 @@ class MenuController extends Controller
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category', 'mentor', 'totalDurations')->addSelect([
+        $courses = Course::with('category', 'mentor', 'company', 'totalDurations')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -99,7 +100,7 @@ class MenuController extends Controller
         $hasPurchased = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
-        $courses = Course::with('category', 'mentor')->addSelect([
+        $courses = Course::with('category', 'mentor', 'company')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -127,7 +128,7 @@ class MenuController extends Controller
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
             
-        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations');
+        $course->load('category', 'mentor', 'company', 'totalDurations', 'playlist.playlistDurations');
         
         if (in_array($course->id, $orderId)) {
             $status = true;
@@ -238,6 +239,39 @@ class MenuController extends Controller
         return $this->response("Livestream found!", $data, 200);
     }
     
+    public function listCompany(Request $request)
+    {
+        $value = $request->get('q');
+        
+        $companies = Company::addSelect([
+            'total_courses' => Course::selectRaw('count(name) as total')
+                ->whereColumn('company_id', 'companies.id')
+                ->groupBy('company_id')
+        ]);
+        
+        if (!empty($value)) {
+            $result = $companies->where('name', 'LIKE', '%'.$value.'%')->paginate(10);
+        } else {
+            $result = $companies->paginate(10);
+        }
+        
+        return $this->response("Companies found!", $result, 200);
+    }
+    
+    public function detailCompany(Company $company)
+    {
+        $company->load('owner', 'users', 'courses');
+        
+        return $this->response("Company found!", $company, 200);
+    }
+    
+    public function coursesCompany(Company $company)
+    {
+        $company->load('courses', 'courses.category', 'courses.mentor', 'courses.totalDurations');
+        
+        return $this->response("Company found!", $company, 200);
+    }
+    
     public function myCourse(Request $request)
     {
         $userId = Auth::user()->id;
@@ -247,7 +281,7 @@ class MenuController extends Controller
         
         $value = e($request->get('q'));
         
-        $courses = Course::with('category', 'mentor')->addSelect([
+        $courses = Course::with('category', 'mentor', 'company')->addSelect([
             'rating' => Rating::selectRaw('avg(value) as total')
                 ->whereColumn('course_id', 'courses.id')
                 ->groupBy('course_id'),
@@ -281,7 +315,7 @@ class MenuController extends Controller
         $orderId = Checkout::where(['status' => 'success', 'user_id' => $userId, 'type' => 'course'])->get()
             ->pluck('course_id')->toArray();
         
-        $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations', 'playlist.video.watched');
+        $course->load('category', 'mentor', 'company', 'totalDurations', 'playlist.playlistDurations', 'playlist.video.watched');
         
         if (!in_array($course->id, $orderId)) {
             return $this->response("You haven't purchased this course!", null, 422);

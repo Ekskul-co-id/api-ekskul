@@ -27,7 +27,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'address',
         'profession',
         'device_token',
-        'has_update_avatar'
+        'has_update_avatar',
+        //'company_id'
     ];
 
     /**
@@ -56,5 +57,11 @@ class User extends Authenticatable implements MustVerifyEmail
     
     public function videos() {
         return $this->belongsToMany('App\Models\Video', 'user_video', 'user_id', 'video_id');
+    }
+    
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'company_user')
+                        ->withPivot('role');
     }
 }

@@ -13,6 +13,7 @@ class Course extends Model
         'name',
         'slug',
         'category_id',
+        'company_id',
         'user_id',
         'image',
         'preview',
@@ -51,5 +52,10 @@ class Course extends Model
         return $this->hasManyThrough(Video::class, Playlist::class)
             ->selectRaw('sum(duration) as total, course_id')
             ->groupBy('course_id');
+    }
+    
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company');
     }
 }
