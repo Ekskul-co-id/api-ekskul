@@ -9,14 +9,14 @@ trait FcmResponse
     public function fcm($deviceToken, $title, $image, $body)
     {
         $url = env('FCM_SENDER_URL');
-        
+
         $serverKey = env('FCM_SERVER_KEY');
-        
+
         $headers = [
             'Content-Type' => 'application/json',
-            'Authorization' => 'key='.$serverKey
+            'Authorization' => 'key='.$serverKey,
         ];
-        
+
         $data = [
             'registration_ids' => $deviceToken,
             'priority' => 'high',
@@ -24,12 +24,12 @@ trait FcmResponse
             'notification' => [
                 'title' => $title,
                 'image' => $image,
-                'body' => $body
-            ]
+                'body' => $body,
+            ],
         ];
-        
+
         $response = Http::withHeaders($headers)->post($url, $data);
-        
+
         return $response->json();
     }
 }

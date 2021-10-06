@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return response()->json([
-        "works" => "it workss"
+        'works' => 'it workss',
     ], 200);
 });
 
@@ -49,9 +49,9 @@ Route::get('fresh-db', function () {
     Artisan::call('migrate:fresh --seed --force');
 
     return response()->json([
-        "status" => "success",
-        "message" => "Success fresh database.",
-        "data" => null
+        'status' => 'success',
+        'message' => 'Success fresh database.',
+        'data' => null,
     ], 200);
 });
 
@@ -60,9 +60,9 @@ Route::get('refresh-cache', function () {
     Artisan::call('optimize:clear');
 
     return response()->json([
-        "status" => "success",
-        "message" => "Success refresh cache.",
-        "data" => null
+        'status' => 'success',
+        'message' => 'Success refresh cache.',
+        'data' => null,
     ], 200);
 });
 
@@ -84,18 +84,18 @@ Route::post('/webhooks', [WebhookController::class, 'midtransHandler']);
 Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/', function () {
         return response()->json([
-            "status" => "success",
-            "message" => "Api Ekskul.co.id v1",
-            "data" => null
+            'status' => 'success',
+            'message' => 'Api Ekskul.co.id v1',
+            'data' => null,
         ], 200);
     });
 
     Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin'], function () {
         Route::get('/', function () {
             return response()->json([
-                "status" => "success",
-                "message" => "Welcome admin.",
-                "data" => null
+                'status' => 'success',
+                'message' => 'Welcome admin.',
+                'data' => null,
             ], 200);
         });
 
@@ -243,7 +243,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
         Route::get('/', [MenuController::class, 'listLivestream']);
         Route::get('/{livestream:slug}', [MenuController::class, 'detailLivestream']);
     });
-    
+
     Route::group(['prefix' => 'companies'], function () {
         Route::get('/', [MenuController::class, 'listCompany']);
         Route::get('/{company:slug}', [MenuController::class, 'detailCompany']);

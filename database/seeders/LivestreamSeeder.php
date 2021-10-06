@@ -14,8 +14,8 @@ class LivestreamSeeder extends Seeder
      */
     public function run()
     {
-        $silabus = ["Example 1","Example 2","Example 3","Example 4","Example 5"];
-        
+        $silabus = ['Example 1', 'Example 2', 'Example 3', 'Example 4', 'Example 5'];
+
         Livestream::create([
             'title' => '[DS3] NEKOmorphs!! nya',
             'slug' => 'ds3-nekomorphs-nya',
@@ -30,7 +30,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-05 12:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => 'TACO BELL: THE STREAM',
             'slug' => 'taco-bell-the-stream',
@@ -45,7 +45,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-07 07:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => '[BUS SIMULATOR] All aboard Goomba\'s bussin Big Rig !',
             'slug' => 'bus-simulator-all-aboard-goombas-bussin-big-rig',
@@ -60,7 +60,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-09 15:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => '[INSIDE] inside what??',
             'slug' => 'inside-inside-what',
@@ -75,7 +75,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-10 12:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => '[MINECRAFT] We bully the Enderdragon #HololiveEN',
             'slug' => 'minecraft-we-bully-the-enderdragon-hololiveen',
@@ -90,7 +90,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-07 20:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => '[JUMP KING] TACTICAL LEAP',
             'slug' => 'jump-king-tactical-leap',
@@ -105,7 +105,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-05 22:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => '[One Hand Clapping] cl a p',
             'slug' => 'one-hand-clapping-cl-a-p',
@@ -120,7 +120,7 @@ class LivestreamSeeder extends Seeder
             'start_date' => '2021-08-07 09:00',
             'end_date' => null,
         ]);
-        
+
         Livestream::create([
             'title' => '[ASSETTO CORSA] SHARK DORIFTO',
             'slug' => 'assetto-corsa-shark-dorifto',

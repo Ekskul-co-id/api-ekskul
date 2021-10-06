@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class ComentController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +19,8 @@ class ComentController extends Controller
     public function index()
     {
         $comments = Comment::with('user', 'livestream')->get();
-        
-        return $this->response("Comment found!", $comments, 200);
+
+        return $this->response('Comment found!', $comments, 200);
     }
 
     /**
@@ -34,20 +34,20 @@ class ComentController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|integer',
             'livestream_id' => 'required|integer',
-            'comment' => 'required'
+            'comment' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $comment = Comment::create([
             'user_id' => $request->user_id,
             'livestream_id' => $request->livestream_id,
             'comment' => $request->comment,
         ]);
 
-        return $this->response("Comment created!", $comment, 201);
+        return $this->response('Comment created!', $comment, 201);
     }
 
     /**
@@ -59,9 +59,8 @@ class ComentController extends Controller
     public function show(Comment $comment)
     {
         $comment->load('user', 'livestream');
-        
-        return $this->response("Comment found!", $comment, 200);
 
+        return $this->response('Comment found!', $comment, 200);
     }
 
     /**
@@ -76,20 +75,20 @@ class ComentController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|integer',
             'livestream_id' => 'required|integer',
-            'comment' => 'required'
+            'comment' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $comment->update([
             'user_id' => $request->user_id,
             'livestream_id' => $request->livestream_id,
             'comment' => $request->comment,
         ]);
 
-        return $this->response("Comment updated!", $comment, 201);
+        return $this->response('Comment updated!', $comment, 201);
     }
 
     /**
@@ -101,7 +100,7 @@ class ComentController extends Controller
     public function destroy(Comment $comment)
     {
         $comment->delete();
-        
-        return $this->response("Comment deleted!", null, 201);
+
+        return $this->response('Comment deleted!', null, 201);
     }
 }

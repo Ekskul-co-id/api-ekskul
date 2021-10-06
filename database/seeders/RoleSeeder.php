@@ -17,11 +17,11 @@ class RoleSeeder extends Seeder
     public function run()
     {
         $roleAdmin = Role::create(['name' => 'admin']);
-        
+
         $roleMentor = Role::create(['name' => 'mentor']);
-        
+
         $roleUser = Role::create(['name' => 'user']);
-        
+
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@ekskul.co.id',
@@ -31,9 +31,9 @@ class RoleSeeder extends Seeder
             'address' => 'Indonesia',
             'profession' => 'CEO Ekskul.co.id',
         ]);
-        
+
         $admin->assignRole($roleAdmin);
-        
+
         $user = User::create([
             'name' => 'John',
             'email' => 'john@example.com',
@@ -43,9 +43,9 @@ class RoleSeeder extends Seeder
             'address' => 'Japan',
             'profession' => 'Student',
         ]);
-        
+
         $user->assignRole($roleUser);
-        
+
         $mentor1 = User::create([
             'name' => 'Angga Maulana, S.Skom',
             'email' => 'angga@maulana.com',
@@ -55,9 +55,9 @@ class RoleSeeder extends Seeder
             'address' => 'Italia',
             'profession' => 'Mobile Developer',
         ]);
-        
+
         $mentor1->assignRole($roleMentor);
-        
+
         $mentor2 = User::create([
             'name' => 'M.Fikri',
             'email' => 'fikri@example.com',
@@ -65,11 +65,11 @@ class RoleSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'address' => 'England',
-            'profession' => 'UI/UX Designer'
+            'profession' => 'UI/UX Designer',
         ]);
-        
+
         $mentor2->assignRole($roleMentor);
-        
+
         $mentor3 = User::create([
             'name' => 'M.Fauzan W',
             'email' => 'pojan@example.com',
@@ -77,11 +77,11 @@ class RoleSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'address' => 'Japan',
-            'profession' => 'Full-Stack Developer'
+            'profession' => 'Full-Stack Developer',
         ]);
-        
+
         $mentor3->assignRole($roleMentor);
-        
+
         User::factory(35)->create();
     }
 }

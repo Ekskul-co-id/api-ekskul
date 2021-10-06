@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class LivestreamController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +20,8 @@ class LivestreamController extends Controller
     public function index()
     {
         $livestreams = Livestream::get();
-        
-        return $this->response("Livestreams found!", $livestreams, 200);
+
+        return $this->response('Livestreams found!', $livestreams, 200);
     }
 
     /**
@@ -47,17 +47,17 @@ class LivestreamController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $fileName = time().'.'.$request->image->extension();
-        
-        $path = "stream";
-        
+
+        $path = 'stream';
+
         $request->image->move(public_path($path), $fileName);
-        
+
         $start_date = date('Y/m/d H:i', strtotime($request->start_date));
-        
+
         $end_date = date('Y/m/d H:i', strtotime($request->end_date));
-        
+
         $livestream = Livestream::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
@@ -70,8 +70,8 @@ class LivestreamController extends Controller
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
-        
-        return $this->response("Livestream created!", $livestream, 201);
+
+        return $this->response('Livestream created!', $livestream, 201);
     }
 
     /**
@@ -83,9 +83,8 @@ class LivestreamController extends Controller
     public function show(Livestream $livestream)
     {
         $livestream->load('user');
-        
-        return $this->response("Livestream found!", $livestream, 200);
 
+        return $this->response('Livestream found!', $livestream, 200);
     }
 
     /**
@@ -112,23 +111,23 @@ class LivestreamController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        if($request->hasFile('image')){
+
+        if ($request->hasFile('image')) {
             $fileName = time().'.'.$request->image->extension();
-            
-            $path = "stream";
-            
+
+            $path = 'stream';
+
             $request->image->move(public_path($path), $fileName);
-            
-            unlink(public_path($path . $livestream->image));
-            
+
+            unlink(public_path($path.$livestream->image));
+
             $image = env('APP_URL').'/'.$path.'/'.$fileName;
         }
-        
+
         $start_date = date('Y/m/d H:i', strtotime($request->start_date));
-        
+
         $end_date = date('Y/m/d H:i', strtotime($request->end_date));
-        
+
         $livestream->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
@@ -141,8 +140,8 @@ class LivestreamController extends Controller
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
-        
-        return $this->response("Livestream updated!", $livestream, 201);
+
+        return $this->response('Livestream updated!', $livestream, 201);
     }
 
     /**
@@ -154,7 +153,7 @@ class LivestreamController extends Controller
     public function destroy(Livestream $livestream)
     {
         $livestream->delete();
-        
-        return $this->response("Livestream deleted!", null, 201);
+
+        return $this->response('Livestream deleted!', null, 201);
     }
 }

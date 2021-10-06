@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Role;
 class RoleController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +20,7 @@ class RoleController extends Controller
     {
         $roles = Role::all();
 
-        return $this->response("Success get roles.", $roles, 200);
+        return $this->response('Success get roles.', $roles, 200);
     }
 
     /**
@@ -43,10 +43,10 @@ class RoleController extends Controller
             $role = Role::create([
                 'name' => $request->name,
             ]);
-            
-            return $this->response("Successfully create role.", $request->all(), 201);
+
+            return $this->response('Successfully create role.', $request->all(), 201);
         } catch (\Exception $e) {
-            return $this->response("Failed to create role.", $e, 409);
+            return $this->response('Failed to create role.', $e, 409);
         }
     }
 
@@ -83,9 +83,9 @@ class RoleController extends Controller
                 'name' => $request->name,
             ]);
 
-            return $this->response("Successfully update role.", $request->all(), 201);
+            return $this->response('Successfully update role.', $request->all(), 201);
         } catch (\Exception $e) {
-            return $this->response("Failed to update role.", $e, 409);
+            return $this->response('Failed to update role.', $e, 409);
         }
     }
 
@@ -100,9 +100,9 @@ class RoleController extends Controller
         try {
             $role->delete();
 
-            return $this->response("Successfully delete role.", null, 201);
+            return $this->response('Successfully delete role.', null, 201);
         } catch (\Exception $e) {
-            return $this->response("Failed to delete role.", $e, 409);
+            return $this->response('Failed to delete role.', $e, 409);
         }
     }
 }

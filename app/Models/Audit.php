@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Audit extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'user_id',
         'description',
     ];
-    
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

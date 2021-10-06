@@ -16,23 +16,23 @@ class PlaylistSeeder extends Seeder
     {
         Playlist::create([
             'name' => '01 Memegang gitar',
-            'course_id' => 1
+            'course_id' => 1,
         ]);
         Playlist::create([
             'name' => '02 Kunci gitar',
-            'course_id' => 1
+            'course_id' => 1,
         ]);
         Playlist::create([
             'name' => '03 Memetik gitar',
-            'course_id' => 1
+            'course_id' => 1,
         ]);
         Playlist::create([
             'name' => '04 Membuat gitar',
-            'course_id' => 1
+            'course_id' => 1,
         ]);
         Playlist::create([
             'name' => '05 Merusak gitar',
-            'course_id' => 1
+            'course_id' => 1,
         ]);
     }
 }

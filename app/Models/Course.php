@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
         'slug',
@@ -22,38 +22,38 @@ class Course extends Model
         'is_paid',
         'silabus',
     ];
-    
+
     protected $casts = [
         'silabus' => 'array',
     ];
-    
+
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
     }
-    
+
     public function mentor()
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
-    
+
     public function playlist()
     {
         return $this->hasMany('App\Models\Playlist', 'course_id');
     }
-    
+
     public function rating()
     {
         return $this->hasMany('App\Models\Rating', 'course_id');
     }
-    
+
     public function totalDurations()
     {
         return $this->hasManyThrough(Video::class, Playlist::class)
             ->selectRaw('sum(duration) as total, course_id')
             ->groupBy('course_id');
     }
-    
+
     public function company()
     {
         return $this->belongsTo('App\Models\Company');

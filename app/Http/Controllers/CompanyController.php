@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 class CompanyController extends Controller
 {
     use APIResponse;
+
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +20,8 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::get();
-        
-        return $this->response("Companies found!", $companies, 200);
+
+        return $this->response('Companies found!', $companies, 200);
     }
 
     /**
@@ -35,7 +36,7 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'slug' => Str::slug($request->name),
             'avatar' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
-            'user_id' => 'required|integer'
+            'user_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -43,21 +44,21 @@ class CompanyController extends Controller
         }
 
         $fileName = time().'.'.$request->avatar->extension();
-        
-        $path = "company";
-        
+
+        $path = 'company';
+
         $request->avatar->move(public_path($path), $fileName);
 
         $company = Company::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'avatar' => env('APP_URL').'/'.$path.'/'.$fileName,
-            'user_id' => $request->user_id
+            'user_id' => $request->user_id,
         ]);
-        
+
         $company->users()->attach($request->user_id, ['role' => 'owner']);
-        
-        return $this->response("Company created!", $company, 201);
+
+        return $this->response('Company created!', $company, 201);
     }
 
     /**
@@ -69,8 +70,8 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         $company->load('owner', 'users', 'courses');
-        
-        return $this->response("Company found!", $company, 200);
+
+        return $this->response('Company found!', $company, 200);
     }
 
     /**
@@ -90,25 +91,25 @@ class CompanyController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        if($request->hasFile('avatar')){
+
+        if ($request->hasFile('avatar')) {
             $fileName = time().'.'.$request->avatar->extension();
-            
-            $path = "company";
-            
+
+            $path = 'company';
+
             $request->avatar->move(public_path($path), $fileName);
-            
-            unlink(public_path($path . $company->avatar));
-            
+
+            unlink(public_path($path.$company->avatar));
+
             $avatar = env('APP_URL').'/'.$path.'/'.$fileName;
         }
 
         $company->update([
             'name' => $request->name,
-            'icon' => $avatar ?? $company->avatar
+            'icon' => $avatar ?? $company->avatar,
         ]);
 
-        return $this->response("Company updated!", $company, 201);
+        return $this->response('Company updated!', $company, 201);
     }
 
     /**
@@ -120,9 +121,9 @@ class CompanyController extends Controller
     public function destroy(Company $company)
     {
         $company->users()->detach();
-        
+
         $company->delete();
-        
-        return $this->response("Company deleted!", null, 201);
+
+        return $this->response('Company deleted!', null, 201);
     }
 }

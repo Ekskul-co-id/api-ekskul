@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class CourseController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +20,8 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with('category', 'mentor')->get();
-        
-        return $this->response("Courses found!", $courses, 200);
+
+        return $this->response('Courses found!', $courses, 200);
     }
 
     /**
@@ -41,15 +41,15 @@ class CourseController extends Controller
             'image' => 'required|mimes:jpeg,jpg,png|max:2048',
             'silabus' => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
 
         $fileName = time().'.'.$request->image->extension();
-        
-        $path = "course";
-        
+
+        $path = 'course';
+
         $request->image->move(public_path($path), $fileName);
 
         $course = Course::create([
@@ -63,7 +63,7 @@ class CourseController extends Controller
             'silabus' => $request->silabus,
         ]);
 
-        return $this->response("Course created!", $course, 201);
+        return $this->response('Course created!', $course, 201);
     }
 
     /**
@@ -75,8 +75,8 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         $course->load('category', 'mentor', 'totalDurations', 'playlist.playlistDurations', 'playlist.video');
-        
-        return $this->response("Course found!", $course, 200);
+
+        return $this->response('Course found!', $course, 200);
     }
 
     /**
@@ -97,23 +97,23 @@ class CourseController extends Controller
             'image' => 'mimes:jpeg,jpg,png|max:2048',
             'silabus' => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        if($request->hasFile('image')){
+
+        if ($request->hasFile('image')) {
             $fileName = time().'.'.$request->image->extension();
-            
-            $path = "course";
-            
+
+            $path = 'course';
+
             $request->image->move(public_path($path), $fileName);
-            
-            unlink(public_path($path . $course->image));
-            
+
+            unlink(public_path($path.$course->image));
+
             $image = env('APP_URL').'/'.$path.'/'.$fileName;
         }
-        
+
         $course->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -125,9 +125,9 @@ class CourseController extends Controller
             'silabus' => $request->silabus,
         ]);
 
-        return $this->response("Course updated!", $course, 201);
+        return $this->response('Course updated!', $course, 201);
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -137,7 +137,7 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         $course->delete();
-        
-        return $this->response("Course deleted!", null, 201);
+
+        return $this->response('Course deleted!', null, 201);
     }
 }
