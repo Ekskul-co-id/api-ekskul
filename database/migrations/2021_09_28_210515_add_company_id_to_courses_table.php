@@ -14,7 +14,7 @@ class AddCompanyIdToCoursesTable extends Migration
     public function up()
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->foreignId('company_id')->after('usergggg_id')->nullable()->constrained('companies');
+            $table->foreignId('company_id')->nullable()->constrained('companies');
         });
     }
 
