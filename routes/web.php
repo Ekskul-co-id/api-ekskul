@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return response()->json([
-        "RestApi" => env('APP_NAME'),
-        "date" => date('Y-m-d')
-    ],200);
+        'RestApi' => env('APP_NAME'),
+        'date' => date('Y-m-d'),
+    ], 200);
 });
 
 Route::get('/transaction-success', function () {

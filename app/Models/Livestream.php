@@ -23,18 +23,18 @@ class Livestream extends Model
         'start_date',
         'end_date',
     ];
-    
+
     protected $casts = [
         'silabus' => 'array',
         'start_date' => 'datetime:Y-m-d H:m',
         'end_date' => 'datetime:Y-m-d H:m',
     ];
-    
+
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
     }
-    
+
     public function mentor()
     {
         return $this->belongsTo('App\Models\User', 'user_id');

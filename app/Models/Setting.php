@@ -10,6 +10,6 @@ class Setting extends Model
     use HasFactory;
 
     protected $fillable = [
-        'image_baner'
+        'image_baner',
     ];
 }

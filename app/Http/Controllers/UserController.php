@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $users = User::get();
 
-        return $this->response("success get users.", $users, 200);
+        return $this->response('success get users.', $users, 200);
     }
 
     /**
@@ -43,7 +43,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -55,9 +55,9 @@ class UserController extends Controller
 
             $user->assignRole($request->role);
 
-            return $this->response("Successfully create user.", $request->all(), 201);
+            return $this->response('Successfully create user.', $request->all(), 201);
         } catch (\Exception $e) {
-            return $this->response("Falied to create user.", $e, 409);
+            return $this->response('Falied to create user.', $e, 409);
         }
     }
 
@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         $user->load('roles');
 
-        return $this->response("Success get user.", $user, 200);
+        return $this->response('Success get user.', $user, 200);
     }
 
     /**
@@ -94,9 +94,9 @@ class UserController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $password = !empty($request->password) ? Hash::make($request->password) : $user->password;
-        
+
         try {
             $user->update([
                 'name' => $request->name,
@@ -106,9 +106,9 @@ class UserController extends Controller
 
             $user->assignRole($request->role);
 
-            return $this->response("Successfully update user.", $request->all(), 201);
+            return $this->response('Successfully update user.', $request->all(), 201);
         } catch (\Exception $e) {
-            return $this->response("Falied to update user.", $e, 409);
+            return $this->response('Falied to update user.', $e, 409);
         }
     }
 
@@ -123,9 +123,9 @@ class UserController extends Controller
         try {
             $user->delete();
 
-            return $this->response("Successfully delete user.", null, 201);
+            return $this->response('Successfully delete user.', null, 201);
         } catch (\Exception $e) {
-            return $this->response("Failed to delete user.", $e, 409);
+            return $this->response('Failed to delete user.', $e, 409);
         }
     }
 }

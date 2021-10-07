@@ -28,22 +28,22 @@ class Checkout extends Model
         'updated_at' => 'datetime:Y-m-d H:m:s',
         'metadata' => 'array',
     ];
-    
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
-    
+
     public function course()
     {
         return $this->belongsTo('App\Models\Course');
     }
-    
+
     public function livestream()
     {
         return $this->belongsTo('App\Models\Livestream');
     }
-    
+
     public function paymentLog()
     {
         return $this->hasMany('App\Models\PaymentLog', 'checkout_id');

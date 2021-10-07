@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class RatingController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +19,8 @@ class RatingController extends Controller
     public function index()
     {
         $ratings = Rating::get();
-        
-        return $this->response("Ratings found!", $ratings, 200);
+
+        return $this->response('Ratings found!', $ratings, 200);
     }
 
     /**
@@ -40,14 +40,14 @@ class RatingController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $rating = Rating::create([
             'course_id' => $request->course_id,
             'user_id' => $request->user_id,
             'value' => $request->value,
         ]);
-        
-        return $this->response("Rating created!", $rating, 201);
+
+        return $this->response('Rating created!', $rating, 201);
     }
 
     /**
@@ -58,7 +58,7 @@ class RatingController extends Controller
      */
     public function show(Rating $rating)
     {
-        return $this->response("Rating found!", $rating, 200);
+        return $this->response('Rating found!', $rating, 200);
     }
 
     /**
@@ -79,14 +79,14 @@ class RatingController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $rating->update([
             'course_id' => $request->course_id,
             'user_id' => $request->user_id,
             'value' => $request->value,
         ]);
-        
-        return $this->response("Rating updated!", $rating, 201);
+
+        return $this->response('Rating updated!', $rating, 201);
     }
 
     /**
@@ -98,7 +98,7 @@ class RatingController extends Controller
     public function destroy($id)
     {
         $rating->delete();
-        
-        return $this->response("Rating deleted!", null, 201);
+
+        return $this->response('Rating deleted!', null, 201);
     }
 }

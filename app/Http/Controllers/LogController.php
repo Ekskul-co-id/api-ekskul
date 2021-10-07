@@ -16,8 +16,8 @@ class LogController extends Controller
     public function index()
     {
         $logs = PaymentLog::get();
-        
-        return $this->response("Payment logs found!", $logs, 200);
+
+        return $this->response('Payment logs found!', $logs, 200);
     }
 
     /**

@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class SocialProvider extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'provider', 'provider_id', 'user_id',
     ];
-    
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');
