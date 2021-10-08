@@ -43,6 +43,29 @@ class CourseSeeder extends Seeder
             'is_paid' => false,
             'silabus' => $silabus,
         ]);
+
+        Course::create([
+            'name' => 'Belajar Database Postgresql',
+            'slug' => 'belajar-database-postgresql',
+            'category_id' => 4,
+            'user_id' => 3,
+            'company_id' => 1,
+            'image' => 'https://cdn.educba.com/academy/wp-content/uploads/2020/02/PostgreSQL-Features.jpg',
+            'preview' => 'QXiURudUHFE',
+            'about' => 'PostgreSQL adalah sebuah sistem basis data yang disebarluaskan secara bebas menurut Perjanjian lisensi BSD. Peranti lunak ini merupakan salah satu basis data yang paling banyak digunakan saat ini, selain MySQL dan Oracle. PostgreSQL menyediakan fitur yang berguna untuk replikasi basis data.',
+            'price' => '120000',
+            'silabus' => [
+                'Pengenalan RDBMS',
+                'Setup Development Environment',
+                'Select Statement & Alias dengan PostgreSQL',
+                'Operasi Aritmatika di PostgreSQL',
+                'Keyword Distinct di Postgresql',
+                'Null and Empty String Handler',
+                'Filter data di PostgreSQL',
+                'Operator for Filter data dengan where clause di PostgreSQL',
+            ],
+        ]);
+
         Course::create([
             'name' => 'Bermain piano yang benar',
             'slug' => 'bermain-piano-yang-benar',
