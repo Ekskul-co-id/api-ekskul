@@ -474,7 +474,7 @@
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">
-                                    <div class="f-fallback button button--green">Back to home</div>
+                                    <a class="f-fallback button button--green" href="ekskul://app/SuccessBuy">Lihat Playlist</a>
                                   </td>
                                 </tr>
                               </table>

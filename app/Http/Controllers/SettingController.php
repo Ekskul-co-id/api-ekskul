@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class SettingController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +19,8 @@ class SettingController extends Controller
     public function index()
     {
         $settings = Setting::get();
-        
-        return $this->response("Settings found!", $settings, 200);
+
+        return $this->response('Settings found!', $settings, 200);
     }
 
     /**
@@ -34,22 +34,22 @@ class SettingController extends Controller
         $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:jpeg,jpg,png|max:2048',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $fileName = time().'.'.$request->file->extension();
-        
-        $path = "settings";
-        
+
+        $path = 'settings';
+
         $request->file->move(public_path($path), $fileName);
-        
+
         $setting = Setting::create([
-            'image_baner' => env('APP_URL').'/'.$fileName
+            'image_baner' => env('APP_URL').'/'.$fileName,
         ]);
 
-        return  $this->response("Setting created!", $setting, 201);
+        return  $this->response('Setting created!', $setting, 201);
     }
 
     /**
@@ -75,22 +75,22 @@ class SettingController extends Controller
         $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:jpeg,jpg,png|max:2048',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $fileName = time().'.'.$request->file->extension();
-        
-        $path = "settings";
-        
+
+        $path = 'settings';
+
         $request->file->move(public_path($path), $fileName);
-        
+
         $setting->update([
-            'image_baner' => env('APP_URL').'/'.$fileName
+            'image_baner' => env('APP_URL').'/'.$fileName,
         ]);
 
-        return  $this->response("Setting updated!", $setting, 201);
+        return  $this->response('Setting updated!', $setting, 201);
     }
 
     /**
@@ -102,7 +102,7 @@ class SettingController extends Controller
     public function destroy(Setting $setting)
     {
         $setting->delete();
-        
-        return $this->response("Setting deleted!", null, 201);
+
+        return $this->response('Setting deleted!', null, 201);
     }
 }

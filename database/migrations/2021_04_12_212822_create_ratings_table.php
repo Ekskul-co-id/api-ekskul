@@ -17,7 +17,7 @@ class CreateRatingsTable extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained('courses');
             $table->foreignId('user_id')->constrained('users');
-            $table->string('value');
+            $table->integer('value');
             $table->timestamps();
         });
     }

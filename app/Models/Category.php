@@ -14,7 +14,7 @@ class Category extends Model
         'slug',
         'icon',
     ];
-    
+
     public function courses()
     {
         return $this->hasMany('App\Models\Course', 'category_id');

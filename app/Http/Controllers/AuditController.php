@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class AuditController extends Controller
 {
     use APIResponse;
+
     /**
      * Display a listing of the resource.
      *

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class VideoController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +20,8 @@ class VideoController extends Controller
     public function index()
     {
         $videos = Video::get();
-        
-        return $this->response("Videos found!", $videos, 200);
+
+        return $this->response('Videos found!', $videos, 200);
     }
 
     /**
@@ -36,9 +36,9 @@ class VideoController extends Controller
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
             'duration' => 'required|integer',
-            'video_id' => 'required|integer',
+            'youtube_id' => 'required|integer',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
@@ -47,10 +47,10 @@ class VideoController extends Controller
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
             'duration' => $request->duration,
-            'video_id' => $request->video_id,
+            'youtube_id' => $request->youtube_id,
         ]);
-        
-        return $this->response("Video created!", $video, 201);
+
+        return $this->response('Video created!', $video, 201);
     }
 
     /**
@@ -62,8 +62,8 @@ class VideoController extends Controller
     public function show(Video $video)
     {
         $video->load('playlist');
-        
-        return $this->response("Video found!", $video, 200);
+
+        return $this->response('Video found!', $video, 200);
     }
 
     /**
@@ -79,9 +79,9 @@ class VideoController extends Controller
             'title' => 'required|string|max:100',
             'playlist_id' => 'required|integer',
             'duration' => 'required|integer',
-            'video_id' => 'required|integer',
+            'youtube_id' => 'required|integer',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
@@ -90,10 +90,10 @@ class VideoController extends Controller
             'title' => $request->title,
             'playlist_id' => $request->playlist_id,
             'duration' => $request->duration,
-            'video_id' => $request->video_id,
+            'youtube_id' => $request->youtube_id,
         ]);
-        
-        return $this->response("Video updated!", $video, 201);
+
+        return $this->response('Video updated!', $video, 201);
     }
 
     /**
@@ -105,7 +105,7 @@ class VideoController extends Controller
     public function destroy(Video $video)
     {
         $video->delete();
-        
-        return $this->response("Video deleted", null, 201);
+
+        return $this->response('Video deleted', null, 201);
     }
 }

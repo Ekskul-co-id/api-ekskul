@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class AnnouncementController extends Controller
 {
     use APIResponse, FcmResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +21,8 @@ class AnnouncementController extends Controller
     public function index()
     {
         $announcements = Announcement::get();
-        
-        return $this->response("Announcements found!", $announcements, 200);
+
+        return $this->response('Announcements found!', $announcements, 200);
     }
 
     /**
@@ -38,49 +38,49 @@ class AnnouncementController extends Controller
             'image' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
             'message' => 'required|string',
             'type' => 'required|in:private,public',
-            'user_id' => 'required_if:type,private|integer'
+            'user_id' => 'required_if:type,private|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $fileName = time().'.'.$request->image->extension();
-        
-        $path = "announcement";
-        
+
+        $path = 'announcement';
+
         $request->image->move(public_path($path), $fileName);
-        
+
         $image = env('APP_URL').'/'.$path.'/'.$fileName;
-        
+
         if ($request->type == 'private') {
             $userId = $request->user_id;
-            
+
             $user = User::findOrFail($userId);
-            
+
             $deviceToken = [$user->device_token];
         } else {
             $userId = null;
-            
+
             $deviceToken = User::whereNotNull('device_token')->get()->pluck('device_token')->toArray();
         }
-        
+
         $fcmResponse = $this->fcm($deviceToken, $request->title, $image, $request->message);
-        
+
         $announcement = Announcement::create([
             'title' => $request->title,
             'image' => $image,
             'message' => $request->message,
             'type' => $request->type,
-            'user_id' => $userId
+            'user_id' => $userId,
         ]);
-        
+
         $data = [
             'announcement' => $announcement,
-            'fcm_response' => $fcmResponse
+            'fcm_response' => $fcmResponse,
         ];
-        
-        return $this->response("Announcement created!", $data, 201);
+
+        return $this->response('Announcement created!', $data, 201);
     }
 
     /**
@@ -92,8 +92,8 @@ class AnnouncementController extends Controller
     public function show(Announcement $announcement)
     {
         $announcement->load('user');
-        
-        return $this->response("Announcement found!", $announcement, 200);
+
+        return $this->response('Announcement found!', $announcement, 200);
     }
 
     /**
@@ -117,7 +117,7 @@ class AnnouncementController extends Controller
     public function destroy(Announcement $announcement)
     {
         $announcement->delete();
-        
-        return $this->response("Announcement deleted!", null, 201);
+
+        return $this->response('Announcement deleted!', null, 201);
     }
 }

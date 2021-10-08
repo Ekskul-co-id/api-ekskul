@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class CategoryController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +20,8 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::get();
-        
-        return $this->response("Category found!", $categories, 200);
+
+        return $this->response('Category found!', $categories, 200);
     }
 
     /**
@@ -42,9 +42,9 @@ class CategoryController extends Controller
         }
 
         $fileName = time().'.'.$request->icon->extension();
-        
-        $path = "icon";
-        
+
+        $path = 'icon';
+
         $request->icon->move(public_path($path), $fileName);
 
         $category = Category::create([
@@ -52,8 +52,8 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
             'icon' => env('APP_URL').'/'.$path.'/'.$fileName,
         ]);
-        
-        return $this->response("Category has created!", $category, 201);
+
+        return $this->response('Category has created!', $category, 201);
     }
 
     /**
@@ -65,8 +65,8 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $category->load('playlist');
-        
-        return $this->response("Category found!", $category, 201);
+
+        return $this->response('Category found!', $category, 201);
     }
 
     /**
@@ -86,26 +86,26 @@ class CategoryController extends Controller
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
-        if($request->hasFile('icon')){
+
+        if ($request->hasFile('icon')) {
             $fileName = time().'.'.$request->icon->extension();
-            
-            $path = "icon";
-            
+
+            $path = 'icon';
+
             $request->icon->move(public_path($path), $fileName);
-            
-            unlink(public_path($path . $category->icon));
-            
+
+            unlink(public_path($path.$category->icon));
+
             $icon = env('APP_URL').'/'.$path.'/'.$fileName;
         }
 
         $category->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'icon' => $icon ?? $category->icon // fungsi dari ?? kalau tidak ada request icon (hanya update name saja) maka dia akan ngambil value dari $category->icon yang dijadikan value untuk update
+            'icon' => $icon ?? $category->icon, // fungsi dari ?? kalau tidak ada request icon (hanya update name saja) maka dia akan ngambil value dari $category->icon yang dijadikan value untuk update
         ]);
 
-        return $this->response("Category has updated!", $category, 201);
+        return $this->response('Category has updated!', $category, 201);
     }
 
     /**
@@ -117,7 +117,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        
-        return $this->response("Category has deleted!", null, 201);
+
+        return $this->response('Category has deleted!', null, 201);
     }
 }

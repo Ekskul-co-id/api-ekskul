@@ -13,17 +13,17 @@ class Playlist extends Model
         'name',
         'course_id',
     ];
-    
+
     public function course()
     {
         return $this->belongsTo('App\Models\Course');
     }
-    
+
     public function video()
     {
         return $this->hasMany('App\Models\Video', 'playlist_id');
     }
-    
+
     public function playlistDurations()
     {
         return $this->video()->selectRaw('sum(duration) as total, playlist_id')

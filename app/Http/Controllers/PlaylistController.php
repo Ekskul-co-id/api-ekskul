@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class PlaylistController extends Controller
 {
     use APIResponse;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +19,8 @@ class PlaylistController extends Controller
     public function index()
     {
         $playlists = Playlist::get();
-        
-        return $this->response("Playlists found!", $playlists, 200);
+
+        return $this->response('Playlists found!', $playlists, 200);
     }
 
     /**
@@ -33,19 +33,19 @@ class PlaylistController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'course_id' => 'required|integer'
+            'course_id' => 'required|integer',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $playlist = Playlist::create([
             'name' => $request->name,
-            'course_id' => $request->course_id
+            'course_id' => $request->course_id,
         ]);
 
-        return $this->response("Playlist created!", $playlist, 201);
+        return $this->response('Playlist created!', $playlist, 201);
     }
 
     /**
@@ -57,8 +57,8 @@ class PlaylistController extends Controller
     public function show(Playlist $playlist)
     {
         $playlist->load('course', 'video');
-        
-        return $this->response("Playlist found!", $playlist, 200);
+
+        return $this->response('Playlist found!', $playlist, 200);
     }
 
     /**
@@ -72,21 +72,21 @@ class PlaylistController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'course_id' => 'required|integer'
+            'course_id' => 'required|integer',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->response(null, $validator->errors(), 422);
         }
-        
+
         $playlist->update([
             'name' => $request->name,
-            'course_id' => $request->course_id
+            'course_id' => $request->course_id,
         ]);
 
-        return $this->response("Playlist updated!", $playlist, 201);
+        return $this->response('Playlist updated!', $playlist, 201);
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -96,7 +96,7 @@ class PlaylistController extends Controller
     public function destroy(Playlist $playlist)
     {
         $playlist->delete();
-        
-        return $this->response("Playlist deleted!", null, 201);
+
+        return $this->response('Playlist deleted!', null, 201);
     }
 }
