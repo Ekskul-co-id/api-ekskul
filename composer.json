@@ -15,7 +15,8 @@
         "laravel/tinker": "^2.5",
         "midtrans/midtrans-php": "^2.4",
         "sentry/sentry-laravel": "^2.8",
-        "spatie/laravel-permission": "^4.2"
+        "spatie/laravel-permission": "^4.2",
+        "tucker-eric/eloquentfilter": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

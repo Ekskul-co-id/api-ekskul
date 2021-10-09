@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Announcement\StoreAnnouncementRequest;
+use App\Http\Requests\FilterRequest;
 use App\Models\Announcement;
 use App\Models\User;
 use App\Traits\APIResponse;
 use App\Traits\FcmResponse;
+use App\Http\Responses\PaginationResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class AnnouncementController extends Controller
 {
@@ -18,11 +20,25 @@ class AnnouncementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FilterRequest $request)
     {
-        $announcements = Announcement::get();
+        // filter data
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+        $order_by = $request->input('order_by') ? $request->input('order_by') : 'created_at';
+        $order_direction = $request->input('order_direction') ? strtoupper($request->input('order_direction')) : 'ASC';
 
-        return $this->response('Announcements found!', $announcements, 200);
+        $query = Announcement::query();
+
+        // clone query
+        $result = (clone $query)->filter($request->all())->limit($limit)->offset($offset)->orderBy($order_by, $order_direction)
+            ->select('id', 'title', 'image', 'message', 'type', 'user_id', 'created_at',)->get();
+
+        $totalResult = (clone $query)->filter($request->all())->count();
+        $totalData = (clone $query)->count();
+
+        // return data with pagination
+        return new PaginationResponse($result, $totalResult, $totalData, $offset, $limit);
     }
 
     /**
@@ -31,27 +47,15 @@ class AnnouncementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAnnouncementRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'image' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
-            'message' => 'required|string',
-            'type' => 'required|in:private,public',
-            'user_id' => 'required_if:type,private|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
-
-        $fileName = time().'.'.$request->image->extension();
+        $fileName = time() . '.' . $request->image->extension();
 
         $path = 'announcement';
 
         $request->image->move(public_path($path), $fileName);
 
-        $image = env('APP_URL').'/'.$path.'/'.$fileName;
+        $image = env('APP_URL') . '/' . $path . '/' . $fileName;
 
         if ($request->type == 'private') {
             $userId = $request->user_id;
@@ -118,6 +122,6 @@ class AnnouncementController extends Controller
     {
         $announcement->delete();
 
-        return $this->response('Announcement deleted!', null, 201);
+        return $this->response('Announcement deleted!', null, 200);
     }
 }
