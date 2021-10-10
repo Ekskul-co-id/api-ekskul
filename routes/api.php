@@ -125,6 +125,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
             Route::get('/{category:id}', 'CategoryController@show');
             Route::put('/{category:id}', 'CategoryController@update');
             Route::delete('/{category:id}', 'CategoryController@destroy');
+            Route::post('/{id}/restore', 'CategoryController@restore');
+            Route::post('/restore-batch', 'CategoryController@restoreBatch');
         });
 
         // Roles
