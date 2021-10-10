@@ -183,7 +183,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
             Route::post('/', 'AnnouncementController@store');
             Route::get('/{announcement:id}', 'AnnouncementController@show');
             Route::put('/{announcement:id}', 'AnnouncementController@update');
-            Route::delete('/{announcement:id}', 'AnnouncementController@destroy');
+            Route::delete('/{announcement:id}/delete', 'AnnouncementController@destroy');
+            Route::delete('/delete-batch', 'AnnouncementController@destroyBatch');
         });
 
         // Company

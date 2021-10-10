@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Announcement\DeleteBatchRequest;
 use App\Http\Requests\Announcement\StoreAnnouncementRequest;
 use App\Http\Requests\FilterRequest;
 use App\Models\Announcement;
@@ -123,5 +124,18 @@ class AnnouncementController extends Controller
         $announcement->delete();
 
         return $this->response('Announcement deleted!', null, 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyBatch(DeleteBatchRequest $request)
+    {
+        $data = Announcement::whereIn('id', $request['id'])->delete();
+
+        return $this->response('Announcement deleted!', $data, 200);
     }
 }
