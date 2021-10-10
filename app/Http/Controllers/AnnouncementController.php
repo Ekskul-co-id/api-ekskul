@@ -6,6 +6,7 @@ use App\Http\Requests\Announcement\DeleteBatchRequest;
 use App\Http\Requests\Announcement\StoreAnnouncementRequest;
 use App\Http\Requests\FilterRequest;
 use App\Http\Responses\PaginationResponse;
+use App\Http\Responses\SimpleResponse;
 use App\Models\Announcement;
 use App\Models\User;
 use App\Traits\APIResponse;
@@ -137,5 +138,23 @@ class AnnouncementController extends Controller
         $data = Announcement::whereIn('id', $request['id'])->delete();
 
         return $this->response('Announcement deleted!', $data, 200);
+    }
+
+    public function restore($id)
+    {
+        $announcement = Announcement::withTrashed()->findOrFail($id);
+
+        $announcement->restore();
+
+        return $this->response('Announcement restored!', $announcement, 200);
+
+    }
+
+    public function restoreBatch(DeleteBatchRequest $request)
+    {
+        $data = Announcement::withTrashed()->whereIn('id', $request['id'])->restore();
+
+        return $this->response('Announcement restored!', $data, 200);
+
     }
 }
