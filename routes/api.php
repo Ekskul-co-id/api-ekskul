@@ -84,7 +84,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
             Route::post('/', 'UserController@store');
             Route::get('/{user:id}', 'UserController@show');
             Route::put('/{user:id}', 'UserController@update');
-            Route::delete('/{user:id}', 'UserController@destroy');
+            Route::delete('/{user:id}/delete', 'UserController@destroy');
+            Route::delete('/delete-batch', 'UserController@destroyBatch');
         });
 
         // Settings

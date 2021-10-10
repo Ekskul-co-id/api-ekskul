@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use EloquentFilter\Filterable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -11,7 +13,12 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use HasRoles;
+    use Filterable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -62,6 +69,36 @@ class User extends Authenticatable implements MustVerifyEmail
     public function companies()
     {
         return $this->belongsToMany(Company::class, 'company_user')
-                        ->withPivot('role');
+            ->withPivot('role');
+    }
+
+    // model filter
+    public function modelFilter()
+    {
+        return $this->provideFilter(\App\ModelFilters\UserFilter::class);
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d-m-Y H:i:s',strtotime($value));
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return date('d-m-Y H:i:s',strtotime($value));
+    }
+
+    public function getEmailVerifiedAtAttribute($value)
+    {
+        return date('d-m-Y H:i:s',strtotime($value));
+    }
+
+    public function getDeletedAtAttribute($value)
+    {
+        if(is_null($value)){
+            return null;
+        } else {
+            return date('d-m-Y H:i:s',strtotime($value));
+        }
     }
 }
