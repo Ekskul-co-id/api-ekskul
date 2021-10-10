@@ -80,25 +80,25 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getCreatedAtAttribute($value)
     {
-        return date('d-m-Y H:i:s',strtotime($value));
+        return date('d-m-Y H:i:s', strtotime($value));
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        return date('d-m-Y H:i:s',strtotime($value));
+        return date('d-m-Y H:i:s', strtotime($value));
     }
 
     public function getEmailVerifiedAtAttribute($value)
     {
-        return date('d-m-Y H:i:s',strtotime($value));
+        return date('d-m-Y H:i:s', strtotime($value));
     }
 
     public function getDeletedAtAttribute($value)
     {
-        if(is_null($value)){
+        if (is_null($value)) {
             return null;
         } else {
-            return date('d-m-Y H:i:s',strtotime($value));
+            return date('d-m-Y H:i:s', strtotime($value));
         }
     }
 }

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FilterRequest;
+use App\Http\Requests\User\DeleteBatchRequest;
+use App\Http\Responses\PaginationResponse;
 use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\FilterRequest;
-use App\Http\Requests\User\DeleteBatchRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Responses\PaginationResponse;
 
 class UserController extends Controller
 {
@@ -33,7 +33,7 @@ class UserController extends Controller
 
         // clone query
         $result = (clone $query)->filter($request->all())->limit($limit)->offset($offset)->orderBy($order_by, $order_direction)
-            ->select('id', 'name', 'email', 'avatar', 'address', 'profession', 'device_token','has_update_avatar','remember_token')->get();
+            ->select('id', 'name', 'email', 'avatar', 'address', 'profession', 'device_token', 'has_update_avatar', 'remember_token')->get();
 
         $totalResult = (clone $query)->filter($request->all())->count();
         $totalData = (clone $query)->count();
@@ -155,9 +155,8 @@ class UserController extends Controller
      */
     public function destroyBatch(DeleteBatchRequest $request)
     {
-        $data = User::whereIn('id',$request['id'])->delete();
+        $data = User::whereIn('id', $request['id'])->delete();
 
         return $this->response('Successfully delete user.', $data, 200);
-
     }
 }

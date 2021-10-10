@@ -32,7 +32,7 @@ class DeleteBatchRequest extends FormRequest
     public function attributes()
     {
         return[
-            'id.*' => 'User id'
+            'id.*' => 'User id',
         ];
     }
 }
