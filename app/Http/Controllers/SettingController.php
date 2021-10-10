@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Setting\DeleteBatchRequest;
+use App\Http\Requests\Setting\StoreSettingRequest;
 use App\Models\Setting;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
 {
@@ -18,7 +19,7 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $settings = Setting::get();
+        $settings = Setting::get(['id', 'image_baner', 'active', 'sequence', 'created_at']);
 
         return $this->response('Settings found!', $settings, 200);
     }
@@ -29,16 +30,8 @@ class SettingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSettingRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,jpg,png|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
-
         $fileName = time().'.'.$request->file->extension();
 
         $path = 'settings';
@@ -47,6 +40,8 @@ class SettingController extends Controller
 
         $setting = Setting::create([
             'image_baner' => env('APP_URL').'/'.$fileName,
+            'sequence' => $request->sequence,
+            'active' => $request->active,
         ]);
 
         return  $this->response('Setting created!', $setting, 201);
@@ -72,13 +67,11 @@ class SettingController extends Controller
      */
     public function update(Request $request, Setting $setting)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'file' => 'required|mimes:jpeg,jpg,png|max:2048',
+            'sequence' => 'required|numeric|unique:settings,sequence,'.$setting->id,
+            'active'=> 'required|in:0,1',
         ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
 
         $fileName = time().'.'.$request->file->extension();
 
@@ -88,6 +81,8 @@ class SettingController extends Controller
 
         $setting->update([
             'image_baner' => env('APP_URL').'/'.$fileName,
+            'sequence' => $request->sequence,
+            'active' => $request->active,
         ]);
 
         return  $this->response('Setting updated!', $setting, 201);
@@ -104,5 +99,35 @@ class SettingController extends Controller
         $setting->delete();
 
         return $this->response('Setting deleted!', null, 201);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyBatch(DeleteBatchRequest $request)
+    {
+        $data = Setting::whereIn('id', $request['id'])->delete();
+
+        return $this->response('Successfully delete setting.', $data, 200);
+    }
+
+    public function restore($id)
+    {
+        $setting = Setting::withTrashed()->findOrFail($id);
+
+        $setting->restore();
+
+        return $this->response('Successfully setting restored!', $setting, 200);
+    }
+
+    public function restoreBatch(DeleteBatchRequest $request)
+    {
+        $data = Setting::withTrashed()->whereIn('id', $request['id'])->restore();
+
+        return $this->response('Successfully setting restored!', $data, 200);
     }
 }

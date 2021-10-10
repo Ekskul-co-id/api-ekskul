@@ -93,8 +93,11 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum', 'verified']], f
             Route::get('/', 'SettingController@index');
             Route::post('/', 'SettingController@store');
             Route::get('/{setting:id}', 'SettingController@show');
-            Route::post('/{setting:id}', 'SettingController@update');
-            Route::get('/{setting:id}', 'SettingController@destroy');
+            Route::put('/{setting:id}', 'SettingController@update');
+            Route::delete('/{setting:id}/delete', 'SettingController@destroy');
+            Route::delete('/delete-batch', 'SettingController@destroyBatch');
+            Route::post('/{id}/restore', 'SettingController@restore');
+            Route::post('/restore-batch', 'SettingController@restoreBatch');
         });
 
         // Course

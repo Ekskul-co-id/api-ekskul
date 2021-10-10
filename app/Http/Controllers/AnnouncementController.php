@@ -147,7 +147,6 @@ class AnnouncementController extends Controller
         $announcement->restore();
 
         return $this->response('Announcement restored!', $announcement, 200);
-
     }
 
     public function restoreBatch(DeleteBatchRequest $request)
@@ -155,6 +154,5 @@ class AnnouncementController extends Controller
         $data = Announcement::withTrashed()->whereIn('id', $request['id'])->restore();
 
         return $this->response('Announcement restored!', $data, 200);
-
     }
 }
