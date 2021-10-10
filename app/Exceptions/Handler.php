@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
                 $exception = new BaseException(405, 'Method Not Allowed');
             } elseif ($exception instanceof ModelNotFoundException) {
                 $exception = new BaseException(404, 'Data tidak ditemukan', [
-                    'trace' => $exception->getTraceAsString()
+                    'trace' => $exception->getMessage()
                 ]);
             } elseif ($exception instanceof NotFoundHttpException) {
                 $exception = new BaseException(404, 'Route Not Found');
