@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Announcement\DeleteBatchRequest;
 use App\Http\Requests\Announcement\StoreAnnouncementRequest;
 use App\Http\Requests\FilterRequest;
+use App\Http\Responses\PaginationResponse;
 use App\Models\Announcement;
 use App\Models\User;
 use App\Traits\APIResponse;
 use App\Traits\FcmResponse;
-use App\Http\Responses\PaginationResponse;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
@@ -33,7 +33,7 @@ class AnnouncementController extends Controller
 
         // clone query
         $result = (clone $query)->filter($request->all())->limit($limit)->offset($offset)->orderBy($order_by, $order_direction)
-            ->select('id', 'title', 'image', 'message', 'type', 'user_id', 'created_at',)->get();
+            ->select('id', 'title', 'image', 'message', 'type', 'user_id', 'created_at', )->get();
 
         $totalResult = (clone $query)->filter($request->all())->count();
         $totalData = (clone $query)->count();
@@ -50,13 +50,13 @@ class AnnouncementController extends Controller
      */
     public function store(StoreAnnouncementRequest $request)
     {
-        $fileName = time() . '.' . $request->image->extension();
+        $fileName = time().'.'.$request->image->extension();
 
         $path = 'announcement';
 
         $request->image->move(public_path($path), $fileName);
 
-        $image = env('APP_URL') . '/' . $path . '/' . $fileName;
+        $image = env('APP_URL').'/'.$path.'/'.$fileName;
 
         if ($request->type == 'private') {
             $userId = $request->user_id;

@@ -2,11 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use GuzzleHttp\Exception\ServerException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
                 $exception = new BaseException(405, 'Method Not Allowed');
             } elseif ($exception instanceof ModelNotFoundException) {
                 $exception = new BaseException(404, 'Data tidak ditemukan', [
-                    'trace' => $exception->getMessage()
+                    'trace' => $exception->getMessage(),
                 ]);
             } elseif ($exception instanceof NotFoundHttpException) {
                 $exception = new BaseException(404, 'Route Not Found');
@@ -91,7 +91,7 @@ class Handler extends ExceptionHandler
                 [
                     'status' => false,
                     'data' => [
-                        'message' => $exception->validator->errors()->first()
+                        'message' => $exception->validator->errors()->first(),
                     ],
                 ]
             );

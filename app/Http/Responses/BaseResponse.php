@@ -54,6 +54,7 @@ class BaseResponse implements Responsable
         if (!empty($this->customAttributes)) {
             $payload = array_merge($payload, $this->customAttributes);
         }
+
         return response()
             ->json($payload, $this->status);
     }

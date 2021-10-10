@@ -28,7 +28,7 @@ class FilterRequest extends FormRequest
             'offset' => 'integer',
             'order_by' => 'nullable|string|in:created_at,id',
             'order_direction' => 'nullable|string|in:asc,desc',
-            'keyword' => 'nullable|string'
+            'keyword' => 'nullable|string',
         ];
     }
 }
