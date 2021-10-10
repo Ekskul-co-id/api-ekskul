@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FilterRequest;
 use App\Http\Requests\User\DeleteBatchRequest;
+use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Responses\PaginationResponse;
 use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -48,19 +47,8 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:6',
-            'role' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
-
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -100,17 +88,13 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request,[
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=png',
             'password' => 'string|min:6',
             'role' => 'required',
         ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
 
         $password = !empty($request->password) ? Hash::make($request->password) : $user->password;
 
