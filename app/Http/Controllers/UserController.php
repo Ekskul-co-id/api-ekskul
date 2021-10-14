@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FilterRequest;
+use App\Http\Requests\User\DeleteBatchRequest;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Responses\PaginationResponse;
 use App\Models\User;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -18,11 +20,25 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FilterRequest $request)
     {
-        $users = User::get();
+        // filter data
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+        $order_by = $request->input('order_by') ? $request->input('order_by') : 'created_at';
+        $order_direction = $request->input('order_direction') ? strtoupper($request->input('order_direction')) : 'ASC';
 
-        return $this->response('success get users.', $users, 200);
+        $query = User::query();
+
+        // clone query
+        $result = (clone $query)->filter($request->all())->limit($limit)->offset($offset)->orderBy($order_by, $order_direction)
+            ->select('id', 'name', 'email', 'avatar', 'address', 'profession', 'device_token', 'has_update_avatar', 'remember_token')->get();
+
+        $totalResult = (clone $query)->filter($request->all())->count();
+        $totalData = (clone $query)->count();
+
+        // return data with pagination
+        return new PaginationResponse($result, $totalResult, $totalData, $offset, $limit);
     }
 
     /**
@@ -31,19 +47,8 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:6',
-            'role' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
-
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -83,17 +88,13 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name).'&background=FBBF24&color=ffffff&bold=true&format=png',
             'password' => 'string|min:6',
             'role' => 'required',
         ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
 
         $password = !empty($request->password) ? Hash::make($request->password) : $user->password;
 
@@ -123,9 +124,23 @@ class UserController extends Controller
         try {
             $user->delete();
 
-            return $this->response('Successfully delete user.', null, 201);
+            return $this->response('Successfully delete user.', null, 200);
         } catch (\Exception $e) {
             return $this->response('Failed to delete user.', $e, 409);
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyBatch(DeleteBatchRequest $request)
+    {
+        $data = User::whereIn('id', $request['id'])->delete();
+
+        return $this->response('Successfully delete user.', $data, 200);
     }
 }

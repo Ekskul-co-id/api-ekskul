@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Categories\DeleteBatchRequest;
 use App\Models\Category;
 use App\Traits\APIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -19,7 +19,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::get();
+        $categories = Category::get(['id','name','slug','icon','created_at']);
 
         return $this->response('Category found!', $categories, 200);
     }
@@ -32,14 +32,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+        $this->validate($request, [
+            'name' => 'required|string|max:255|unique:categories',
             'icon' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
         ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
 
         $fileName = time().'.'.$request->icon->extension();
 
@@ -66,7 +62,7 @@ class CategoryController extends Controller
     {
         $category->load('playlist');
 
-        return $this->response('Category found!', $category, 201);
+        return $this->response('Category found!', $category, 200);
     }
 
     /**
@@ -78,14 +74,10 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'icon' => 'mimes:jpeg,jpg,png,svg|max:2048',
+        $this->validate($request, [
+            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
+            'icon' => 'sometimes|mimes:jpeg,jpg,png,svg|max:2048',
         ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
 
         if ($request->hasFile('icon')) {
             $fileName = time().'.'.$request->icon->extension();
@@ -101,11 +93,10 @@ class CategoryController extends Controller
 
         $category->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
             'icon' => $icon ?? $category->icon, // fungsi dari ?? kalau tidak ada request icon (hanya update name saja) maka dia akan ngambil value dari $category->icon yang dijadikan value untuk update
         ]);
 
-        return $this->response('Category has updated!', $category, 201);
+        return $this->response('Category has updated!', $category, 200);
     }
 
     /**
@@ -118,6 +109,24 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return $this->response('Category has deleted!', null, 201);
+        return $this->response('Category has deleted!', null, 200);
+    }
+
+    // restore by id
+    public function restore($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+
+        $category->restore();
+
+        return $this->response('Category restored!', $category, 200);
+    }
+
+    // restore batch
+    public function restoreBatch(DeleteBatchRequest $request)
+    {
+        $data = Category::withTrashed()->whereIn('id', $request['id'])->restore();
+
+        return $this->response('Category restored!', $data, 200);
     }
 }

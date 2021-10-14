@@ -177,7 +177,7 @@ return [
 
         // Other
         Spatie\Permission\PermissionServiceProvider::class,
-
+        EloquentFilter\ServiceProvider::class,
     ],
 
     /*

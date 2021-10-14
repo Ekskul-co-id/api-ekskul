@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Announcement\DeleteBatchRequest;
+use App\Http\Requests\Announcement\StoreAnnouncementRequest;
+use App\Http\Requests\FilterRequest;
+use App\Http\Responses\PaginationResponse;
+use App\Http\Responses\SimpleResponse;
 use App\Models\Announcement;
 use App\Models\User;
 use App\Traits\APIResponse;
 use App\Traits\FcmResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class AnnouncementController extends Controller
 {
@@ -18,11 +22,25 @@ class AnnouncementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FilterRequest $request)
     {
-        $announcements = Announcement::get();
+        // filter data
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+        $order_by = $request->input('order_by') ? $request->input('order_by') : 'created_at';
+        $order_direction = $request->input('order_direction') ? strtoupper($request->input('order_direction')) : 'ASC';
 
-        return $this->response('Announcements found!', $announcements, 200);
+        $query = Announcement::query();
+
+        // clone query
+        $result = (clone $query)->filter($request->all())->limit($limit)->offset($offset)->orderBy($order_by, $order_direction)
+            ->select('id', 'title', 'image', 'message', 'type', 'user_id', 'created_at', )->get();
+
+        $totalResult = (clone $query)->filter($request->all())->count();
+        $totalData = (clone $query)->count();
+
+        // return data with pagination
+        return new PaginationResponse($result, $totalResult, $totalData, $offset, $limit);
     }
 
     /**
@@ -31,20 +49,8 @@ class AnnouncementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAnnouncementRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'image' => 'required|mimes:jpeg,jpg,png,svg|max:2048',
-            'message' => 'required|string',
-            'type' => 'required|in:private,public',
-            'user_id' => 'required_if:type,private|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->response(null, $validator->errors(), 422);
-        }
-
         $fileName = time().'.'.$request->image->extension();
 
         $path = 'announcement';
@@ -118,6 +124,35 @@ class AnnouncementController extends Controller
     {
         $announcement->delete();
 
-        return $this->response('Announcement deleted!', null, 201);
+        return $this->response('Announcement deleted!', null, 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyBatch(DeleteBatchRequest $request)
+    {
+        $data = Announcement::whereIn('id', $request['id'])->delete();
+
+        return $this->response('Announcement deleted!', $data, 200);
+    }
+
+    public function restore($id)
+    {
+        $announcement = Announcement::withTrashed()->findOrFail($id);
+
+        $announcement->restore();
+
+        return $this->response('Announcement restored!', $announcement, 200);
+    }
+
+    public function restoreBatch(DeleteBatchRequest $request)
+    {
+        $data = Announcement::withTrashed()->whereIn('id', $request['id'])->restore();
+
+        return $this->response('Announcement restored!', $data, 200);
     }
 }

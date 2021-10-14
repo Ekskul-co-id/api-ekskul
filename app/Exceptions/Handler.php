@@ -2,7 +2,16 @@
 
 namespace App\Exceptions;
 
+use GuzzleHttp\Exception\ServerException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -13,7 +22,14 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
+        NotFoundHttpException::class,
+        MethodNotAllowedHttpException::class,
+        CommandNotFoundException::class,
+        BaseHttpException::class,
     ];
 
     /**
@@ -25,6 +41,10 @@ class Handler extends ExceptionHandler
         'current_password',
         'password',
         'password_confirmation',
+    ];
+
+    protected $dontReportOnLocal = [
+        BindingResolutionException::class,
     ];
 
     /**
@@ -47,6 +67,49 @@ class Handler extends ExceptionHandler
         });
     }
 
+    public function render($request, Throwable $exception)
+    {
+        // jika debug di matikan maka trace error tidak akan di tampilkan di di render response eror
+        if (!config('app.debug')) {
+            if ($exception instanceof MethodNotAllowedHttpException) {
+                $exception = new BaseException(405, 'Method Not Allowed');
+            } elseif ($exception instanceof ModelNotFoundException) {
+                $exception = new BaseException(404, 'Data tidak ditemukan', [
+                    'trace' => $exception->getMessage(),
+                ]);
+            } elseif ($exception instanceof NotFoundHttpException) {
+                $exception = new BaseException(404, 'Route Not Found');
+            } elseif ($exception instanceof ServerException) {
+                $exception = new BaseException(500, 'Terjadi kesalahan. Mohon ulangi kembali');
+            }
+        }
+        if ($exception instanceof ValidationException) {
+            $exception = new BaseException(
+                200,
+                $exception->validator->errors()->first(),
+                null,
+                [
+                    'status' => false,
+                    'data' => [
+                        'message' => $exception->validator->errors()->first(),
+                    ],
+                ]
+            );
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    public function isLocalEnv()
+    {
+        return app()->environment('local');
+    }
+
+    public function shouldReportOnLocal(Throwable $e)
+    {
+        return $this->isLocalEnv() && !$this->shouldReportOnLocal($e);
+    }
+
     public function report(Throwable $exception)
     {
         if (app()->bound('sentry') && $this->shouldReport($exception)) {
@@ -54,5 +117,16 @@ class Handler extends ExceptionHandler
         }
 
         parent::report($exception);
+    }
+
+    public function shouldntReportOnLocal(Throwable $e)
+    {
+        foreach ($this->dontReportOnLocal as $type) {
+            if ($e instanceof $type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
